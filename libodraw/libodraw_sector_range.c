@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,8 +26,8 @@
 #include "libodraw_libcerror.h"
 #include "libodraw_sector_range.h"
 
-/* Initialize a session value
- * Make sure the value is pointing to is set to NULL
+/* Creates a sector range
+ * Make sure the value sector_range is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libodraw_sector_range_initialize(
@@ -42,7 +42,7 @@ int libodraw_sector_range_initialize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid session value.",
+		 "%s: invalid sector range.",
 		 function );
 
 		return( -1 );
@@ -67,7 +67,7 @@ int libodraw_sector_range_initialize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-		 "%s: unable to create session value.",
+		 "%s: unable to create sector range.",
 		 function );
 
 		goto on_error;
@@ -81,7 +81,7 @@ int libodraw_sector_range_initialize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
-		 "%s: unable to clear session value.",
+		 "%s: unable to clear sector range.",
 		 function );
 
 		goto on_error;
@@ -99,7 +99,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees a session value
+/* Frees a sector range
  * Returns 1 if successful or -1 on error
  */
 int libodraw_sector_range_free(
@@ -114,7 +114,7 @@ int libodraw_sector_range_free(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid session value.",
+		 "%s: invalid sector range.",
 		 function );
 
 		return( -1 );
@@ -129,7 +129,7 @@ int libodraw_sector_range_free(
 	return( 1 );
 }
 
-/* Retrieves a session value
+/* Retrieves a sector range
  * Returns 1 if successful or -1 on error
  */
 int libodraw_sector_range_get(
@@ -146,7 +146,7 @@ int libodraw_sector_range_get(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid session value.",
+		 "%s: invalid sector range.",
 		 function );
 
 		return( -1 );
@@ -179,7 +179,7 @@ int libodraw_sector_range_get(
 	return( 1 );
 }
 
-/* Sets a session value
+/* Sets a sector range
  * Returns 1 if successful or -1 on error
  */
 int libodraw_sector_range_set(
@@ -196,7 +196,7 @@ int libodraw_sector_range_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid session value.",
+		 "%s: invalid sector range.",
 		 function );
 
 		return( -1 );

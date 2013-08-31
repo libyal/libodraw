@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,8 +27,8 @@
 #include "libodraw_libcerror.h"
 #include "libodraw_track_value.h"
 
-/* Initialize a track value
- * Make sure the value is pointing to is set to NULL
+/* Creates a track value
+ * Make sure the value track_value is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libodraw_track_value_initialize(
