@@ -9,6 +9,7 @@ MSVSCPP_FILES = \
 	libcsplit/libcsplit.vcproj \
 	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
+	libcthreads/libcthreads.vcproj \
 	libodraw_dll/libodraw_dll.vcproj \
 	libuna/libuna.vcproj \
 	libodraw.sln \
