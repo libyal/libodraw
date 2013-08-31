@@ -1,0 +1,620 @@
+/*
+ * Library to access optical disc (split) RAW formats
+ *
+ * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBODRAW_H )
+#define _LIBODRAW_H
+
+#include <libodraw/codepage.h>
+#include <libodraw/definitions.h>
+#include <libodraw/error.h>
+#include <libodraw/extern.h>
+#include <libodraw/features.h>
+#include <libodraw/types.h>
+
+#include <stdio.h>
+
+#if defined( LIBODRAW_HAVE_BFIO )
+#include <libbfio.h>
+#endif
+
+#if defined( __cplusplus )
+extern "C" {
+#endif
+
+/* -------------------------------------------------------------------------
+ * Support functions
+ * ------------------------------------------------------------------------- */
+
+/* Returns the library version
+ */
+LIBODRAW_EXTERN \
+const char *libodraw_get_version(
+             void );
+
+/* Returns the access flags for reading
+ */
+LIBODRAW_EXTERN \
+int libodraw_get_access_flags_read(
+     void );
+
+/* Returns the access flags for reading and writing
+ */
+LIBODRAW_EXTERN \
+int libodraw_get_access_flags_read_write(
+     void );
+
+/* Returns the access flags for writing
+ */
+LIBODRAW_EXTERN \
+int libodraw_get_access_flags_write(
+     void );
+
+/* Retrieves the narrow system string codepage
+ * A value of 0 represents no codepage, UTF-8 encoding is used instead
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_get_codepage(
+     int *codepage,
+     libodraw_error_t **error );
+
+/* Sets the narrow system string codepage
+ * A value of 0 represents no codepage, UTF-8 encoding is used instead
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_set_codepage(
+     int codepage,
+     libodraw_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Notify functions
+ * ------------------------------------------------------------------------- */
+
+/* Sets the verbose notification
+ */
+LIBODRAW_EXTERN \
+void libodraw_notify_set_verbose(
+      int verbose );
+
+/* Sets the notification stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_notify_set_stream(
+     FILE *stream,
+     libodraw_error_t **error );
+
+/* Opens the notification stream using a filename
+ * The stream is opened in append mode
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_notify_stream_open(
+     const char *filename,
+     libodraw_error_t **error );
+
+/* Closes the notification stream if opened using a filename
+ * Returns 0 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_notify_stream_close(
+     libodraw_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Error functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees the error including elements
+ */
+LIBODRAW_EXTERN \
+void libodraw_error_free(
+      libodraw_error_t **error );
+
+/* Prints a descriptive string of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_error_fprint(
+     libodraw_error_t *error,
+     FILE *stream );
+
+/* Prints a descriptive string of the error to the string
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_error_sprint(
+     libodraw_error_t *error,
+     char *string,
+     size_t size );
+
+/* Prints a backtrace of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_error_backtrace_fprint(
+     libodraw_error_t *error,
+     FILE *stream );
+
+/* Prints a backtrace of the error to the string
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_error_backtrace_sprint(
+     libodraw_error_t *error,
+     char *string,
+     size_t size );
+
+/* -------------------------------------------------------------------------
+ * Handle functions
+ * ------------------------------------------------------------------------- */
+
+/* Initializes a handle
+ * Make sure the value handle is pointing to is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_initialize(
+     libodraw_handle_t **handle,
+     libodraw_error_t **error );
+
+/* Frees a handle
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_free(
+     libodraw_handle_t **handle,
+     libodraw_error_t **error );
+
+/* Signals the libodraw handle to abort its current activity
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_signal_abort(
+     libodraw_handle_t *handle,
+     libodraw_error_t **error );
+
+/* Opens a handle using a table of contents (TOC) file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_open(
+     libodraw_handle_t *handle,
+     const char *filename,
+     int access_flags,
+     libodraw_error_t **error );
+
+#if defined( LIBODRAW_HAVE_WIDE_CHARACTER_TYPE )
+/* Opens a handle using a table of contents (TOC) file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_open_wide(
+     libodraw_handle_t *handle,
+     const wchar_t *filename,
+     int access_flags,
+     libodraw_error_t **error );
+#endif
+
+#if defined( LIBODRAW_HAVE_BFIO )
+/* Opens a handle using a Basic File IO (bfio) handle of a table of contents (TOC) file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_open_handle_io_handle(
+     libodraw_handle_t *handle,
+     libbfio_handle_t *file_io_handle,
+     int access_flags,
+     libodraw_error_t **error );
+#endif
+
+/* Opens the data files
+ * If the data filenames were not set explicitly this function assumes the data files
+ * are in the same location as the table of contents (TOC) file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_open_data_files(
+     libodraw_handle_t *handle,
+     libodraw_error_t **error );
+
+#if defined( LIBODRAW_HAVE_BFIO )
+/* Opens the data files using a Basic File IO (bfio) pool
+ * This function assumes the data files are in same order as defined by the table of contents (TOC) file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_open_data_files_file_io_pool(
+     libodraw_handle_t *handle,
+     libbfio_pool_t *file_io_pool,
+     libodraw_error_t **error );
+#endif
+
+/* Closes a handle
+ * Returns 0 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_close(
+     libodraw_handle_t *handle,
+     libodraw_error_t **error );
+
+/* Reads a buffer from the handle
+ * Returns the number of bytes read or -1 on error
+ */
+LIBODRAW_EXTERN \
+ssize_t libodraw_handle_read_buffer(
+         libodraw_handle_t *handle,
+         void *buffer,
+         size_t buffer_size,
+         libodraw_error_t **error );
+
+/* Reads (media) data at a specific offset
+ * Returns the number of bytes read or -1 on error
+ */
+LIBODRAW_EXTERN \
+ssize_t libodraw_handle_read_random(
+         libodraw_handle_t *handle,
+         void *buffer,
+         size_t buffer_size,
+         off64_t offset,
+         libodraw_error_t **error );
+
+#ifdef TODO_WRITE_SUPPORT
+/* Writes a buffer to the handle
+ * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
+ */
+LIBODRAW_EXTERN \
+ssize_t libodraw_handle_write_buffer(
+         libodraw_handle_t *handle,
+         const void *buffer,
+         size_t buffer_size,
+         libodraw_error_t **error );
+
+/* Writes (media) data at a specific offset,
+ * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
+ */
+LIBODRAW_EXTERN \
+ssize_t libodraw_handle_write_random(
+         libodraw_handle_t *handle,
+         const void *buffer,
+         size_t buffer_size,
+         off64_t offset,
+         libodraw_error_t **error );
+#endif
+
+/* Seeks an offset in the handle
+ * Returns the number of bytes in the buffer or -1 on error
+ */
+LIBODRAW_EXTERN \
+off64_t libodraw_handle_seek_offset(
+         libodraw_handle_t *handle,
+         off64_t offset,
+         int whence,
+         libodraw_error_t **error );
+
+/* Retrieves the current offset of the (media) data
+ * Returns the offset if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_offset(
+     libodraw_handle_t *handle,
+     off64_t *offset,
+     libodraw_error_t **error );
+
+/* Sets the maximum number of (concurrent) open file handles
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_set_maximum_number_of_open_handles(
+     libodraw_handle_t *handle,
+     int maximum_number_of_open_handles,
+     libodraw_error_t **error );
+
+/* Retrieves the handle ASCII codepage
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_ascii_codepage(
+     libodraw_handle_t *handle,
+     int *ascii_codepage,
+     libodraw_error_t **error );
+
+/* Sets the handle ASCII codepage
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_set_ascii_codepage(
+     libodraw_handle_t *handle,
+     int ascii_codepage,
+     libodraw_error_t **error );
+
+/* Retrieves the number of data files
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_data_files(
+     libodraw_handle_t *handle,
+     int *number_of_data_files,
+     libodraw_error_t **error );
+
+/* Retrieves a data file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_data_file(
+     libodraw_handle_t *handle,
+     int index,
+     libodraw_data_file_t **data_file,
+     libodraw_error_t **error );
+
+/* Appends a data file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_append_data_file(
+     libodraw_handle_t *handle,
+     const char *name,
+     size_t name_length,
+     uint8_t type,
+     libodraw_error_t **error );
+
+#if defined( HAVE_WIDE_CHARACTER_TYPE )
+/* Appends a data file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_append_data_file_wide(
+     libodraw_handle_t *handle,
+     const wchar_t *name,
+     size_t name_length,
+     uint8_t type,
+     libodraw_error_t **error );
+#endif
+
+/* -------------------------------------------------------------------------
+ * Meta data functions
+ * ------------------------------------------------------------------------- */
+
+/* Retrieves the media size
+ * Returns the 1 if succesful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_media_size(
+     libodraw_handle_t *handle,
+     size64_t *media_size,
+     libodraw_error_t **error );
+
+/* Retrieves the number of bytes per sector
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_bytes_per_sector(
+     libodraw_handle_t *handle,
+     uint32_t *bytes_per_sector,
+     libodraw_error_t **error );
+
+#ifdef TODO
+/* Sets the number of bytes per sector
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_set_bytes_per_sector(
+     libodraw_handle_t *handle,
+     uint32_t bytes_per_sector,
+     libodraw_error_t **error );
+#endif
+
+/* Retrieves the number of sectors
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_sectors(
+     libodraw_handle_t *handle,
+     uint64_t *number_of_sectors,
+     libodraw_error_t **error );
+
+/* Retrieves the number of sessions
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_sessions(
+     libodraw_handle_t *handle,
+     int *number_of_sessions,
+     libodraw_error_t **error );
+
+/* Retrieves a session
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_session(
+     libodraw_handle_t *handle,
+     int index,
+     uint64_t *start_sector,
+     uint64_t *number_of_sectors,
+     libodraw_error_t **error );
+
+/* Appends a session
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_append_session(
+     libodraw_handle_t *handle,
+     uint64_t first_sector,
+     uint64_t number_of_sectors,
+     libodraw_error_t **error );
+
+/* Retrieves the number of lead-outs
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_lead_outs(
+     libodraw_handle_t *handle,
+     int *number_of_lead_outs,
+     libodraw_error_t **error );
+
+/* Retrieves a lead-out
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_lead_out(
+     libodraw_handle_t *handle,
+     int index,
+     uint64_t *start_sector,
+     uint64_t *number_of_sectors,
+     libodraw_error_t **error );
+
+/* Appends a lead-out
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_append_lead_out(
+     libodraw_handle_t *handle,
+     uint64_t first_sector,
+     uint64_t number_of_sectors,
+     libodraw_error_t **error );
+
+/* Retrieves the number of tracks
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_tracks(
+     libodraw_handle_t *handle,
+     int *number_of_tracks,
+     libodraw_error_t **error );
+
+/* Retrieves a track
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_get_track(
+     libodraw_handle_t *handle,
+     int index,
+     uint64_t *start_sector,
+     uint64_t *number_of_sectors,
+     uint8_t *type,
+     int *data_file_index,
+     uint64_t *data_file_start_sector,
+     libodraw_error_t **error );
+
+/* Appends a track
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_handle_append_track(
+     libodraw_handle_t *handle,
+     uint64_t start_sector,
+     uint64_t number_of_sectors,
+     uint8_t type,
+     int data_file_index,
+     uint64_t data_file_start_sector,
+     libodraw_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Data file functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees a data file
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_free(
+     libodraw_data_file_t **data_file,
+     libodraw_error_t **error );
+
+/* Retrieves the filename size
+ * The filename size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_get_filename_size(
+     libodraw_data_file_t *data_file,
+     size_t *filename_size,
+     libodraw_error_t **error );
+
+/* Retrieves the filename
+ * The filename size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_get_filename(
+     libodraw_data_file_t *data_file,
+     char *filename,
+     size_t filename_size,
+     libodraw_error_t **error );
+
+/* Sets the filename
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_set_filename(
+     libodraw_data_file_t *data_file,
+     const char *filename,
+     size_t filename_length,
+     libodraw_error_t **error );
+
+#if defined( LIBODRAW_HAVE_WIDE_CHARACTER_TYPE )
+/* Retrieves the filename size
+ * The filename size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_get_filename_size_wide(
+     libodraw_data_file_t *data_file,
+     size_t *filename_size,
+     libodraw_error_t **error );
+
+/* Retrieves the filename
+ * The filename size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_get_filename_wide(
+     libodraw_data_file_t *data_file,
+     wchar_t *filename,
+     size_t filename_size,
+     libodraw_error_t **error );
+
+/* Sets the filename
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_set_filename_wide(
+     libodraw_data_file_t *data_file,
+     const wchar_t *filename,
+     size_t filename_length,
+     libodraw_error_t **error );
+#endif
+
+/* Retrieves the file type
+ * Returns 1 if successful or -1 on error
+ */
+LIBODRAW_EXTERN \
+int libodraw_data_file_get_type(
+     libodraw_data_file_t *data_file,
+     uint8_t *type,
+     libodraw_error_t **error );
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif
+

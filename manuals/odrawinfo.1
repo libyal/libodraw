@@ -1,0 +1,79 @@
+.Dd March 29, 2013
+.Dt odrawinfo
+.Os libodraw
+.Sh NAME
+.Nm odrawinfo
+.Nd determines information about an optical disc (split) RAW file
+.Sh SYNOPSIS
+.Nm odrawinfo
+.Op Fl hivV
+.Va Ar source
+.Sh DESCRIPTION
+.Nm odrawinfo
+is a utility to determine information about an optical disc (split) RAW file
+.Pp
+.Nm odrawinfo
+is part of the
+.Nm libodraw
+package.
+.Nm libodraw
+is a library to access optical disc (split) RAW formats
+.Pp
+.Ar source
+is the source file.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl h
+shows this help
+.It Fl i
+ignore data file(s)
+.It Fl v
+verbose output to stderr
+.It Fl V
+print version
+.El
+.Sh ENVIRONMENT
+None
+.Sh FILES
+None
+.Sh EXAMPLES
+.Bd -literal
+# odrawinfo cd.cue
+odrawinfo 20110111
+
+Optical disc:
+	media size: 42885120
+
+Data files:
+	total number: 1
+	filename: disc1_single.iso (type: binary little-endian)
+
+Sessions:
+	total number: 2
+	at sectors(s): 0 - 20619 number: 20620
+	at sectors(s): 20620 - 20939 number: 320
+
+Lead-outs:
+	total number: 1
+	at sectors(s): 9220 - 20619 number: 11400
+
+Tracks:
+	total number: 2
+	type: mode1/2352 (sector size: 2352) at sectors(s): 0 - 9219 number: 9220 (data file: 0, start sector: 0)
+	type: mode1/2352 (sector size: 2352) at sectors(s): 20620 - 20939 number: 320 (data file: 0, start sector: 20620)
+
+.Ed
+.Sh DIAGNOSTICS
+Errors, verbose and debug output are printed to stderr when verbose output \-v is enabled.
+Verbose and debug output are only printed when enabled at compilation.
+.Sh BUGS
+Please report bugs of any kind to <joachim.metz@gmail.com> or on the project website:
+http://code.google.com/p/libodraw/
+.Sh AUTHOR
+These man pages were written by Joachim Metz.
+.Sh COPYRIGHT
+Copyright 2010-2013, Joachim Metz <joachim.metz@gmail.com>.
+This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+.Sh SEE ALSO
+.Xr odrawexport 1

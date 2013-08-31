@@ -1,0 +1,257 @@
+TODO:
+* update msvscpp files
+* fix verbose/debug output issue in IO handle regarding sector mode
+
+* find a solution for
+  - redefinition of _FILE_OFFSET_BITS for Solaris
+  - redefinition of _MIN and _MAX for BorlandC
+* library
+  - add read error support
+  - add run-out support (partial)
+  - track data cache
+  - cache current sector in IO handle
+  - check MSF in track sector data (requires current sector)
+  - emulate checksum and ECC data for 2352 byte sectors
+* scanner
+  - put syntax error in error object
+  - use start conditions %s for REM (has impact on parser)
+  - different types of ISRC definitions
+* parser
+  - make sure sector offsets are relative from the start of the media
+  - handle success file commands without a track command
+  - refactor code into separate functions?
+* session
+  - handle pregap and postgap
+  - add default 1 session if no session data is available ?
+* cue file
+  - add syntax restrictions
+  - add support for single digit values
+  - handle reset of track MSF to 00:00:00
+* add support for .toc file
+* libodraw_track_value_copy_track_data_to_buffer
+  - add read error support
+  - emulate sector error correction data
+
+Tools:
+* odrawinfo
+  - add flag to skip open of data files ?
+  - add byte size string output (see smdevinfo)
+* odrawmount
+  - mount different sessions
+
+Deployment
+* check man pages
+* check functions included in configure.ac
+* add examples
+
+Tests:
+
+20130831
+* updated dependencies
+* removed examples
+* added macosx files
+* worked on tests
+* added support for codepage 949, 950 and 1255
+
+20130721
+* updated dependencies
+
+20130329
+* small changes
+
+20130327
+* 2013 update
+* updated dependencies
+* changes for project move
+
+20120923
+* updated dependencies
+* code clean up
+
+20120701
+* changes due to updates
+* updated msvscpp files
+
+20120630
+* updated dependencies
+
+20120212
+* small changes
+
+20120209
+* updated libnotify, libbfio
+* added dpkg files
+
+20120102
+* 2012 update
+
+20111231
+* updated libcstring, libuna
+
+20111224
+* updated libcstring, libsystem, libuna
+* updated array type
+* code clean up
+
+20111102
+* updated m4 files
+* updated libcstring, libsystem, libuna, libbfio
+
+20111030
+* updated configure.as and m4 files
+* removed libfvalue
+
+20111008
+* updated configure.as and m4 files
+* updated README files
+* updated pc and spec file
+* updated common
+* updated libuna, libbfio, libsystem
+
+20110918
+* updated configure
+
+20110914
+* updated configure
+
+20110831
+* updated configure, libuna
+
+20110806
+* updated configure.ac and acinclude.m4
+* updated libfvalue
+
+20110726
+* worked on support for handle reset of track MSF to 00:00:00 after new FILE
+* updated msvscpp files
+
+20110725
+* updated common, libsystem, libfvalue,
+* added support for blue book cue, multiple audio tracks per session
+* odrawinfo added option to ignore data files (-i)
+* fixed print of last sector when number of sectors is 0
+* worked on support for handle reset of track MSF to 00:00:00 after new FILE
+
+20110625
+* changes for: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+* code clean up
+* updated common, libuna, libbfio, libfvalue
+
+20110510
+* small correction in verbose output
+
+20110508
+* updated configure.ac
+* updated include/codepage.h
+* updated libcstring, libsystem
+* added INTLLIBS to odrawtools Makefile.am
+* worked on sector header sanity checks
+
+20110312
+* updated libcstring, libuna, libbfio, libsystem
+* bug fix in session size correction
+
+20110211
+* synced with secondary branch
+* fixed multiple issues in CUE parser
+
+20110209
+* added support for audio tracks
+
+20110203
+* updated libsystem
+
+20110114
+* updated libsystem, libuna, libbfio
+
+20110114
+* updated common, libsystem, libuna, libbfio
+
+20110111
+* updated libcstring, libuna, libbfio, libfvalue
+* updated man pages
+* updated msvscpp files
+* fixes for mingw compilation
+
+20110109
+* worked on mode 2 XA form-1 support
+* changed LIBODRAW_TRACK_TYPE_MODE2_2342 into LIBODRAW_TRACK_TYPE_MODE2_2324
+* updated configure.ac
+* updated common, libcstring, libsystem, libuna, libbfio
+* debug output of scanner and parser now uses libnotify
+
+20110106
+* small fixes in header files
+* data_file_set_filename overwrites auto-detection behavior of open_data_files
+* refactore copy track data to IO handle
+
+20110105
+* worked on seek and read tests
+* worked on non-sector size read buffer
+* read buffer added read beyond media size support
+* fixed leak in cue scanner of yy_buffer_stack, by not calling cue scanner destroy
+
+20110104
+* updated libsystem, libuna, libbfio, libfvalue
+* 2011 update
+* worked on seek offset
+* added initial run-out support
+* added tests directory
+* added example directory
+* worked on seek and read tests
+
+20101221
+* worked on read buffer
+
+20101220
+* worked on media offset in lead-outs, sessions, tracks, data_file
+* removed list type and sector list
+* worked on read buffer
+
+20101219
+* updated array type
+* updated libsystem, libbfio, libfvalue
+* code clean up
+* worked on data file support
+* worked on determining media size and sizes missing from CUE
+
+20101218
+* fix for mingw compilation
+
+20101217
+* renamed libodtoc to libodraw
+* updated configure.ac, added gettext support
+* updated array type, list type, sector list
+* updated common, liberror, libnotify, libsystem, libuna, libbfio, libfvalue
+* added unused
+* renamed file to handle
+* added %no-lines to yacc file for Builder5 support
+
+20101119
+* updated configure.ac
+* updated libcsting, liberror
+* added local library support
+
+20101117
+* worked on file support
+
+20101116
+* added file support
+* changed track support to entail file and type
+
+20101115
+* updated libbfio
+* worked on initial version with CUE support
+  - checked msvscpp build
+  - overwritten lex/yacc memory management
+  - turned off lex file options
+* added list type and offset list
+* added runtime information for sessions and tracks
+
+20101114
+* worked on initial version with CUE support
+  - created lex/yacc parser skeleton
+
+20101113
+* Created initial version
+
