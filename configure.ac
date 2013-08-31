@@ -215,6 +215,7 @@ Building:
    libcsystem support:                         $ac_cv_libcsystem
 
 Features:
+   Multi-threading support:                    $ac_cv_libcthreads_multi_threading
    Wide character type support:                $ac_cv_enable_wide_character_type
    odrawtools are build as static executables: $ac_cv_enable_static_executables
    Verbose output:                             $ac_cv_enable_verbose_output
