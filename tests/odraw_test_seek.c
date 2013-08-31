@@ -169,7 +169,7 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to open handle.\n" );
+		 "Unable to open file.\n" );
 
 		goto on_error;
 	}
