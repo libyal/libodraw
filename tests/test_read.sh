@@ -60,7 +60,7 @@ test_read()
 
 ODRAW_TEST_READ="odraw_test_read";
 
-if ! test -x ${ODRAW_TEST_SEEK};
+if ! test -x ${ODRAW_TEST_READ};
 then
 	ODRAW_TEST_READ="odraw_test_read.exe";
 
