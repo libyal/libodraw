@@ -1,5 +1,4 @@
 TODO:
-* update msvscpp files
 * fix verbose/debug output issue in IO handle regarding sector mode
 
 * find a solution for
@@ -37,6 +36,7 @@ Tools:
   - add flag to skip open of data files ?
   - add byte size string output (see smdevinfo)
 * odrawmount
+  - create?
   - mount different sessions
 
 Deployment
@@ -45,6 +45,11 @@ Deployment
 * add examples
 
 Tests:
+
+20130901
+* added odrawverify
+* added verification test
+* updated msvscpp files
 
 20130831
 * updated dependencies

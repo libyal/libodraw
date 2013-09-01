@@ -55,7 +55,7 @@ void odrawoutput_copyright_fprint(
  */
 void odrawoutput_version_fprint(
       FILE *stream,
-      const char *program )
+      const libcstring_system_character_t *program )
 {
 	if( stream == NULL )
 	{
@@ -67,7 +67,7 @@ void odrawoutput_version_fprint(
 	}
         fprintf(
 	 stream,
-	 "%s %s\n\n",
+	 "%" PRIs_LIBCSTRING_SYSTEM " %s\n\n",
          program,
 	 LIBODRAW_VERSION_STRING );
 }
@@ -76,7 +76,7 @@ void odrawoutput_version_fprint(
  */
 void odrawoutput_version_detailed_fprint(
       FILE *stream,
-      const char *program )
+      const libcstring_system_character_t *program )
 {
 	if( stream == NULL )
 	{
@@ -88,7 +88,7 @@ void odrawoutput_version_detailed_fprint(
 	}
         fprintf(
 	 stream,
-	 "%s %s (libodraw %s",
+	 "%" PRIs_LIBCSTRING_SYSTEM " %s (libodraw %s",
          program,
 	 LIBODRAW_VERSION_STRING,
 	 LIBODRAW_VERSION_STRING );

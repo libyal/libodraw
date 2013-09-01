@@ -10,10 +10,12 @@ MSVSCPP_FILES = \
 	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
+	libhmac/libhmac.vcproj \
 	libodraw_dll/libodraw_dll.vcproj \
 	libuna/libuna.vcproj \
 	libodraw.sln \
-	odrawinfo/odrawinfo.vcproj
+	odrawinfo/odrawinfo.vcproj \
+	odrawverify/odrawverify.vcproj
 
 SCRIPT_FILES = \
 	scripts/vs2008_x64.sh \

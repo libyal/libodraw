@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * Storage media buffer
  *
  * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,29 +19,54 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _STORAGE_MEDIA_BUFFER_H )
+#define _STORAGE_MEDIA_BUFFER_H
 
 #include <common.h>
-#include <file_stream.h>
 #include <types.h>
 
-#include "odrawtools_libcstring.h"
+#include "odrawtools_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
+typedef struct storage_media_buffer storage_media_buffer_t;
 
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+struct storage_media_buffer
+{
+	/* The raw buffer
+	 */
+	uint8_t *raw_buffer;
 
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+	/* The raw buffer size
+	 */
+	size_t raw_buffer_size;
+
+	/* The size of the data in the raw buffer
+	 */
+	size_t raw_buffer_data_size;
+};
+
+int storage_media_buffer_initialize(
+     storage_media_buffer_t **buffer,
+     size_t size,
+     libcerror_error_t **error );
+
+int storage_media_buffer_free(
+     storage_media_buffer_t **buffer,
+     libcerror_error_t **error );
+
+int storage_media_buffer_resize(
+     storage_media_buffer_t *buffer,
+     size_t size,
+     libcerror_error_t **error );
+
+int storage_media_buffer_get_data(
+     storage_media_buffer_t *buffer,
+     uint8_t **data,
+     size_t *data_size,
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

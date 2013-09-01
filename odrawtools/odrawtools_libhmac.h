@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * The internal libhmac header
  *
  * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,22 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _SMRAWTOOLS_LIBHMAC_H )
+#define _SMRAWTOOLS_LIBHMAC_H
 
 #include <common.h>
-#include <file_stream.h>
-#include <types.h>
 
-#include "odrawtools_libcstring.h"
+#if defined( HAVE_LOCAL_LIBHMAC )
+#include <libhmac_definitions.h>
+#include <libhmac_md5.h>
+#include <libhmac_sha1.h>
+#include <libhmac_sha256.h>
+#include <libhmac_support.h>
+#include <libhmac_types.h>
 
-#if defined( __cplusplus )
-extern "C" {
-#endif
+#elif defined( HAVE_LIBHMAC_H )
+#include <libhmac.h>
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
-
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
-
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
-
-#if defined( __cplusplus )
-}
 #endif
 
 #endif

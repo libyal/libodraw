@@ -19,10 +19,12 @@ TESTS = \
 	test_open_close.sh \
 	test_seek.sh \
 	test_read.sh \
-	test_odrawinfo.sh
+	test_odrawinfo.sh \
+	test_odrawverify.sh
 
 check_SCRIPTS = \
 	test_odrawinfo.sh \
+	test_odrawverify.sh \
 	test_open_close.sh \
 	test_read.sh \
 	test_runner.sh \

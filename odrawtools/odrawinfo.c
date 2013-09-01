@@ -112,12 +112,12 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libcerror_error_t *error              = NULL;
-	libcstring_system_character_t *source = NULL;
-	char *program                         = "odrawinfo";
-	libcstring_system_integer_t option    = 0;
-	uint8_t ignore_data_files             = 0;
-	int verbose                           = 0;
+	libcerror_error_t *error               = NULL;
+	libcstring_system_character_t *program = _LIBCSTRING_SYSTEM_STRING( "odrawinfo" );
+	libcstring_system_character_t *source  = NULL;
+	libcstring_system_integer_t option     = 0;
+	uint8_t ignore_data_files              = 0;
+	int verbose                            = 0;
 
 	libcnotify_stream_set(
 	 stderr,
@@ -206,11 +206,14 @@ int main( int argc, char * const argv[] )
 
 	libcnotify_verbose_set(
 	 verbose );
+
+#if !defined( HAVE_LOCAL_LIBODRAW )
 	libodraw_notify_set_stream(
 	 stderr,
 	 NULL );
 	libodraw_notify_set_verbose(
 	 verbose );
+#endif
 
 	if( info_handle_initialize(
 	     &odrawinfo_info_handle,

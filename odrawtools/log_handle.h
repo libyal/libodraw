@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * Log handle
  *
  * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,29 +19,50 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _LOG_HANDLE_H )
+#define _LOG_HANDLE_H
 
 #include <common.h>
 #include <file_stream.h>
 #include <types.h>
 
+#include "odrawtools_libcerror.h"
 #include "odrawtools_libcstring.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
+typedef struct log_handle log_handle_t;
 
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+struct log_handle
+{
+	/* The log stream
+	 */
+	FILE *log_stream;
+};
 
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+int log_handle_initialize(
+     log_handle_t **log_handle,
+     libcerror_error_t **error );
+
+int log_handle_free(
+     log_handle_t **log_handle,
+     libcerror_error_t **error );
+
+int log_handle_open(
+     log_handle_t *log_handle,
+     const libcstring_system_character_t *filename,
+     libcerror_error_t **error );
+
+int log_handle_close(
+     log_handle_t *log_handle,
+     libcerror_error_t **error );
+
+void log_handle_printf(
+      log_handle_t *log_handle,
+      char *format,
+      ... );
 
 #if defined( __cplusplus )
 }

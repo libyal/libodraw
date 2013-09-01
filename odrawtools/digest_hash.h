@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * Crypographic digest hash
  *
  * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,29 +19,25 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _DIGEST_HASH_H )
+#define _DIGEST_HASH_H
 
 #include <common.h>
-#include <file_stream.h>
 #include <types.h>
 
+#include "odrawtools_libcerror.h"
 #include "odrawtools_libcstring.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
-
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
-
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+int digest_hash_copy_to_string(
+     const uint8_t *digest_hash,
+     size_t digest_hash_size,
+     libcstring_system_character_t *string,
+     size_t string_size,
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

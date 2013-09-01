@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * Byte size string functions
  *
  * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,29 +19,37 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _BYTE_SIZE_STRING_H )
+#define _BYTE_SIZE_STRING_H
 
 #include <common.h>
-#include <file_stream.h>
 #include <types.h>
 
+#include "odrawtools_libcerror.h"
 #include "odrawtools_libcstring.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
+enum BYTE_SIZE_STRING_UNITS
+{
+	BYTE_SIZE_STRING_UNIT_MEGABYTE	= 1000,
+	BYTE_SIZE_STRING_UNIT_MEBIBYTE	= 1024
+};
 
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+int byte_size_string_create(
+     libcstring_system_character_t *byte_size_string,
+     size_t byte_size_string_length,
+     uint64_t size,
+     int units,
+     libcerror_error_t **error );
 
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
+int byte_size_string_convert(
+     const libcstring_system_character_t *byte_size_string,
+     size_t byte_size_string_length,
+     uint64_t *size,
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

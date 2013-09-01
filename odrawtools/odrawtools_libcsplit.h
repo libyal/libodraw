@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * The internal libcsplit header
  *
  * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,33 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _ODRAWTOOLS_LIBCSPLIT_H )
+#define _ODRAWTOOLS_LIBCSPLIT_H
 
 #include <common.h>
-#include <file_stream.h>
-#include <types.h>
 
-#include "odrawtools_libcstring.h"
+/* Define HAVE_LOCAL_LIBCSPLIT for local use of libcsplit
+ */
+#if defined( HAVE_LOCAL_LIBCSPLIT )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libcsplit_definitions.h>
+#include <libcsplit_narrow_split_string.h>
+#include <libcsplit_narrow_string.h>
+#include <libcsplit_types.h>
+#include <libcsplit_wide_split_string.h>
+#include <libcsplit_wide_string.h>
+
+#else
+
+/* If libtool DLL support is enabled set LIBCSPLIT_DLL_IMPORT
+ * before including libcsplit.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBCSPLIT_DLL_IMPORT
 #endif
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
+#include <libcsplit.h>
 
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
-
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const libcstring_system_character_t *program );
-
-#if defined( __cplusplus )
-}
 #endif
 
 #endif

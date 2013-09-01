@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libodraw],
- [20130831],
+ [20130901],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -90,9 +90,140 @@ AX_LIBBFIO_CHECK_ENABLE
 dnl Check for library function support
 AX_LIBODRAW_CHECK_LOCAL
 
+dnl Check for enabling libhmac for message digest hash function support
+AX_LIBHMAC_CHECK_ENABLE
+
 dnl Check for enabling libcsystem for cross-platform C generic system functions
 AX_LIBCSYSTEM_CHECK_ENABLE
 
+dnl Check for headers and functions used in tools
+
+dnl Function to detect if ctime_r or ctime is available
+dnl Also checks how to use ctime_r
+AC_DEFUN([AX_ODRAWTOOLS_CHECK_FUNC_CTIME],
+ [AC_CHECK_FUNCS([ctime_r])
+
+ AS_IF(
+  [test "x$ac_cv_func_ctime_r" = xyes],
+  [AC_MSG_CHECKING(
+   [how to use ctime_r])
+
+  AC_LANG_PUSH(C)
+
+  AC_LINK_IFELSE(
+   [AC_LANG_PROGRAM(
+    [[#include <time.h>]],
+    [[ctime_r( NULL, NULL, 0 )]] )],
+    [AC_MSG_RESULT(
+     [with additional size argument])
+    ac_cv_cv_ctime_r_size=yes],
+    [ac_cv_cv_ctime_r_size=no])
+
+  AS_IF(
+   [test "x$ac_cv_cv_ctime_r_size" = xno],
+   [AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM(
+     [[#include <time.h>]],
+     [[ctime_r( NULL, NULL )]] )],
+    [AC_MSG_RESULT(
+     [with two arguments])
+    ac_cv_cv_ctime_r_posix=yes],
+    [ac_cv_cv_ctime_r_posix=no])
+   ])
+
+  AS_IF(
+   [test "x$ac_cv_cv_ctime_r_posix" = xno],
+   [CPPFLAGS="$CPPFLAGS -D_POSIX_PTHREAD_SEMANTICS"
+   AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM(
+     [[#include <time.h>]],
+     [[ctime_r( NULL, NULL )]] )],
+    [AC_MSG_RESULT(
+     [with two arguments and definition _POSIX_PTHREAD_SEMANTICS])
+     ac_cv_cv_ctime_r_posix=yes],
+    [ac_cv_cv_ctime_r_posix=no])
+   ])
+
+  AC_LANG_POP(C)
+
+  AS_IF(
+   [test "x$ac_cv_cv_ctime_r_size" = xno && test "x$ac_cv_cv_ctime_r_posix" = xno],
+   [AC_MSG_WARN(
+    [unknown])
+   ac_cv_func_ctime_r=no])
+
+  AS_IF(
+   [test "x$ac_cv_func_ctime_r" = xyes],
+   [AC_DEFINE(
+    [HAVE_CTIME_R],
+    [1],
+    [Define to 1 if you have the ctime_r function.])
+   ])
+
+  AS_IF(
+   [test "x$ac_cv_cv_ctime_r_size" = xyes],
+   [AC_DEFINE(
+    [HAVE_CTIME_R_SIZE],
+    [1],
+    [Define to 1 if you have the ctime_r function with a third size argument.])
+   ])
+  ])
+
+ AS_IF(
+  [test "x$ac_cv_func_ctime_r" = xno],
+  [AC_CHECK_FUNCS([ctime])
+
+  AS_IF(
+   [test "x$ac_cv_func_ctime" = xno],
+   [AC_MSG_FAILURE(
+    [Missing function: ctime_r and ctime],
+    [1])
+   ])
+  ])
+ ])
+
+AS_IF(
+ [test "x$ac_cv_enable_winapi" = xno],
+ [AC_HEADER_TIME
+ AC_CHECK_FUNCS([time])
+ ])
+
+dnl Date and time functions used in libcsystem/libcsystem_date_time.c
+AC_CHECK_FUNCS([localtime localtime_r mktime])
+
+AS_IF(
+ [test "x$ac_cv_func_localtime" != xyes && test "x$ac_cv_func_localtime_r" != xyes],
+ [AC_MSG_FAILURE(
+  [Missing functions: localtime and localtime_r],
+  [1])
+ ])
+ 
+AS_IF(
+ [test "x$ac_cv_func_mktime" != xyes],
+ [AC_MSG_FAILURE(
+  [Missing function: mktime],
+  [1])
+ ])
+ 
+dnl Date and time functions used in libcsystem/libcsystem_date_time.h
+AX_ODRAWTOOLS_CHECK_FUNC_CTIME
+ 
+AC_CHECK_FUNCS([gmtime gmtime_r time])
+
+AS_IF(
+ [test "x$ac_cv_func_gmtime" != xyes && test "x$ac_cv_func_gmtime_r" != xyes],
+ [AC_MSG_FAILURE(
+  [Missing functions: gmtime_r and gmtime],
+  [1])
+ ])
+ 
+AS_IF(
+ [test "x$ac_cv_func_time" != xyes],
+ [AC_MSG_FAILURE(
+  [Missing function: time],
+  [1])
+ ])
+ 
 dnl Check if odrawtools should be build as static executables
 AX_COMMON_CHECK_ENABLE_STATIC_EXECUTABLES
 
@@ -129,9 +260,9 @@ AS_IF(
  ])
 
 AS_IF(
- [test "x$ac_cv_libcsystem" = xyes],
+ [test "x$ac_cv_libcsystem" = xyes || test "x$ac_cv_libhmac" = xyes || test "x$ac_cv_libcrypto" = xyes],
  [AC_SUBST(
-  [libodraw_spec_tools_build_requires],
+  [libsmraw_tools_spec_build_requires],
   [BuildRequires:])
  ])
 
@@ -167,6 +298,7 @@ AC_CONFIG_FILES([libcpath/Makefile])
 AC_CONFIG_FILES([libbfio/Makefile])
 AC_CONFIG_FILES([libodraw/Makefile])
 AC_CONFIG_FILES([libcsystem/Makefile])
+AC_CONFIG_FILES([libhmac/Makefile])
 AC_CONFIG_FILES([odrawtools/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])
@@ -212,6 +344,10 @@ Building:
    libcfile support:                           $ac_cv_libcfile
    libcpath support:                           $ac_cv_libcpath
    libbfio support:                            $ac_cv_libbfio
+   libhmac support:                            $ac_cv_libhmac
+   MD5 support:                                $ac_cv_libhmac_md5
+   SHA1 support:                               $ac_cv_libhmac_sha1
+   SHA256 support:                             $ac_cv_libhmac_sha256
    libcsystem support:                         $ac_cv_libcsystem
 
 Features:
