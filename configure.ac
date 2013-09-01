@@ -262,7 +262,7 @@ AS_IF(
 AS_IF(
  [test "x$ac_cv_libcsystem" = xyes || test "x$ac_cv_libhmac" = xyes || test "x$ac_cv_libcrypto" = xyes],
  [AC_SUBST(
-  [libsmraw_tools_spec_build_requires],
+  [libodraw_tools_spec_build_requires],
   [BuildRequires:])
  ])
 
