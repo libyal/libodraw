@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20130831
+# Version: 20130922
 
 # Generic auto-generated build files
 *~
@@ -99,13 +99,12 @@ stamp-h1
 /include/libodraw/definitions.h
 /include/libodraw/features.h
 /include/libodraw/types.h
+/libodraw/libodraw.rc
 /libodraw/libodraw_cue_parser.c
 /libodraw/libodraw_cue_parser.h
 /libodraw/libodraw_cue_parser.output
 /libodraw/libodraw_cue_scanner.c
 /libodraw/libodraw_definitions.h
-/libodraw/libodraw.rc
-/libodraw/libodraw.h
 /macosx/Introduction.rtf
 /macosx/libodraw.pmdoc/01bin.xml
 /macosx/libodraw.pmdoc/02include.xml
@@ -114,10 +113,12 @@ stamp-h1
 /macosx/libodraw.pmdoc/index.xml
 /odrawtools/odrawinfo
 /odrawtools/odrawverify
+/tests/input
 /tests/odraw_test_open_close
 /tests/odraw_test_read
 /tests/odraw_test_seek
 /tests/odraw_test_set_ascii_codepage
+/tests/tmp
 
 # Local library dependencies specific files
 /libbfio
