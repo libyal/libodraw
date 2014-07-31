@@ -1,7 +1,7 @@
 /*
  * Configuration file for WINAPI
  *
- * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2006-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -43,6 +43,10 @@
 #if !defined( SIZEOF_WCHAR_T )
 #define SIZEOF_WCHAR_T			2
 #endif
+
+/* Enable the DllMain function
+ */
+#define HAVE_DLLMAIN			1
 
 /* Enable verbose output
 #define HAVE_VERBOSE_OUTPUT		1

@@ -105,12 +105,6 @@ stamp-h1
 /libodraw/libodraw_cue_parser.output
 /libodraw/libodraw_cue_scanner.c
 /libodraw/libodraw_definitions.h
-/macosx/Introduction.rtf
-/macosx/libodraw.pmdoc/01bin.xml
-/macosx/libodraw.pmdoc/02include.xml
-/macosx/libodraw.pmdoc/03lib.xml
-/macosx/libodraw.pmdoc/04share.xml
-/macosx/libodraw.pmdoc/index.xml
 /odrawtools/odrawinfo
 /odrawtools/odrawverify
 /tests/input

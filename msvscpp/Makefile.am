@@ -11,11 +11,15 @@ MSVSCPP_FILES = \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
 	libhmac/libhmac.vcproj \
-	libodraw_dll/libodraw_dll.vcproj \
+	libodraw/libodraw.vcproj \
 	libuna/libuna.vcproj \
-	libodraw.sln \
+	odraw_test_open_close/odraw_test_open_close.vcproj \
+	odraw_test_read/odraw_test_read.vcproj \
+	odraw_test_seek/odraw_test_seek.vcproj \
+	odraw_test_set_ascii_codepage/odraw_test_set_ascii_codepage.vcproj \
 	odrawinfo/odrawinfo.vcproj \
-	odrawverify/odrawverify.vcproj
+	odrawverify/odrawverify.vcproj \
+	libodraw.sln
 
 SCRIPT_FILES = \
 	scripts/vs2008_x64.sh \

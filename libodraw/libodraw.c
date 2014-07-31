@@ -1,7 +1,7 @@
 /*
  * Library to access optical disc (split) RAW formats.
  *
- * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -31,7 +31,7 @@
  */
 #if !defined( HAVE_LOCAL_LIBODRAW )
 
-#if defined( WINAPI )
+#if defined( WINAPI ) && defined( HAVE_DLLMAIN )
 
 #if defined( _MANAGED )
 #pragma managed( push, off )
@@ -74,7 +74,7 @@ int libodraw_is_dll(
 	return( 1 );
 }
 
-#endif /* defined( WINAPI ) */
+#endif /* defined( WINAPI ) && defined( HAVE_DLLMAIN ) */
 
 #endif /* !defined( HAVE_LOCAL_LIBODRAW ) */
 

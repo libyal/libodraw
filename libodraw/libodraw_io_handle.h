@@ -1,7 +1,7 @@
 /*
  * Input/Output (IO) handle functions
  *
- * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -80,6 +80,10 @@ int libodraw_io_handle_initialize(
 
 int libodraw_io_handle_free(
      libodraw_io_handle_t **io_handle,
+     libcerror_error_t **error );
+
+int libodraw_io_handle_clear(
+     libodraw_io_handle_t *io_handle,
      libcerror_error_t **error );
 
 ssize_t libodraw_io_handle_copy_sector_data_to_buffer(

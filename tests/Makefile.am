@@ -85,7 +85,7 @@ odraw_test_set_ascii_codepage_SOURCES = \
 	odraw_test_unused.h
 
 odraw_test_set_ascii_codepage_LDADD = \
-	../libodraw/libodraw.la
+	../libodraw/libodraw.la \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCSTRING_LIBADD@

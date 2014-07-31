@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libodraw],
- [20131210],
+ [20140731],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -233,15 +233,36 @@ AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT
 dnl Check if libodraw should be build with debug output
 AX_COMMON_CHECK_ENABLE_DEBUG_OUTPUT
 
-dnl Check if DLL support is needed in odrawtools
+dnl Headers included in various places
+AC_CHECK_HEADERS([stdarg.h varargs.h])
+
 AS_IF(
- [test "x$enable_shared" = xyes && test "x$ac_cv_enable_static_executables" = xno],
+ [test "x$ac_cv_header_stdarg_h" != xyes && test "x$ac_cv_header_varargs_h" != xyes],
+ [AC_MSG_FAILURE(
+  [Missing headers: stdarg.h and varargs.h],
+  [1])
+ ])
+
+dnl Check if DLL support is needed
+AS_IF(
+ [test "x$enable_shared" = xyes],
  [AS_CASE(
   [$host],
   [*cygwin* | *mingw*],
-  [AC_SUBST(
-   [LIBODRAW_DLL_IMPORT],
-   ["-DLIBODRAW_DLL_IMPORT"])
+  [AC_DEFINE(
+   [HAVE_DLLMAIN],
+   [1],
+   [Define to 1 to enable the DllMain function.])
+  AC_SUBST(
+   [HAVE_DLLMAIN],
+   [1])
+
+  AS_IF(
+   [test "x$ac_cv_enable_static_executables" = xno],
+   [AC_SUBST(
+    [LIBODRAW_DLL_IMPORT],
+    ["-DLIBODRAW_DLL_IMPORT"])
+   ])
   ])
  ])
 
@@ -304,7 +325,6 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])
 AC_CONFIG_FILES([manuals/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
-AC_CONFIG_FILES([macosx/Makefile])
 AC_CONFIG_FILES([msvscpp/Makefile])
 dnl Have configure make the include files
 AC_CONFIG_FILES([include/libodraw.h])
@@ -317,12 +337,6 @@ AC_CONFIG_FILES([common/types.h])
 AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([dpkg/copyright])
 AC_CONFIG_FILES([libodraw/libodraw.rc])
-AC_CONFIG_FILES([macosx/libodraw.pmdoc/01bin.xml])
-AC_CONFIG_FILES([macosx/libodraw.pmdoc/02include.xml])
-AC_CONFIG_FILES([macosx/libodraw.pmdoc/03lib.xml])
-AC_CONFIG_FILES([macosx/libodraw.pmdoc/04share.xml])
-AC_CONFIG_FILES([macosx/libodraw.pmdoc/index.xml])
-AC_CONFIG_FILES([macosx/Introduction.rtf])
 AC_CONFIG_FILES([libodraw.pc])
 AC_CONFIG_FILES([libodraw.spec])
 dnl Have configure write its configuration
