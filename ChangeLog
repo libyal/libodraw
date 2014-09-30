@@ -46,6 +46,9 @@ Deployment
 
 Tests:
 
+20140930
+* removed README.macosx
+
 20140731
 * updated dependencies
 * updated msvscpp files
