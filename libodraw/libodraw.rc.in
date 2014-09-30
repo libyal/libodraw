@@ -28,7 +28,7 @@ BEGIN
       VALUE "OriginalFilename",		"libodraw.dll\0"
       VALUE "ProductName",		"libodraw\0"
       VALUE "ProductVersion",		"@VERSION@" "\0"
-      VALUE "Comments",			"For more information visit http://code.google.com/p/libodraw/\0"
+      VALUE "Comments",			"For more information visit https://github.com/libyal/libodraw/\0"
     END
   END
   BLOCK "VarFileInfo"

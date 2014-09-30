@@ -1,4 +1,10 @@
-See:
-* http://code.google.com/p/libodraw/wiki/Building
-* README.macosx
+libodraw is a library to access to optical disc (split) RAW image files (bin/cue, iso/cue).
+
+Planned:
+* Multi-threading support
+* Python 3 support
+
+For more information see:
+* Project documentation: https://github.com/libyal/libodraw/wiki/Home
+* How to build from source: https://github.com/libyal/libodraw/wiki/Building
 
