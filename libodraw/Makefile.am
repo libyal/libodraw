@@ -1,3 +1,6 @@
+AM_LFLAGS = -Cf
+AM_YFLAGS = -d -v -l -p cue_scanner_
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
@@ -13,9 +16,6 @@ AM_CPPFLAGS = \
 	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
 	@PTHREAD_CPPFLAGS@
-
-AM_LFLAGS = -Cf
-AM_YFLAGS = -d -v -l -p cue_scanner_
 
 BUILT_SOURCES = libodraw_cue_parser.h
 
