@@ -1,4 +1,4 @@
-.Dd January 19, 2014
+.Dd November 29, 2014
 .Dt libodraw 3
 .Os libodraw
 .Sh NAME
@@ -59,7 +59,7 @@ File functions
 .Ft ssize_t
 .Fn libodraw_handle_read_buffer "libodraw_handle_t *handle, void *buffer, size_t buffer_size, libodraw_error_t **error"
 .Ft ssize_t
-.Fn libodraw_handle_read_random "libodraw_handle_t *handle, void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
+.Fn libodraw_handle_read_buffer_at_offset "libodraw_handle_t *handle, void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
 .Ft off64_t
 .Fn libodraw_handle_seek_offset "libodraw_handle_t *handle, off64_t offset, int whence, libodraw_error_t **error"
 .Ft off64_t

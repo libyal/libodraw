@@ -43,28 +43,6 @@ struct libodraw_io_handle
 	 */
 	uint8_t mode;
 
-	/* The current offset
-	 */
-	off64_t current_offset;
-
-#ifdef TODO
-	/* The current sector
-	 */
-	uint64_t current_sector;
-#endif
-
-	/* The current run-out
-	 */
-	int current_run_out;
-
-	/* The current lead-out
-	 */
-	int current_lead_out;
-
-	/* The current track
-	 */
-	int current_track;
-
 	/* The codepage of the extended ASCII strings
 	 */
 	int ascii_codepage;

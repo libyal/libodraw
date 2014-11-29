@@ -203,6 +203,7 @@ int libodraw_handle_open(
      libodraw_error_t **error );
 
 #if defined( LIBODRAW_HAVE_WIDE_CHARACTER_TYPE )
+
 /* Opens a handle using a table of contents (TOC) file
  * Returns 1 if successful or -1 on error
  */
@@ -212,9 +213,11 @@ int libodraw_handle_open_wide(
      const wchar_t *filename,
      int access_flags,
      libodraw_error_t **error );
-#endif
+
+#endif /* defined( LIBODRAW_HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( LIBODRAW_HAVE_BFIO )
+
 /* Opens a handle using a Basic File IO (bfio) handle of a table of contents (TOC) file
  * Returns 1 if successful or -1 on error
  */
@@ -224,7 +227,8 @@ int libodraw_handle_open_handle_io_handle(
      libbfio_handle_t *file_io_handle,
      int access_flags,
      libodraw_error_t **error );
-#endif
+
+#endif /* defined( LIBODRAW_HAVE_BFIO ) */
 
 /* Opens the data files
  * If the data filenames were not set explicitly this function assumes the data files
@@ -237,6 +241,7 @@ int libodraw_handle_open_data_files(
      libodraw_error_t **error );
 
 #if defined( LIBODRAW_HAVE_BFIO )
+
 /* Opens the data files using a Basic File IO (bfio) pool
  * This function assumes the data files are in same order as defined by the table of contents (TOC) file
  * Returns 1 if successful or -1 on error
@@ -246,7 +251,8 @@ int libodraw_handle_open_data_files_file_io_pool(
      libodraw_handle_t *handle,
      libbfio_pool_t *file_io_pool,
      libodraw_error_t **error );
-#endif
+
+#endif /* defined( LIBODRAW_HAVE_BFIO ) */
 
 /* Closes a handle
  * Returns 0 if successful or -1 on error
@@ -270,6 +276,21 @@ ssize_t libodraw_handle_read_buffer(
  * Returns the number of bytes read or -1 on error
  */
 LIBODRAW_EXTERN \
+ssize_t libodraw_handle_read_buffer_at_offset(
+         libodraw_handle_t *handle,
+         void *buffer,
+         size_t buffer_size,
+         off64_t offset,
+         libodraw_error_t **error );
+
+/* Reads (media) data at a specific offset
+ *
+ * This function is deprecated use libodraw_handle_read_buffer_at_offset instead
+ *
+ * Returns the number of bytes read or -1 on error
+ */
+LIBODRAW_DEPRECATED \
+LIBODRAW_EXTERN \
 ssize_t libodraw_handle_read_random(
          libodraw_handle_t *handle,
          void *buffer,
@@ -278,6 +299,7 @@ ssize_t libodraw_handle_read_random(
          libodraw_error_t **error );
 
 #ifdef TODO_WRITE_SUPPORT
+
 /* Writes a buffer to the handle
  * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
  */
@@ -292,13 +314,14 @@ ssize_t libodraw_handle_write_buffer(
  * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
  */
 LIBODRAW_EXTERN \
-ssize_t libodraw_handle_write_random(
+ssize_t libodraw_handle_write_buffer_at_offset(
          libodraw_handle_t *handle,
          const void *buffer,
          size_t buffer_size,
          off64_t offset,
          libodraw_error_t **error );
-#endif
+
+#endif /* TODO_WRITE_SUPPORT */
 
 /* Seeks an offset in the handle
  * Returns the number of bytes in the buffer or -1 on error

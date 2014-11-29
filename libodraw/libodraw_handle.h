@@ -51,6 +51,22 @@ typedef struct libodraw_internal_handle libodraw_internal_handle_t;
 
 struct libodraw_internal_handle
 {
+	/* The current offset
+	 */
+	off64_t current_offset;
+
+	/* The current run-out
+	 */
+	int current_run_out;
+
+	/* The current lead-out
+	 */
+	int current_lead_out;
+
+	/* The current track
+	 */
+	int current_track;
+
 	/* The (storage) media size
 	 */
 	size64_t media_size;
@@ -95,10 +111,6 @@ struct libodraw_internal_handle
 	 */
 	int maximum_number_of_open_handles;
 
-	/* A value to indicate if the read values have been initialized
-	 */
-	uint8_t read_values_initialized;
-
 	/* The IO handle
 	 */
 	libodraw_io_handle_t *io_handle;
@@ -110,6 +122,10 @@ struct libodraw_internal_handle
 	/* Value to indicate if the table of contents (TOC) file IO handle was created inside the library
 	 */
 	uint8_t toc_file_io_handle_created_in_library;
+
+	/* Value to indicate if the table of contents (TOC) file IO handle was opened inside the library
+	 */
+	uint8_t toc_file_io_handle_opened_in_library;
 
 	/* The data file pool of file IO handles
 	 */
@@ -143,13 +159,15 @@ int libodraw_handle_open(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 LIBODRAW_EXTERN \
 int libodraw_handle_open_wide(
      libodraw_handle_t *handle,
      const wchar_t *filename,
      int access_flags,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 LIBODRAW_EXTERN \
 int libodraw_handle_open_file_io_handle(
@@ -196,6 +214,7 @@ int libodraw_handle_close(
 
 int libodraw_handle_open_read(
      libodraw_internal_handle_t *internal_handle,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error );
 
 LIBODRAW_EXTERN \
@@ -230,6 +249,14 @@ ssize_t libodraw_handle_read_buffer_from_track(
          libcerror_error_t **error );
 
 LIBODRAW_EXTERN \
+ssize_t libodraw_handle_read_buffer_at_offset(
+         libodraw_handle_t *handle,
+         void *buffer,
+         size_t buffer_size,
+         off64_t offset,
+         libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
 ssize_t libodraw_handle_read_random(
          libodraw_handle_t *handle,
          void *buffer,
@@ -238,6 +265,7 @@ ssize_t libodraw_handle_read_random(
          libcerror_error_t **error );
 
 #ifdef TODO_WRITE_SUPPORT
+
 LIBODRAW_EXTERN \
 ssize_t libodraw_handle_write_buffer(
          libodraw_handle_t *handle,
@@ -246,13 +274,14 @@ ssize_t libodraw_handle_write_buffer(
          libcerror_error_t **error );
 
 LIBODRAW_EXTERN \
-ssize_t libodraw_handle_write_random(
+ssize_t libodraw_handle_write_buffer_at_offset(
          libodraw_handle_t *handle,
          const void *buffer,
          size_t buffer_size,
          off64_t offset,
          libcerror_error_t **error );
-#endif
+
+#endif /* TODO_WRITE_SUPPORT */
 
 LIBODRAW_EXTERN \
 off64_t libodraw_handle_seek_offset(
@@ -309,6 +338,7 @@ int libodraw_handle_set_basename(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 int libodraw_handle_get_basename_size_wide(
      libodraw_internal_handle_t *internal_handle,
      size_t *basename_size,
@@ -325,7 +355,8 @@ int libodraw_handle_set_basename_wide(
      const wchar_t *basename,
      size_t basename_length,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 LIBODRAW_EXTERN \
 int libodraw_handle_set_maximum_number_of_open_handles(
@@ -371,6 +402,7 @@ int libodraw_handle_append_data_file(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 LIBODRAW_EXTERN \
 int libodraw_handle_append_data_file_wide(
      libodraw_handle_t *handle,
@@ -378,7 +410,8 @@ int libodraw_handle_append_data_file_wide(
      size_t name_length,
      uint8_t type,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( __cplusplus )
 }

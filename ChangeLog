@@ -1,5 +1,6 @@
 TODO:
 * fix verbose/debug output issue in IO handle regarding sector mode
+* remove libodraw_handle_read_random
 
 * find a solution for
   - redefinition of _FILE_OFFSET_BITS for Solaris
@@ -45,6 +46,9 @@ Deployment
 * add examples
 
 Tests:
+
+20141129
+* code clean up
 
 20141027
 * changes for deployment
