@@ -26,14 +26,15 @@ SUBDIRS = \
 DPKG_FILES = \
 	dpkg/changelog \
 	dpkg/changelog.in \
-       	dpkg/compat \
-       	dpkg/control \
-       	dpkg/copyright \
-       	dpkg/copyright.in \
-       	dpkg/rules \
-       	dpkg/libodraw-dev.docs \
-       	dpkg/libodraw.docs \
-       	dpkg/libodraw-tools.docs
+	dpkg/compat \
+	dpkg/control \
+	dpkg/copyright \
+	dpkg/copyright.in \
+	dpkg/rules \
+	dpkg/libodraw-dev.docs \
+	dpkg/libodraw.docs \
+	dpkg/libodraw-tools.docs \
+	dpkg/source/format
 
 GETTEXT_FILES = \
 	config.rpath \

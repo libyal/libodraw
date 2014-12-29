@@ -47,6 +47,11 @@ Deployment
 
 Tests:
 
+20141229
+* updated dpkg files
+* updated dependencies
+* updated .gitignore
+
 20141129
 * code clean up
 

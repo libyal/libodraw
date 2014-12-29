@@ -1,13 +1,12 @@
 Source: libodraw
-Section: unknown
+Section: libs
 Priority: extra
 Maintainer: Joachim Metz <joachim.metz@gmail.com>
 Build-Depends: debhelper (>= 7), autotools-dev, libssl-dev
-Standards-Version: 3.8.3
+Standards-Version: 3.9.5
 Homepage: https://github.com/libyal/libodraw/
 
 Package: libodraw
-Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: libodraw-dbg
@@ -17,21 +16,21 @@ Description: Library to access optical disc (split) RAW formats
 Package: libodraw-dbg
 Architecture: any
 Section: debug
-Depends: libodraw (= ${Source-Version}), ${misc:Depends}
+Depends: libodraw (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for libodraw
  Debugging symbols for libodraw.
 
 Package: libodraw-dev
 Section: libdevel
 Architecture: any
-Depends: libodraw (= ${Source-Version})
+Depends: libodraw (= ${binary:Version}), ${misc:Depends}
 Description: Header files and libraries for developing applications for libodraw
  Header files and libraries for developing applications for libodraw.
 
 Package: libodraw-tools
 Section: utils
 Architecture: any
-Depends: libodraw (= ${Source-Version}), ${shlibs:Depends}
+Depends: libodraw (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Several tools for accessing optical disc (split) RAW formats
  Several tools for accessing optical disc (split) RAW formats.
 
