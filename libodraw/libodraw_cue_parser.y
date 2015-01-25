@@ -72,6 +72,9 @@
 /* %name-prefix="cue_scanner_" replaced by -p cue_scanner_ */
 /* %no-lines replaced by -l */
 
+%lex-param { NULL }
+%parse-param { void *parser_state }
+
 %start cue_main
 
 %union
@@ -224,6 +227,7 @@ extern int cue_scanner_lex(
             void *user_data );
 
 extern void cue_scanner_error(
+             void *parser_state,
              const char *error_string );
 
 extern YY_BUFFER_STATE cue_scanner__scan_buffer(

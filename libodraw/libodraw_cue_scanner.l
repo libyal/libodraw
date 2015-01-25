@@ -374,6 +374,7 @@ int cue_scanner_wrap(
 }
 
 void cue_scanner_error(
+      void *parser_state,
       const char *error_string )
 {
 	if( cue_scanner_suppress_error == 0 )
