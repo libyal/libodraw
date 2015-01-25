@@ -13,22 +13,21 @@ function ExtractZip($Filename, $Destination)
 	# AppVeyor does not seem to support extraction using "native ZIP" so we use 7z instead.
 	$SevenZip = "C:\Program Files\7-Zip\7z.exe"
 
+	if (-Not (Test-Path ${Destination}))
+	{
+		New-Item -ItemType directory -Path ${Destination} -Force | Out-Null
+	}
 	if (Test-Path ${SevenZip})
 	{
 		# PowerShell will raise NativeCommandError if 7z writes to stdout or stderr
 		# therefore 2>&1 is added and the output is stored in a variable.
 		# The leading & and single quotes are necessary to compensate for the spaces in the path.
-		$Output = Invoke-Expression -Command "& '${SevenZip}' -y -o ${Destination} x ${Filename} 2>&1"
+		$Output = Invoke-Expression -Command "& '${SevenZip}' x ${Filename} -y -o${Destination} 2>&1"
 	}
 	else
 	{
 		$Shell = New-Object -ComObject Shell.Application
 		$Archive = ${Shell}.NameSpace(${Filename})
-
-		if (-Not (Test-Path ${Destination}))
-		{
-			New-Item -ItemType directory -Path ${Destination} -Force | Out-Null
-		}
 		$Directory = ${Shell}.Namespace(${Destination})
 
 		foreach($FileEntry in ${Archive}.items())
@@ -53,7 +52,7 @@ if (Test-Path ${ExtractedPath})
 {
 	Remove-Item -Path ${ExtractedPath} -Force -Recurse
 }
-ExtractZip -Filename ${Filename} -Destination "${pwd}\${ExtractedPath}"
+ExtractZip -Filename ${Filename} -Destination ${ExtractedPath}
 
 if (Test-Path ${DestinationPath})
 {
