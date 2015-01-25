@@ -22,7 +22,7 @@ function ExtractZip($Filename, $Destination)
 		# PowerShell will raise NativeCommandError if 7z writes to stdout or stderr
 		# therefore 2>&1 is added and the output is stored in a variable.
 		# The leading & and single quotes are necessary to compensate for the spaces in the path.
-		$Output = Invoke-Expression -Command "& '${SevenZip}' x ${Filename} -y -o${Destination} 2>&1"
+		$Output = Invoke-Expression -Command "& '${SevenZip}' -y -o${Destination} x ${Filename} 2>&1"
 	}
 	else
 	{
