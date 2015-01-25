@@ -52,7 +52,7 @@ if (Test-Path ${ExtractedPath})
 {
 	Remove-Item -Path ${ExtractedPath} -Force -Recurse
 }
-ExtractZip -Filename ${Filename} -Destination ${ExtractedPath}
+ExtractZip -Filename ${Filename} -Destination "${pwd}\${ExtractedPath}"
 
 if (Test-Path ${DestinationPath})
 {
