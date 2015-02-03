@@ -72,7 +72,7 @@
 /* %name-prefix="cue_scanner_" replaced by -p cue_scanner_ */
 /* %no-lines replaced by -l */
 
-%lex-param { NULL }
+%lex-param { (void *) NULL }
 %parse-param { void *parser_state }
 
 %start cue_main
