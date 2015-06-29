@@ -25,12 +25,12 @@
 
 #include "byte_size_string.h"
 #include "digest_hash.h"
+#include "log_handle.h"
 #include "odrawtools_libcerror.h"
 #include "odrawtools_libcsplit.h"
 #include "odrawtools_libcstring.h"
 #include "odrawtools_libhmac.h"
 #include "odrawtools_libodraw.h"
-#include "log_handle.h"
 #include "process_status.h"
 #include "storage_media_buffer.h"
 #include "verification_handle.h"

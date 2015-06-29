@@ -26,11 +26,11 @@
 #include <types.h>
 
 #include "digest_hash.h"
+#include "log_handle.h"
 #include "odrawtools_libcerror.h"
 #include "odrawtools_libcstring.h"
 #include "odrawtools_libodraw.h"
 #include "odrawtools_libhmac.h"
-#include "log_handle.h"
 #include "storage_media_buffer.h"
 
 #if defined( __cplusplus )
