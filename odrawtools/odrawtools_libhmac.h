@@ -33,7 +33,15 @@
 #include <libhmac_support.h>
 #include <libhmac_types.h>
 
-#elif defined( HAVE_LIBHMAC_H )
+#else
+
+/* If libtool DLL support is enabled set LIBHMAC_DLL_IMPORT
+ * before including libhmac.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBHMAC_DLL_IMPORT
+#endif
+
 #include <libhmac.h>
 
 #endif
