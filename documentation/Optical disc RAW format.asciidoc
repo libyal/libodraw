@@ -381,8 +381,8 @@ The physical sector size of a DVD is 2048 bytes.
 | Title: | Herong's Tutorial Notes on CD/DVD
 | Author(s): | Dr. Herong Yang
 | Date: | 2007
+| URL: | http://www.herongyang.com/CD-DVD/index.html
 |===
-URL: | http://www.herongyang.com/CD-DVD/index.html
 
 [appendix]
 == GNU Free Documentation License
