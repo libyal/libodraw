@@ -102,7 +102,7 @@ remaining 27-bits is used to store a unique synchronization sequence.
 98 frames are grouped into a single sector which results in a sector size of 
 98 x 24 = 2352 bytes.
 
-[yellow-background]*16-bit stereo *
+[yellow-background]*16-bit stereo*
 
 === CD-ROM Mode 0
 
@@ -240,8 +240,8 @@ For data integrity the same information is stored in bytes 0 to 3 and 4 to 7.
 ===== CD-ROM XA channel number
 Channel number:
 
-* 0 – 15 valid for ADPCM audio sectors
-* 0 – 31 valid for VCD and data sectors
+* 0 - 15 valid for ADPCM audio sectors
+* 0 - 31 valid for VCD and data sectors
 
 ===== CD-ROM XA sub-mode flags
 
