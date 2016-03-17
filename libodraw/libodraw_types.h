@@ -33,7 +33,7 @@
 
 /* The following type definitions hide internal data structures
  */
-#if defined( HAVE_DEBUG_OUTPUT )
+#if defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI )
 typedef struct libodraw_data_file {}	libodraw_data_file_t;
 typedef struct libodraw_handle {}	libodraw_handle_t;
 
@@ -41,9 +41,9 @@ typedef struct libodraw_handle {}	libodraw_handle_t;
 typedef intptr_t libodraw_data_file_t;
 typedef intptr_t libodraw_handle_t;
 
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI ) */
 
 #endif /* defined( HAVE_LOCAL_LIBODRAW ) */
 
-#endif
+#endif /* !defined( _LIBODRAW_INTERNAL_TYPES_H ) */
 

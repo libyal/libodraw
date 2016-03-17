@@ -283,21 +283,6 @@ ssize_t libodraw_handle_read_buffer_at_offset(
          off64_t offset,
          libodraw_error_t **error );
 
-/* Reads (media) data at a specific offset
- *
- * This function is deprecated use libodraw_handle_read_buffer_at_offset instead
- *
- * Returns the number of bytes read or -1 on error
- */
-LIBODRAW_DEPRECATED \
-LIBODRAW_EXTERN \
-ssize_t libodraw_handle_read_random(
-         libodraw_handle_t *handle,
-         void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         libodraw_error_t **error );
-
 #ifdef TODO_WRITE_SUPPORT
 
 /* Writes a buffer to the handle

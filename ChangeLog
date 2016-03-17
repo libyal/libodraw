@@ -47,6 +47,10 @@ Deployment
 
 Tests:
 
+20160317
+* code clean up
+* remove read random functions
+
 20160110
 * 2016 update
 

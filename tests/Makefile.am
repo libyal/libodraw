@@ -12,6 +12,8 @@ AM_CPPFLAGS = \
 	@LIBCFILE_CPPFLAGS@ \
 	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
+	@LIBCSYSTEM_CPPFLAGS@ \
+	@PTHREAD_CPPFLAGS@ \
 	@LIBODRAW_DLL_IMPORT@
 
 TESTS = \
@@ -48,9 +50,11 @@ odraw_test_open_close_SOURCES = \
 	odraw_test_unused.h
 
 odraw_test_open_close_LDADD = \
+	@LIBCSYSTEM_LIBADD@ \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCSTRING_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 odraw_test_read_SOURCES = \
 	odraw_test_libcerror.h \
@@ -62,7 +66,8 @@ odraw_test_read_SOURCES = \
 odraw_test_read_LDADD = \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCSTRING_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 odraw_test_seek_SOURCES = \
 	odraw_test_libcerror.h \
@@ -74,7 +79,8 @@ odraw_test_seek_SOURCES = \
 odraw_test_seek_LDADD = \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCSTRING_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 odraw_test_set_ascii_codepage_SOURCES = \
 	odraw_test_libcerror.h \
@@ -88,7 +94,8 @@ odraw_test_set_ascii_codepage_LDADD = \
 	../libodraw/libodraw.la \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCSTRING_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

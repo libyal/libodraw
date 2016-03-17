@@ -53,11 +53,11 @@ LIBODRAW_EXTERN \
 int libodraw_notify_stream_close(
      libcerror_error_t **error );
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBODRAW ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_NOTIFY_H ) */
 

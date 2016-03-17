@@ -40,5 +40,5 @@
 	/* parameter */
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_INTERNAL_UNUSED_H ) */
 

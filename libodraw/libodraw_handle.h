@@ -256,14 +256,6 @@ ssize_t libodraw_handle_read_buffer_at_offset(
          off64_t offset,
          libcerror_error_t **error );
 
-LIBODRAW_EXTERN \
-ssize_t libodraw_handle_read_random(
-         libodraw_handle_t *handle,
-         void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         libcerror_error_t **error );
-
 #ifdef TODO_WRITE_SUPPORT
 
 LIBODRAW_EXTERN \
@@ -282,6 +274,12 @@ ssize_t libodraw_handle_write_buffer_at_offset(
          libcerror_error_t **error );
 
 #endif /* TODO_WRITE_SUPPORT */
+
+off64_t libodraw_internal_handle_seek_offset(
+         libodraw_internal_handle_t *internal_handle,
+         off64_t offset,
+         int whence,
+         libcerror_error_t **error );
 
 LIBODRAW_EXTERN \
 off64_t libodraw_handle_seek_offset(

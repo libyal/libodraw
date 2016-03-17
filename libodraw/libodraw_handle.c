@@ -3828,54 +3828,6 @@ ssize_t libodraw_handle_read_buffer_at_offset(
 	return( read_count );
 }
 
-/* Reads (media) data at a specific offset
- * Returns the number of bytes read or -1 on error
- */
-ssize_t libodraw_handle_read_random(
-         libodraw_handle_t *handle,
-         void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         libcerror_error_t **error )
-{
-	static char *function = "libodraw_handle_read_random";
-	ssize_t read_count    = 0;
-
-	if( libodraw_handle_seek_offset(
-	     handle,
-	     offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek offset.",
-		 function );
-
-		return( -1 );
-	}
-	read_count = libodraw_handle_read_buffer(
-	              handle,
-	              buffer,
-	              buffer_size,
-	              error );
-
-	if( read_count <= -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read buffer.",
-		 function );
-
-		return( -1 );
-	}
-	return( read_count );
-}
-
 #ifdef TODO_WRITE_SUPPORT
 
 /* Writes a buffer
@@ -3959,20 +3911,20 @@ ssize_t libodraw_handle_write_buffer_at_offset(
 
 #endif /* TODO_WRITE_SUPPORT */
 
-/* Seeks a certain offset
- * Returns the offset or -1 on error
+/* Seeks a certain offset of the (media) data
+ * This function is not multi-thread safe acquire write lock before call
+ * Returns the offset if seek is successful or -1 on error
  */
-off64_t libodraw_handle_seek_offset(
-         libodraw_handle_t *handle,
+off64_t libodraw_internal_handle_seek_offset(
+         libodraw_internal_handle_t *internal_handle,
          off64_t offset,
          int whence,
          libcerror_error_t **error )
 {
-	libodraw_internal_handle_t *internal_handle    = NULL;
 	libodraw_sector_range_t *lead_out_sector_range = NULL;
 	libodraw_sector_range_t *run_out_sector_range  = NULL;
 	libodraw_track_value_t *track_value            = NULL;
-	static char *function                          = "libodraw_handle_seek_offset";
+	static char *function                          = "libodraw_internal_handle_seek_offset";
 	off64_t lead_out_offset                        = 0;
 	off64_t run_out_offset                         = 0;
 	off64_t track_offset                           = 0;
@@ -3980,7 +3932,7 @@ off64_t libodraw_handle_seek_offset(
 	int current_run_out                            = 0;
 	int current_track                              = 0;
 
-	if( handle == NULL )
+	if( internal_handle == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -3991,8 +3943,6 @@ off64_t libodraw_handle_seek_offset(
 
 		return( -1 );
 	}
-	internal_handle = (libodraw_internal_handle_t *) handle;
-
 	if( internal_handle->io_handle == NULL )
 	{
 		libcerror_error_set(
@@ -4143,6 +4093,92 @@ off64_t libodraw_handle_seek_offset(
 	internal_handle->current_lead_out = current_lead_out;
 	internal_handle->current_track    = current_track;
 
+	return( offset );
+}
+
+/* Seeks a certain offset of the (media) data
+ * Returns the offset if seek is successful or -1 on error
+ */
+off64_t libodraw_handle_seek_offset(
+         libodraw_handle_t *handle,
+         off64_t offset,
+         int whence,
+         libcerror_error_t **error )
+{
+	libodraw_internal_handle_t *internal_handle = NULL;
+	static char *function                       = "libodraw_handle_seek_offset";
+
+	if( handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid handle.",
+		 function );
+
+		return( -1 );
+	}
+	internal_handle = (libodraw_internal_handle_t *) handle;
+
+	if( internal_handle->data_file_io_pool == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid handle - missing data file IO pool.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_LIBODRAW_MULTI_THREAD_SUPPORT )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_handle->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	offset = libodraw_internal_handle_seek_offset(
+	          internal_handle,
+	          offset,
+	          whence,
+	          error );
+
+	if( offset == -1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek offset.",
+		 function );
+
+		offset = -1;
+	}
+#if defined( HAVE_LIBODRAW_MULTI_THREAD_SUPPORT )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_handle->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( offset );
 }
 

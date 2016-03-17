@@ -1,4 +1,4 @@
-.Dd January  5, 2015
+.Dd January 10, 2016
 .Dt libodraw 3
 .Os libodraw
 .Sh NAME
@@ -63,8 +63,6 @@ Handle functions
 .Ft ssize_t
 .Fn libodraw_handle_read_buffer_at_offset "libodraw_handle_t *handle, void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
 .Ft ssize_t
-.Fn libodraw_handle_read_random "libodraw_handle_t *handle, void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
-.Ft ssize_t
 .Fn libodraw_handle_write_buffer "libodraw_handle_t *handle, const void *buffer, size_t buffer_size, libodraw_error_t **error"
 .Ft ssize_t
 .Fn libodraw_handle_write_buffer_at_offset "libodraw_handle_t *handle, const void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
@@ -84,8 +82,6 @@ Handle functions
 .Fn libodraw_handle_get_data_file "libodraw_handle_t *handle, int index, libodraw_data_file_t **data_file, libodraw_error_t **error"
 .Ft int
 .Fn libodraw_handle_append_data_file "libodraw_handle_t *handle, const char *name, size_t name_length, uint8_t type, libodraw_error_t **error"
-.Ft #endif
-.Fn 
 .Pp
 Available when compiled with wide character string support:
 .Ft int
@@ -106,7 +102,7 @@ Meta data functions
 .Fn libodraw_handle_get_bytes_per_sector "libodraw_handle_t *handle, uint32_t *bytes_per_sector, libodraw_error_t **error"
 .Ft int
 .Fn libodraw_handle_set_bytes_per_sector "libodraw_handle_t *handle, uint32_t bytes_per_sector, libodraw_error_t **error"
-.Ft #endif int
+.Ft int
 .Fn libodraw_handle_get_number_of_sectors "libodraw_handle_t *handle, uint64_t *number_of_sectors, libodraw_error_t **error"
 .Ft int
 .Fn libodraw_handle_get_number_of_sessions "libodraw_handle_t *handle, int *number_of_sessions, libodraw_error_t **error"
@@ -136,7 +132,7 @@ Data file functions
 .Fn libodraw_data_file_get_filename "libodraw_data_file_t *data_file, char *filename, size_t filename_size, libodraw_error_t **error"
 .Ft int
 .Fn libodraw_data_file_set_filename "libodraw_data_file_t *data_file, const char *filename, size_t filename_length, libodraw_error_t **error"
-.Ft #endif int
+.Ft int
 .Fn libodraw_data_file_get_type "libodraw_data_file_t *data_file, uint8_t *type, libodraw_error_t **error"
 .Pp
 Available when compiled with wide character string support:
@@ -157,6 +153,7 @@ For the actual return values see "libodraw.h".
 None
 .Sh FILES
 None
+.Sh NOTES
 libodraw allows to be compiled with wide character support (wchar_t).
 
 To compile libodraw with wide character support use:

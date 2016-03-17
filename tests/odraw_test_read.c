@@ -20,15 +20,16 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include <stdio.h>
-
-#include "odraw_test_libcstring.h"
 #include "odraw_test_libcerror.h"
+#include "odraw_test_libcstring.h"
+#include "odraw_test_libcsystem.h"
+#include "odraw_test_libcthreads.h"
 #include "odraw_test_libodraw.h"
 #include "odraw_test_unused.h"
 
@@ -36,7 +37,8 @@
 #define ODRAW_TEST_READ_VERBOSE
  */
 
-#define ODRAW_TEST_READ_BUFFER_SIZE	4096
+#define ODRAW_TEST_READ_BUFFER_SIZE		4096
+#define ODRAW_TEST_READ_NUMBER_OF_THREADS	4
 
 /* Tests libodraw_handle_seek_offset
  * Returns 1 if successful, 0 if not or -1 on error
@@ -47,9 +49,9 @@ int odraw_test_seek_offset(
      int input_whence,
      off64_t expected_offset )
 {
-	libodraw_error_t *error = NULL;
-	off64_t result_offset  = 0;
-	int result             = 0;
+	libcerror_error_t *error = NULL;
+	off64_t result_offset    = 0;
+	int result               = 0;
 
 	if( handle == NULL )
 	{
@@ -76,11 +78,11 @@ int odraw_test_seek_offset(
 	{
 		if( result != 1 )
 		{
-			libodraw_error_backtrace_fprint(
+			libcerror_error_backtrace_fprint(
 			 error,
 			 stderr );
 		}
-		libodraw_error_free(
+		libcerror_error_free(
 		 &error );
 	}
 	return( result );
@@ -96,12 +98,12 @@ int odraw_test_read_buffer(
 {
 	uint8_t buffer[ ODRAW_TEST_READ_BUFFER_SIZE ];
 
-	libodraw_error_t *error  = NULL;
-	size64_t remaining_size = 0;
-	size64_t result_size    = 0;
-	size_t read_size        = 0;
-	ssize_t read_count      = 0;
-	int result              = 0;
+	libcerror_error_t *error = NULL;
+	size64_t remaining_size  = 0;
+	size64_t result_size     = 0;
+	size_t read_size         = 0;
+	ssize_t read_count       = 0;
+	int result               = 0;
 
 	if( handle == NULL )
 	{
@@ -150,11 +152,11 @@ int odraw_test_read_buffer(
 	{
 		if( result != 1 )
 		{
-			libodraw_error_backtrace_fprint(
+			libcerror_error_backtrace_fprint(
 			 error,
 			 stderr );
 		}
-		libodraw_error_free(
+		libcerror_error_free(
 		 &error );
 	}
 	return( result );
@@ -172,13 +174,13 @@ int odraw_test_read_buffer_at_offset(
 {
 	uint8_t buffer[ ODRAW_TEST_READ_BUFFER_SIZE ];
 
-	libodraw_error_t *error  = NULL;
-	off64_t result_offset   = 0;
-	size64_t remaining_size = 0;
-	size64_t result_size    = 0;
-	size_t read_size        = 0;
-	ssize_t read_count      = 0;
-	int result              = 0;
+	libcerror_error_t *error = NULL;
+	off64_t result_offset    = 0;
+	size64_t remaining_size  = 0;
+	size64_t result_size     = 0;
+	size_t read_size         = 0;
+	ssize_t read_count       = 0;
+	int result               = 0;
 
 	if( handle == NULL )
 	{
@@ -265,11 +267,11 @@ int odraw_test_read_buffer_at_offset(
 	{
 		if( result != 1 )
 		{
-			libodraw_error_backtrace_fprint(
+			libcerror_error_backtrace_fprint(
 			 error,
 			 stderr );
 		}
-		libodraw_error_free(
+		libcerror_error_free(
 		 &error );
 	}
 	return( result );
@@ -368,7 +370,7 @@ int odraw_test_read_from_handle(
 	{
 		fprintf(
 		 stderr,
-		 "Volume size exceeds maximum.\n" );
+		 "Media size exceeds maximum.\n" );
 
 		return( -1 );
 	}
@@ -414,7 +416,7 @@ int odraw_test_read_from_handle(
 		return( result );
 	}
 
-	/* Case 1: test random read
+	/* Case 1: test buffer at offset read
 	 */
 
 	/* Test: offset: <media_size / 7> size: <media_size / 2>
@@ -541,7 +543,7 @@ int odraw_test_read_from_handle(
 			return( result );
 		}
 	}
-	/* Case 3: test read buffer at offset
+	/* Case 3: test buffer at offset read
 	 */
 
 	/* Test: offset: <media_size / 7> size: <media_size / 2>
@@ -583,6 +585,271 @@ int odraw_test_read_from_handle(
 	return( 1 );
 }
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT )
+
+/* The thread pool callback function
+ * Returns 1 if successful or -1 on error
+ */
+int odraw_test_read_callback_function(
+     libodraw_handle_t *handle,
+     void *arguments ODRAW_TEST_ATTRIBUTE_UNUSED )
+{
+	uint8_t buffer[ ODRAW_TEST_READ_BUFFER_SIZE ];
+
+	libcerror_error_t *error = NULL;
+	static char *function    = "odraw_test_read_callback_function";
+	size_t read_size         = ODRAW_TEST_READ_BUFFER_SIZE;
+	ssize_t read_count       = 0;
+	int number_of_iterations = 3;
+
+	ODRAW_TEST_UNREFERENCED_PARAMETER( arguments )
+
+	if( handle == NULL )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid handle.",
+		 function );
+
+		goto on_error;
+	}
+	while( number_of_iterations > 0 )
+	{
+		read_count = libodraw_handle_read_buffer(
+		              handle,
+		              buffer,
+		              read_size,
+		              &error );
+
+		if( read_count != (ssize_t) read_size )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read from handle.",
+			 function );
+
+			goto on_error;
+		}
+		number_of_iterations--;
+
+		if( number_of_iterations > 0 )
+		{
+			if( libodraw_handle_seek_offset(
+			     handle,
+			     (off64_t) -read_size,
+			     SEEK_CUR,
+			     &error ) == -1 )
+			{
+				libcerror_error_set(
+				 &error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_SEEK_FAILED,
+				 "%s: unable to seek in handle.",
+				 function );
+
+				goto on_error;
+			}
+		}
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stderr );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( -1 );
+}
+
+/* Tests reading data from a handle in multiple threads
+ * This test requires multi-threading support
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int odraw_test_read_from_handle_multi_thread(
+     libodraw_handle_t *handle,
+     size64_t media_size,
+     int number_of_threads )
+{
+	libcerror_error_t *error               = NULL;
+	libcthreads_thread_pool_t *thread_pool = NULL;
+	static char *function                  = "odraw_test_read_from_handle_multi_thread";
+	off64_t expected_offset                = 0;
+	off64_t result_offset                  = 0;
+	int iteration                          = 0;
+	int number_of_iterations               = 0;
+	int result                             = 0;
+
+	if( handle == NULL )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid handle.",
+		 function );
+
+		goto on_error;
+	}
+	if( libodraw_handle_seek_offset(
+	     handle,
+	     0,
+	     SEEK_SET,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek in handle.",
+		 function );
+
+		goto on_error;
+	}
+	if( number_of_threads > 1 )
+	{
+		number_of_iterations = number_of_threads * 32;
+
+		expected_offset = (off64_t) number_of_iterations * ODRAW_TEST_READ_BUFFER_SIZE;
+
+		if( (size64_t) expected_offset > media_size )
+		{
+			expected_offset = media_size;
+
+			number_of_iterations = media_size / ODRAW_TEST_READ_BUFFER_SIZE;
+
+			if( ( media_size % ODRAW_TEST_READ_BUFFER_SIZE ) != 0 )
+			{
+				number_of_iterations += 1;
+			}
+		}
+		if( libcthreads_thread_pool_create(
+		     &thread_pool,
+		     NULL,
+		     number_of_threads,
+		     number_of_iterations,
+		     (int (*)(intptr_t *, void *)) &odraw_test_read_callback_function,
+		     NULL,
+		     &error ) != 1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create thread pool.",
+			 function );
+
+			goto on_error;
+		}
+		for( iteration = 0;
+		     iteration < number_of_iterations;
+		     iteration++ )
+		{
+			if( libcthreads_thread_pool_push(
+			     thread_pool,
+			     (intptr_t *) handle,
+			     &error ) == -1 )
+			{
+				libcerror_error_set(
+				 &error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+				 "%s: unable to push handle onto queue.",
+				 function );
+
+				goto on_error;
+			}
+		}
+		if( libcthreads_thread_pool_join(
+		     &thread_pool,
+		     &error ) != 1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to join thread pool.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	if( libodraw_handle_get_offset(
+	     handle,
+	     &result_offset,
+	     &error ) != 1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve offset.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing multi-threaded read buffer at offset: 0\t" );
+
+	if( expected_offset != result_offset )
+	{
+		fprintf(
+		 stderr,
+		 "Unexpected offset: %" PRIi64 "\n",
+		 result_offset );
+	}
+	else
+	{
+		result = 1;
+	}
+	if( result == 1 )
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	return( result );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stderr );
+
+		libcerror_error_free(
+		 &error );
+	}
+	if( thread_pool != NULL )
+	{
+		libcthreads_thread_pool_join(
+		 &thread_pool,
+		 NULL );
+	}
+	return( -1 );
+}
+
+#endif /* defined( HAVE_MULTI_THREAD_SUPPORT ) */
+
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
@@ -591,18 +858,39 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libodraw_error_t *error   = NULL;
-	libodraw_handle_t *handle = NULL;
-	size64_t media_size       = 0;
+	libcerror_error_t *error              = NULL;
+	libodraw_handle_t *handle             = NULL;
+	libcstring_system_character_t *source = NULL;
+	libcstring_system_integer_t option    = 0;
+	size64_t media_size                   = 0;
 
-	if( argc < 2 )
+	while( ( option = libcsystem_getopt(
+	                   argc,
+	                   argv,
+	                   _LIBCSTRING_SYSTEM_STRING( "" ) ) ) != (libcstring_system_integer_t) -1 )
+	{
+		switch( option )
+		{
+			case (libcstring_system_integer_t) '?':
+			default:
+				fprintf(
+				 stderr,
+				 "Invalid argument: %" PRIs_LIBCSTRING_SYSTEM ".\n",
+				 argv[ optind - 1 ] );
+
+				return( EXIT_FAILURE );
+		}
+	}
+	if( optind == argc )
 	{
 		fprintf(
 		 stderr,
-		 "Missing filename.\n" );
+		 "Missing source file or device.\n" );
 
 		return( EXIT_FAILURE );
 	}
+	source = argv[ optind ];
+
 #if defined( HAVE_DEBUG_OUTPUT ) && defined( ODRAW_TEST_READ_VERBOSE )
 	libodraw_notify_set_verbose(
 	 1 );
@@ -625,20 +913,20 @@ int main( int argc, char * const argv[] )
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libodraw_handle_open_wide(
 	     handle,
-	     argv[ 1 ],
+	     source,
 	     LIBODRAW_OPEN_READ,
 	     &error ) != 1 )
 #else
 	if( libodraw_handle_open(
 	     handle,
-	     argv[ 1 ],
+	     source,
 	     LIBODRAW_OPEN_READ,
 	     &error ) != 1 )
 #endif
 	{
 		fprintf(
 		 stderr,
-		 "Unable to open file.\n" );
+		 "Unable to open handle.\n" );
 
 		goto on_error;
 	}
@@ -678,6 +966,21 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
+/* TODO implement thread support
+#if defined( HAVE_MULTI_THREAD_SUPPORT )
+	if( odraw_test_read_from_handle_multi_thread(
+	     handle,
+	     media_size,
+	     ODRAW_TEST_READ_NUMBER_OF_THREADS ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to read from handle in multiple threads.\n" );
+
+		goto on_error;
+	}
+#endif
+*/
 	/* Clean up
 	 */
 	if( libodraw_handle_close(
@@ -705,10 +1008,10 @@ int main( int argc, char * const argv[] )
 on_error:
 	if( error != NULL )
 	{
-		libodraw_error_backtrace_fprint(
+		libcerror_error_backtrace_fprint(
 		 error,
 		 stderr );
-		libodraw_error_free(
+		libcerror_error_free(
 		 &error );
 	}
 	if( handle != NULL )

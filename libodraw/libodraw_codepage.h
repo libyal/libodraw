@@ -80,11 +80,11 @@ enum LIBODRAW_CODEPAGES
 	LIBODRAW_CODEPAGE_WINDOWS_1258			= 1258
 };
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBODRAW ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_INTERNAL_CODEPAGE_H ) */
 
