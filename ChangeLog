@@ -1,6 +1,7 @@
 TODO:
 * fix verbose/debug output issue in IO handle regarding sector mode
-* remove libodraw_handle_read_random
+* add Python bindings
+* add thread safely
 
 * find a solution for
   - redefinition of _FILE_OFFSET_BITS for Solaris
@@ -43,7 +44,6 @@ Tools:
 Deployment
 * check man pages
 * check functions included in configure.ac
-* add examples
 
 Tests:
 
