@@ -1,10 +1,13 @@
 # Files to ignore by git
 #
-# Version: 20151228
+# Version: 20160507
 
 # Generic auto-generated build files
 *~
 *.a
+*.gcda
+*.gcno
+*.gcov
 *.la
 *.lai
 *.lib
@@ -123,6 +126,7 @@ stamp-h[1-9]
 /odrawtools/odrawinfo
 /odrawtools/odrawverify
 /tests/input
+/tests/odraw_test_get_version
 /tests/odraw_test_open_close
 /tests/odraw_test_read
 /tests/odraw_test_seek

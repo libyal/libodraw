@@ -46,7 +46,7 @@ struct info_handle
 	 */
 	uint8_t ignore_data_files;
 
-	/* The nofication output stream
+	/* The notification output stream
 	 */
 	FILE *notify_stream;
 };

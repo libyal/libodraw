@@ -17,30 +17,37 @@ AM_CPPFLAGS = \
 	@LIBODRAW_DLL_IMPORT@
 
 TESTS = \
+	test_api_functions.sh \
 	test_set_ascii_codepage.sh \
-	test_open_close.sh \
-	test_seek.sh \
-	test_read.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh
 
 check_SCRIPTS = \
+	test_api_functions.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh \
-	test_open_close.sh \
-	test_read.sh \
 	test_runner.sh \
-	test_seek.sh \
 	test_set_ascii_codepage.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	odraw_test_get_version \
 	odraw_test_open_close \
 	odraw_test_read \
 	odraw_test_seek \
 	odraw_test_set_ascii_codepage
+
+odraw_test_get_version_SOURCES = \
+	odraw_test_get_version.c \
+	odraw_test_libcstring.h \
+	odraw_test_libodraw.h \
+	odraw_test_unused.h
+
+odraw_test_get_version_LDADD = \
+	../libodraw/libodraw.la \
+	@LIBCSTRING_LIBADD@
 
 odraw_test_open_close_SOURCES = \
 	odraw_test_libcerror.h \

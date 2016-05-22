@@ -13,6 +13,7 @@ MSVSCPP_FILES = \
 	libhmac/libhmac.vcproj \
 	libodraw/libodraw.vcproj \
 	libuna/libuna.vcproj \
+	odraw_test_get_version/odraw_test_get_version.vcproj \
 	odraw_test_open_close/odraw_test_open_close.vcproj \
 	odraw_test_read/odraw_test_read.vcproj \
 	odraw_test_seek/odraw_test_seek.vcproj \
