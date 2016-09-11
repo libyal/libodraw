@@ -85,6 +85,7 @@ odraw_test_read_SOURCES = \
 
 odraw_test_read_LDADD = \
 	../libodraw/libodraw.la \
+	@LIBCTHREADS_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCSTRING_LIBADD@ \
 	@PTHREAD_LIBADD@
