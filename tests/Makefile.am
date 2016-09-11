@@ -84,6 +84,7 @@ odraw_test_read_SOURCES = \
 	odraw_test_unused.h
 
 odraw_test_read_LDADD = \
+	@LIBCSYSTEM_LIBADD@ \
 	../libodraw/libodraw.la \
 	@LIBCTHREADS_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
@@ -98,6 +99,7 @@ odraw_test_seek_SOURCES = \
 	odraw_test_unused.h
 
 odraw_test_seek_LDADD = \
+	@LIBCSYSTEM_LIBADD@ \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBCSTRING_LIBADD@ \
