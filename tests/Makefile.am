@@ -33,16 +33,29 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	odraw_test_error \
 	odraw_test_get_version \
 	odraw_test_open_close \
 	odraw_test_read \
 	odraw_test_seek \
 	odraw_test_set_ascii_codepage
 
+odraw_test_error_SOURCES = \
+	odraw_test_error.c \
+	odraw_test_libcstring.h \
+	odraw_test_libodraw.h \
+	odraw_test_macros.h \
+	odraw_test_unused.h
+
+odraw_test_error_LDADD = \
+	../libodraw/libodraw.la \
+	@LIBCSTRING_LIBADD@
+
 odraw_test_get_version_SOURCES = \
 	odraw_test_get_version.c \
 	odraw_test_libcstring.h \
 	odraw_test_libodraw.h \
+	odraw_test_macros.h \
 	odraw_test_unused.h
 
 odraw_test_get_version_LDADD = \

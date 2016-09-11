@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="odraw_test_get_version"
-	ProjectGUID="{8FA5A597-4350-4D99-9353-24267E98EC3E}"
-	RootNamespace="odraw_test_get_version"
+	Name="odraw_test_error"
+	ProjectGUID="{7CBE8F86-11C3-4D09-9E2B-D3610F7D980C}"
+	RootNamespace="odraw_test_error"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\odraw_test_get_version.c"
+				RelativePath="..\..\tests\odraw_test_error.c"
 				>
 			</File>
 		</Filter>

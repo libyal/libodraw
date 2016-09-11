@@ -13,6 +13,7 @@ MSVSCPP_FILES = \
 	libhmac/libhmac.vcproj \
 	libodraw/libodraw.vcproj \
 	libuna/libuna.vcproj \
+	odraw_test_error/odraw_test_error.vcproj \
 	odraw_test_get_version/odraw_test_get_version.vcproj \
 	odraw_test_open_close/odraw_test_open_close.vcproj \
 	odraw_test_read/odraw_test_read.vcproj \
@@ -22,17 +23,8 @@ MSVSCPP_FILES = \
 	odrawverify/odrawverify.vcproj \
 	libodraw.sln
 
-SCRIPT_FILES = \
-	scripts/vs2008_x64.sh \
-	scripts/vs2008_x64_sln.sed \
-	scripts/vs2008_x64_vcproj.sed \
-	scripts/vs2010_x64.sh \
-	scripts/vs2010_x64_sln.sed \
-	scripts/vs2010_x64_vcxproj.sed
-
 EXTRA_DIST = \
-	$(MSVSCPP_FILES) \
-	$(SCRIPT_FILES)
+	$(MSVSCPP_FILES)
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

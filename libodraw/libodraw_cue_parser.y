@@ -243,7 +243,7 @@ static char *cue_parser_function = "cue_parser";
 
 int cue_parser_parse_buffer(
      libodraw_handle_t *handle,
-     uint8_t *buffer,
+     const uint8_t *buffer,
      size_t buffer_size,
      libcerror_error_t **error );
 
@@ -1233,7 +1233,7 @@ cue_empty_line
 
 int cue_parser_parse_buffer(
      libodraw_handle_t *handle,
-     uint8_t *buffer,
+     const uint8_t *buffer,
      size_t buffer_size,
      libcerror_error_t **error )
 {

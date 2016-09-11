@@ -45,7 +45,7 @@
 
 extern int cue_parser_parse_buffer(
             libodraw_handle_t *handle,
-            uint8_t *buffer,
+            const uint8_t *buffer,
             size_t buffer_size,
             libcerror_error_t **error );
 
@@ -1867,7 +1867,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to empty data file descriptors array.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( libcdata_array_empty(
 	     internal_handle->sessions_array,
@@ -1881,7 +1881,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to empty sessions array.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( libcdata_array_empty(
 	     internal_handle->run_outs_array,
@@ -1895,7 +1895,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to empty run-outs array.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( libcdata_array_empty(
 	     internal_handle->lead_outs_array,
@@ -1909,7 +1909,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to empty lead-outs array.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( libcdata_array_empty(
 	     internal_handle->tracks_array,
@@ -1923,7 +1923,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to empty tracks array.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( internal_handle->io_handle->abort != 0 )
 	{
@@ -1948,7 +1948,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to retrieve TOC file size.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( file_size > (size64_t) SSIZE_MAX )
 	{
@@ -1959,7 +1959,7 @@ int libodraw_handle_open_read(
 		 "%s: invalid file size value exceeds maximum.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
@@ -1982,7 +1982,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to seek TOC file offset: 0.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	/* Lex wants 2 zero bytes at the end of the buffer
 	 */
@@ -2000,7 +2000,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to create buffer.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
@@ -2017,10 +2017,7 @@ int libodraw_handle_open_read(
 		 "%s: unable to read TOC file data.",
 		 function );
 
-		memory_free(
-		 buffer );
-
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
@@ -2045,7 +2042,7 @@ int libodraw_handle_open_read(
 	          buffer_size,
 	          error );
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -2053,15 +2050,27 @@ int libodraw_handle_open_read(
 		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to parse file data.",
 		 function );
+
+		goto on_error;
 	}
 	memory_free(
 	 buffer );
+
+	buffer = NULL;
 
 	if( internal_handle->io_handle->abort != 0 )
 	{
 		internal_handle->io_handle->abort = 0;
 	}
 	return( result );
+
+on_error:
+	if( buffer != NULL )
+	{
+		memory_free(
+		 buffer );
+	}
+	return( -1 );
 }
 
 /* Reads a buffer
