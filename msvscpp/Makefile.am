@@ -14,11 +14,11 @@ MSVSCPP_FILES = \
 	libodraw/libodraw.vcproj \
 	libuna/libuna.vcproj \
 	odraw_test_error/odraw_test_error.vcproj \
-	odraw_test_get_version/odraw_test_get_version.vcproj \
 	odraw_test_open_close/odraw_test_open_close.vcproj \
 	odraw_test_read/odraw_test_read.vcproj \
 	odraw_test_seek/odraw_test_seek.vcproj \
 	odraw_test_set_ascii_codepage/odraw_test_set_ascii_codepage.vcproj \
+	odraw_test_support/odraw_test_support.vcproj \
 	odrawinfo/odrawinfo.vcproj \
 	odrawverify/odrawverify.vcproj \
 	libodraw.sln

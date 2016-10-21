@@ -127,12 +127,12 @@ stamp-h[1-9]
 /odrawtools/odrawverify
 /tests/input
 /tests/odraw_test_error
-/tests/odraw_test_get_version
 /tests/odraw_test_notify
 /tests/odraw_test_open_close
 /tests/odraw_test_read
 /tests/odraw_test_seek
 /tests/odraw_test_set_ascii_codepage
+/tests/odraw_test_support
 /tests/tmp*
 
 # Local library dependencies specific files
