@@ -14,6 +14,7 @@ MSVSCPP_FILES = \
 	libodraw/libodraw.vcproj \
 	libuna/libuna.vcproj \
 	odraw_test_error/odraw_test_error.vcproj \
+	odraw_test_notify/odraw_test_notify.vcproj \
 	odraw_test_open_close/odraw_test_open_close.vcproj \
 	odraw_test_read/odraw_test_read.vcproj \
 	odraw_test_seek/odraw_test_seek.vcproj \

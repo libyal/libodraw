@@ -105,19 +105,19 @@ int main(
 
 	ODRAW_TEST_RUN(
 	 "libodraw_notify_set_verbose",
-	 odraw_test_notify_set_verbose() )
+	 odraw_test_notify_set_verbose )
 
 	ODRAW_TEST_RUN(
 	 "libodraw_notify_set_stream",
-	 odraw_test_notify_set_stream() )
+	 odraw_test_notify_set_stream )
 
 	ODRAW_TEST_RUN(
 	 "libodraw_notify_stream_open",
-	 odraw_test_notify_stream_open() )
+	 odraw_test_notify_stream_open )
 
 	ODRAW_TEST_RUN(
 	 "libodraw_notify_stream_close",
-	 odraw_test_notify_stream_close() )
+	 odraw_test_notify_stream_close )
 
 	return( EXIT_SUCCESS );
 

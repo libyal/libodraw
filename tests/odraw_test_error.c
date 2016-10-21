@@ -123,23 +123,23 @@ int main(
 
 	ODRAW_TEST_RUN(
 	 "libodraw_error_free",
-	 odraw_test_error_free() )
+	 odraw_test_error_free );
 
 	ODRAW_TEST_RUN(
 	 "libodraw_error_fprint",
-	 odraw_test_error_fprint() )
+	 odraw_test_error_fprint );
 
 	ODRAW_TEST_RUN(
 	 "libodraw_error_sprint",
-	 odraw_test_error_sprint() )
+	 odraw_test_error_sprint );
 
 	ODRAW_TEST_RUN(
 	 "libodraw_error_backtrace_fprint",
-	 odraw_test_error_backtrace_fprint() )
+	 odraw_test_error_backtrace_fprint );
 
 	ODRAW_TEST_RUN(
 	 "libodraw_error_backtrace_sprint",
-	 odraw_test_error_backtrace_sprint() )
+	 odraw_test_error_backtrace_sprint );
 
 	return( EXIT_SUCCESS );
 

@@ -23,3 +23,6 @@ before_build:
 build:
   project: vs2010\libodraw.sln
 
+test_script:
+  - ps: .\runtests.ps1
+
