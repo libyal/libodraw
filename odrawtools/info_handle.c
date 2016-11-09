@@ -22,7 +22,10 @@
 #include <common.h>
 #include <byte_stream.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #if defined( HAVE_SYS_UTSNAME_H )
 #include <sys/utsname.h>
@@ -30,7 +33,6 @@
 
 #include "info_handle.h"
 #include "odrawtools_libcerror.h"
-#include "odrawtools_libcstring.h"
 #include "odrawtools_libodraw.h"
 
 #define INFO_HANDLE_VALUE_SIZE			512
@@ -289,7 +291,7 @@ int info_handle_signal_abort(
  */
 int info_handle_open_input(
      info_handle_t *info_handle,
-     const libcstring_system_character_t *filename,
+     const system_character_t *filename,
      libcerror_error_t **error )
 {
 	static char *function = "info_handle_open_input";
@@ -316,7 +318,7 @@ int info_handle_open_input(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libodraw_handle_open_wide(
 	     info_handle->input_handle,
 	     filename,
@@ -412,14 +414,14 @@ int info_handle_data_files_fprint(
      info_handle_t *info_handle,
      libcerror_error_t **error )
 {
-	libcstring_system_character_t *filename = NULL;
-	libodraw_data_file_t *data_file         = NULL;
-	static char *function                   = "info_handle_data_files_fprint";
-	size_t filename_size                    = 0;
-	uint8_t data_file_type                  = 0;
-	int data_file_index                     = 0;
-	int number_of_data_files                = 0;
-	int result                              = 0;
+	libodraw_data_file_t *data_file = NULL;
+	system_character_t *filename    = NULL;
+	static char *function           = "info_handle_data_files_fprint";
+	size_t filename_size            = 0;
+	uint8_t data_file_type          = 0;
+	int data_file_index             = 0;
+	int number_of_data_files        = 0;
+	int result                      = 0;
 
 	if( info_handle == NULL )
 	{
@@ -488,7 +490,7 @@ int info_handle_data_files_fprint(
 
 				goto on_error;
 			}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 			result = libodraw_data_file_get_filename_size_wide(
 			          data_file,
 			          &filename_size,
@@ -513,7 +515,7 @@ int info_handle_data_files_fprint(
 			}
 			if( filename_size > 0 )
 			{
-				filename = libcstring_system_string_allocate(
+				filename = system_string_allocate(
 				            filename_size );
 
 				if( filename == NULL )
@@ -527,7 +529,7 @@ int info_handle_data_files_fprint(
 
 					goto on_error;
 				}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 				result = libodraw_data_file_get_filename_wide(
 				          data_file,
 				          filename,
@@ -572,7 +574,7 @@ int info_handle_data_files_fprint(
 				}
 				fprintf(
 				 info_handle->notify_stream,
-				 "\tfilename: %" PRIs_LIBCSTRING_SYSTEM " (type: %s)\n",
+				 "\tfilename: %" PRIs_SYSTEM " (type: %s)\n",
 				 filename,
 				 info_handle_get_data_file_type(
 				  data_file_type ) );

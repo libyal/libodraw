@@ -85,5 +85,5 @@ enum LIBODRAW_TRACK_TYPES
 	LIBODRAW_TRACK_TYPE_CDI_2352,
 };
 
-#endif
+#endif /* !defined( _LIBODRAW_DEFINITIONS_H ) */
 

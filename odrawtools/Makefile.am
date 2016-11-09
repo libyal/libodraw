@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -30,7 +29,6 @@ odrawinfo_SOURCES = \
 	odrawtools_libcerror.h \
 	odrawtools_libclocale.h \
 	odrawtools_libcnotify.h \
-	odrawtools_libcstring.h \
 	odrawtools_libcsystem.h \
 	odrawtools_libodraw.h \
 	odrawtools_libuna.h
@@ -41,7 +39,6 @@ odrawinfo_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 odrawverify_SOURCES = \
@@ -55,7 +52,6 @@ odrawverify_SOURCES = \
 	odrawtools_libclocale.h \
 	odrawtools_libcnotify.h \
 	odrawtools_libcsplit.h \
-	odrawtools_libcstring.h \
 	odrawtools_libcsystem.h \
 	odrawtools_libhmac.h \
 	odrawtools_libodraw.h \
@@ -72,7 +68,6 @@ odrawverify_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 MAINTAINERCLEANFILES = \

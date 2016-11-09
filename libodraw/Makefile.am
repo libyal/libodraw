@@ -4,7 +4,6 @@ AM_YFLAGS = -d -v -l -p cue_scanner_
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -41,7 +40,6 @@ libodraw_la_SOURCES = \
 	libodraw_libclocale.h \
 	libodraw_libcnotify.h \
 	libodraw_libcpath.h \
-	libodraw_libcstring.h \
 	libodraw_libuna.h \
 	libodraw_notify.c libodraw_notify.h \
 	libodraw_sector_range.c libodraw_sector_range.h \
@@ -51,7 +49,6 @@ libodraw_la_SOURCES = \
 	libodraw_unused.h
 
 libodraw_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCTHREADS_LIBADD@ \
 	@LIBCDATA_LIBADD@ \

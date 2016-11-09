@@ -30,7 +30,6 @@
 #include "libodraw_libbfio.h"
 #include "libodraw_libcdata.h"
 #include "libodraw_libcerror.h"
-#include "libodraw_libcstring.h"
 #include "libodraw_sector_range.h"
 #include "libodraw_track_value.h"
 #include "libodraw_types.h"
@@ -97,7 +96,7 @@ struct libodraw_internal_handle
 
 	/* The basename
 	 */
-	libcstring_system_character_t *basename;
+	system_character_t *basename;
 
 	/* The basename size
 	 */

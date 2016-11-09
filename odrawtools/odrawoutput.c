@@ -22,6 +22,7 @@
 #include <common.h>
 #include <file_stream.h>
 #include <memory.h>
+#include <system_string.h>
 #include <types.h>
 
 #include "odrawoutput.h"
@@ -29,7 +30,6 @@
 #include "odrawtools_libcerror.h"
 #include "odrawtools_libclocale.h"
 #include "odrawtools_libcnotify.h"
-#include "odrawtools_libcstring.h"
 #include "odrawtools_libcsystem.h"
 #include "odrawtools_libodraw.h"
 #include "odrawtools_libuna.h"
@@ -70,7 +70,7 @@ void odrawoutput_copyright_fprint(
  */
 void odrawoutput_version_fprint(
       FILE *stream,
-      const libcstring_system_character_t *program )
+      const system_character_t *program )
 {
 	if( stream == NULL )
 	{
@@ -82,7 +82,7 @@ void odrawoutput_version_fprint(
 	}
         fprintf(
 	 stream,
-	 "%" PRIs_LIBCSTRING_SYSTEM " %s\n\n",
+	 "%" PRIs_SYSTEM " %s\n\n",
          program,
 	 LIBODRAW_VERSION_STRING );
 }
@@ -91,7 +91,7 @@ void odrawoutput_version_fprint(
  */
 void odrawoutput_version_detailed_fprint(
       FILE *stream,
-      const libcstring_system_character_t *program )
+      const system_character_t *program )
 {
 	if( stream == NULL )
 	{
@@ -103,7 +103,7 @@ void odrawoutput_version_detailed_fprint(
 	}
         fprintf(
 	 stream,
-	 "%" PRIs_LIBCSTRING_SYSTEM " %s (libodraw %s",
+	 "%" PRIs_SYSTEM " %s (libodraw %s",
          program,
 	 LIBODRAW_VERSION_STRING,
 	 LIBODRAW_VERSION_STRING );

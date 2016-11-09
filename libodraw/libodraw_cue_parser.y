@@ -21,6 +21,7 @@
  */
 
 #include <common.h>
+#include <narrow_string.h>
 #include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
@@ -31,7 +32,6 @@
 #include "libodraw_handle.h"
 #include "libodraw_libcerror.h"
 #include "libodraw_libcnotify.h"
-#include "libodraw_libcstring.h"
 #include "libodraw_metadata.h"
 #include "libodraw_types.h"
 
@@ -452,7 +452,7 @@ cue_file
 
 		if( $3.length == 3 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "MP3",
 			     3 ) == 0 )
@@ -462,14 +462,14 @@ cue_file
 		}
 		else if( $3.length == 4 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "AIFF",
 			     4 ) == 0 )
 			{
 				( (cue_parser_state_t *) parser_state )->file_type = LIBODRAW_FILE_TYPE_AUDIO_AIFF;
 			}
-			else if( libcstring_narrow_string_compare(
+			else if( narrow_string_compare(
 			          $3.data,
 			          "WAVE",
 			          4 ) == 0 )
@@ -479,7 +479,7 @@ cue_file
 		}
 		else if( $3.length == 6 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "BINARY",
 			     6 ) == 0 )
@@ -489,7 +489,7 @@ cue_file
 		}
 		else if( $3.length == 8 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "MOTOROLA",
 			     8 ) == 0 )
@@ -1118,7 +1118,7 @@ cue_track
 
 		if( $3.length == 3 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "CDG",
 			     3 ) == 0 )
@@ -1128,7 +1128,7 @@ cue_track
 		}
 		else if( $3.length == 5 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "AUDIO",
 			     5 ) == 0 )
@@ -1138,21 +1138,21 @@ cue_track
 		}
 		else if( $3.length == 8 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "CDI",
 			     3 ) == 0 )
 			{
 				if( ( $3.data )[ 3 ] == '/' )
 				{
-					if( libcstring_narrow_string_compare(
+					if( narrow_string_compare(
 					     &( ( $3.data )[ 4 ] ),
 					     "2336",
 					     4 ) == 0 )
 					{
 						 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_CDI_2336;
 					}
-					else if( libcstring_narrow_string_compare(
+					else if( narrow_string_compare(
 						  &( ( $3.data )[ 4 ] ),
 						  "2352",
 						  4 ) == 0 )
@@ -1164,7 +1164,7 @@ cue_track
 		}
 		else if( $3.length == 10 )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     $3.data,
 			     "MODE",
 			     4 ) == 0 )
@@ -1173,14 +1173,14 @@ cue_track
 				{
 					if( ( $3.data )[ 4 ] == '1' )
 					{
-						if( libcstring_narrow_string_compare(
+						if( narrow_string_compare(
 						     &( ( $3.data )[ 6 ] ),
 						     "2048",
 						     4 ) == 0 )
 						{
 							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE1_2048;
 						}
-						else if( libcstring_narrow_string_compare(
+						else if( narrow_string_compare(
 						          &( ( $3.data )[ 6 ] ),
 						          "2352",
 						          4 ) == 0 )
@@ -1190,28 +1190,28 @@ cue_track
 					}
 					else if( ( $3.data )[ 4 ] == '2' )
 					{
-						if( libcstring_narrow_string_compare(
+						if( narrow_string_compare(
 						     &( ( $3.data )[ 6 ] ),
 						     "2048",
 						     4 ) == 0 )
 						{
 							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2048;
 						}
-						else if( libcstring_narrow_string_compare(
+						else if( narrow_string_compare(
 						          &( ( $3.data )[ 6 ] ),
 						          "2324",
 						          4 ) == 0 )
 						{
 							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2324;
 						}
-						else if( libcstring_narrow_string_compare(
+						else if( narrow_string_compare(
 						          &( ( $3.data )[ 6 ] ),
 						          "2336",
 						          4 ) == 0 )
 						{
 							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2336;
 						}
-						else if( libcstring_narrow_string_compare(
+						else if( narrow_string_compare(
 						          &( ( $3.data )[ 6 ] ),
 						          "2352",
 						          4 ) == 0 )

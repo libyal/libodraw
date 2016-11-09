@@ -21,7 +21,10 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "libodraw_codepage.h"
 #include "libodraw_cue_parser.h"
@@ -37,7 +40,6 @@
 #include "libodraw_libclocale.h"
 #include "libodraw_libcnotify.h"
 #include "libodraw_libcpath.h"
-#include "libodraw_libcstring.h"
 #include "libodraw_libuna.h"
 #include "libodraw_sector_range.h"
 #include "libodraw_track_value.h"
@@ -487,10 +489,10 @@ int libodraw_handle_open(
 
 		return( -1 );
 	}
-	filename_length = libcstring_narrow_string_length(
+	filename_length = narrow_string_length(
 	                   filename );
 
-	basename_end = libcstring_narrow_string_search_character_reverse(
+	basename_end = narrow_string_search_character_reverse(
 	                filename,
 	                (int) LIBCPATH_SEPARATOR,
 	                filename_length + 1 );
@@ -656,11 +658,11 @@ int libodraw_handle_open_wide(
 
 		return( -1 );
 	}
-	filename_length = libcstring_wide_string_length(
+	filename_length = wide_string_length(
 	                   filename );
 
 /* TODO does this work for UTF-16 ? */
-	basename_end = libcstring_wide_string_search_character_reverse(
+	basename_end = wide_string_search_character_reverse(
 	                filename,
 	                (wint_t) LIBCPATH_SEPARATOR,
 	                filename_length + 1 );
@@ -719,7 +721,7 @@ int libodraw_handle_open_wide(
 	if( libbfio_file_set_name_wide(
 	     file_io_handle,
 	     filename,
-	     libcstring_wide_string_length(
+	     wide_string_length(
 	      filename ) + 1,
 	     error ) != 1 )
 	{
@@ -913,10 +915,10 @@ int libodraw_handle_open_data_files(
      libodraw_handle_t *handle,
      libcerror_error_t **error )
 {
-	libcstring_system_character_t *data_file_location     = NULL;
-	libcstring_system_character_t *data_file_name_start   = NULL;
 	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
 	libodraw_internal_handle_t *internal_handle           = NULL;
+	system_character_t *data_file_location                = NULL;
+	system_character_t *data_file_name_start              = NULL;
 	static char *function                                 = "libodraw_handle_open_data_files";
 	size_t data_file_location_size                        = 0;
 	size_t data_file_name_size                            = 0;
@@ -1009,13 +1011,13 @@ int libodraw_handle_open_data_files(
 		}
 		if( data_file_descriptor->name_set == 0 )
 		{
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-			data_file_name_start = libcstring_wide_string_search_character_reverse(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+			data_file_name_start = wide_string_search_character_reverse(
 			                        data_file_descriptor->name,
 			                        (wint_t) LIBCPATH_SEPARATOR,
 			                        data_file_descriptor->name_size );
 #else
-			data_file_name_start = libcstring_narrow_string_search_character_reverse(
+			data_file_name_start = narrow_string_search_character_reverse(
 			                        data_file_descriptor->name,
 			                        (int) LIBCPATH_SEPARATOR,
 		        	                data_file_descriptor->name_size );
@@ -1038,7 +1040,7 @@ int libodraw_handle_open_data_files(
 		if( ( data_file_descriptor->name_set == 0 )
 		 && ( internal_handle->basename != NULL ) )
 		{
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 			if( libcpath_path_join_wide(
 			     &data_file_location,
 			     &data_file_location_size,
@@ -1073,7 +1075,7 @@ int libodraw_handle_open_data_files(
 			data_file_location      = data_file_name_start;
 			data_file_location_size = data_file_name_size;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libodraw_handle_open_data_file_wide(
 			  internal_handle,
 			  data_file_descriptor_index,
@@ -1092,7 +1094,7 @@ int libodraw_handle_open_data_files(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_OPEN_FAILED,
-			 "%s: unable to open data file: %" PRIs_LIBCSTRING_SYSTEM ".",
+			 "%s: unable to open data file: %" PRIs_SYSTEM ".",
 			 function,
 			 data_file_location );
 
@@ -1285,7 +1287,7 @@ int libodraw_handle_open_data_file(
 	if( libbfio_file_set_name(
 	     file_io_handle,
 	     filename,
-	     libcstring_narrow_string_length(
+	     narrow_string_length(
 	      filename ) + 1,
 	     error ) != 1 )
 	{
@@ -1405,7 +1407,7 @@ int libodraw_handle_open_data_file_wide(
 	if( libbfio_file_set_name_wide(
 	     file_io_handle,
 	     filename,
-	     libcstring_wide_string_length(
+	     wide_string_length(
 	      filename ) + 1,
 	     error ) != 1 )
 	{
@@ -4729,7 +4731,7 @@ int libodraw_handle_get_basename_size(
 {
 	static char *function = "libodraw_handle_get_basename_size";
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -4759,7 +4761,7 @@ int libodraw_handle_get_basename_size(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -4811,7 +4813,7 @@ int libodraw_handle_get_basename_size(
 	}
 #else
 	*basename_size = internal_handle->basename_size;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	return( 1 );
 }
@@ -4828,7 +4830,7 @@ int libodraw_handle_get_basename(
 	static char *function       = "libodraw_handle_get_basename";
 	size_t narrow_basename_size = 0;
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result                  = 0;
 #endif
 
@@ -4858,7 +4860,7 @@ int libodraw_handle_get_basename(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -4910,7 +4912,7 @@ int libodraw_handle_get_basename(
 	}
 #else
 	narrow_basename_size = internal_handle->basename_size;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	if( basename_size < narrow_basename_size )
 	{
@@ -4923,7 +4925,7 @@ int libodraw_handle_get_basename(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -4978,7 +4980,7 @@ int libodraw_handle_get_basename(
 		return( -1 );
 	}
 #else
-	if( libcstring_system_string_copy(
+	if( system_string_copy(
 	     basename,
 	     internal_handle->basename,
 	     internal_handle->basename_size ) == NULL )
@@ -4993,7 +4995,7 @@ int libodraw_handle_get_basename(
 		return( -1 );
 	}
 	basename[ internal_handle->basename_size - 1 ] = 0;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	return( 1 );
 }
@@ -5009,7 +5011,7 @@ int libodraw_handle_set_basename(
 {
 	static char *function = "libodraw_handle_set_basename";
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -5043,7 +5045,7 @@ int libodraw_handle_set_basename(
 		internal_handle->basename      = NULL;
 		internal_handle->basename_size = 0;
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -5096,7 +5098,7 @@ int libodraw_handle_set_basename(
 #else
 	internal_handle->basename_size = basename_length + 1;
 #endif
-	internal_handle->basename = libcstring_system_string_allocate(
+	internal_handle->basename = system_string_allocate(
 	                             internal_handle->basename_size );
 
 	if( internal_handle->basename == NULL )
@@ -5112,7 +5114,7 @@ int libodraw_handle_set_basename(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -5173,7 +5175,7 @@ int libodraw_handle_set_basename(
 		return( -1 );
 	}
 #else
-	if( libcstring_system_string_copy(
+	if( system_string_copy(
 	     internal_handle->basename,
 	     basename,
 	     basename_length ) == NULL )
@@ -5194,7 +5196,7 @@ int libodraw_handle_set_basename(
 		return( -1 );
 	}
 	internal_handle->basename[ basename_length ] = 0;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	return( 1 );
 }
@@ -5211,7 +5213,7 @@ int libodraw_handle_get_basename_size_wide(
 {
 	static char *function = "libodraw_handle_get_basename_size_wide";
 
-#if !defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -5241,7 +5243,7 @@ int libodraw_handle_get_basename_size_wide(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	*basename_size = internal_handle->basename_size;
 #else
 	if( libclocale_codepage == 0 )
@@ -5293,7 +5295,7 @@ int libodraw_handle_get_basename_size_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
 
@@ -5309,7 +5311,7 @@ int libodraw_handle_get_basename_wide(
 	static char *function     = "libodraw_handle_get_basename_wide";
 	size_t wide_basename_size = 0;
 
-#if !defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result                = 0;
 #endif
 
@@ -5339,7 +5341,7 @@ int libodraw_handle_get_basename_wide(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	wide_basename_size = internal_handle->basename_size;
 #else
 	if( libclocale_codepage == 0 )
@@ -5391,7 +5393,7 @@ int libodraw_handle_get_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	if( basename_size < wide_basename_size )
 	{
 		libcerror_error_set(
@@ -5403,8 +5405,8 @@ int libodraw_handle_get_basename_wide(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_system_string_copy(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	if( system_string_copy(
 	     basename,
 	     internal_handle->basename,
 	     internal_handle->basename_size ) == NULL )
@@ -5473,7 +5475,7 @@ int libodraw_handle_get_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
 
@@ -5488,7 +5490,7 @@ int libodraw_handle_set_basename_wide(
 {
 	static char *function = "libodraw_handle_set_basename_wide";
 
-#if !defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -5522,7 +5524,7 @@ int libodraw_handle_set_basename_wide(
 		internal_handle->basename      = NULL;
 		internal_handle->basename_size = 0;
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	internal_handle->basename_size = basename_length + 1;
 #else
 	if( libclocale_codepage == 0 )
@@ -5574,8 +5576,8 @@ int libodraw_handle_set_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
-	internal_handle->basename = libcstring_system_string_allocate(
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
+	internal_handle->basename = system_string_allocate(
 	                             internal_handle->basename_size );
 
 	if( internal_handle->basename == NULL )
@@ -5589,8 +5591,8 @@ int libodraw_handle_set_basename_wide(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_system_string_copy(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	if( system_string_copy(
 	     internal_handle->basename,
 	     basename,
 	     basename_length ) == NULL )
@@ -5671,7 +5673,7 @@ int libodraw_handle_set_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
 

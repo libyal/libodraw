@@ -20,12 +20,15 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <narrow_string.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include "odraw_test_libcstring.h"
+#include "odraw_test_libcerror.h"
 #include "odraw_test_libodraw.h"
 #include "odraw_test_macros.h"
 #include "odraw_test_unused.h"
@@ -41,7 +44,7 @@ int odraw_test_get_version(
 
 	version_string = libodraw_get_version();
 
-	result = libcstring_narrow_string_compare(
+	result = narrow_string_compare(
 	          version_string,
 	          LIBODRAW_VERSION_STRING,
 	          9 );
@@ -57,9 +60,133 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libodraw_get_access_flags_read function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_get_access_flags_read(
+     void )
+{
+	int access_flags = 0;
+
+	access_flags = libodraw_get_access_flags_read();
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "access_flags",
+	 access_flags,
+	 LIBODRAW_ACCESS_FLAG_READ );
+
+	return( 1 );
+
+on_error:
+	return( 0 );
+}
+
+/* Tests the libodraw_get_codepage function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_get_codepage(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int codepage             = 0;
+	int result               = 0;
+
+	result = libodraw_get_codepage(
+	          &codepage,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libodraw_get_codepage(
+	          NULL,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_set_codepage function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_set_codepage(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	result = libodraw_set_codepage(
+	          0,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libodraw_set_codepage(
+	          -1,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc ODRAW_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] ODRAW_TEST_ATTRIBUTE_UNUSED )

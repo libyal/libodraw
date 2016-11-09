@@ -27,7 +27,6 @@
 #include <types.h>
 
 #include "odrawtools_libcerror.h"
-#include "odrawtools_libcstring.h"
 #include "odrawtools_libodraw.h"
 
 #if defined( __cplusplus )
@@ -71,7 +70,7 @@ int info_handle_signal_abort(
 
 int info_handle_open_input(
      info_handle_t *info_handle,
-     const libcstring_system_character_t *filename,
+     const system_character_t *filename,
      libcerror_error_t **error );
 
 int info_handle_close(

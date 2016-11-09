@@ -1,5 +1,5 @@
 /*
- * Library notification functions test program
+ * Library data_file type testing program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -27,66 +27,48 @@
 #include <stdlib.h>
 #endif
 
+#include "odraw_test_libcerror.h"
 #include "odraw_test_libodraw.h"
 #include "odraw_test_macros.h"
+#include "odraw_test_memory.h"
 #include "odraw_test_unused.h"
 
-/* Tests the libodraw_notify_set_verbose function
+/* Tests the libodraw_data_file_free function
  * Returns 1 if successful or 0 if not
  */
-int odraw_test_notify_set_verbose(
+int odraw_test_data_file_free(
      void )
 {
-	/* Test invocation of function only
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
 	 */
-	libodraw_notify_set_verbose(
-	 0 );
+	result = libodraw_data_file_free(
+	          NULL,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	return( 1 );
-}
 
-/* Tests the libodraw_notify_set_stream function
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_notify_set_stream(
-     void )
-{
-	/* Test invocation of function only
-	 */
-	libodraw_notify_set_stream(
-	 NULL,
-	 NULL );
-
-	return( 1 );
-}
-
-/* Tests the libodraw_notify_stream_open function
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_notify_stream_open(
-     void )
-{
-	/* Test invocation of function only
-	 */
-	libodraw_notify_stream_open(
-	 NULL,
-	 NULL );
-
-	return( 1 );
-}
-
-/* Tests the libodraw_notify_stream_close function
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_notify_stream_close(
-     void )
-{
-	/* Test invocation of function only
-	 */
-	libodraw_notify_stream_close(
-	 NULL );
-
-	return( 1 );
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
 }
 
 /* The main program
@@ -105,20 +87,8 @@ int main(
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argv )
 
 	ODRAW_TEST_RUN(
-	 "libodraw_notify_set_verbose",
-	 odraw_test_notify_set_verbose )
-
-	ODRAW_TEST_RUN(
-	 "libodraw_notify_set_stream",
-	 odraw_test_notify_set_stream )
-
-	ODRAW_TEST_RUN(
-	 "libodraw_notify_stream_open",
-	 odraw_test_notify_stream_open )
-
-	ODRAW_TEST_RUN(
-	 "libodraw_notify_stream_close",
-	 odraw_test_notify_stream_close )
+	 "libodraw_data_file_free",
+	 odraw_test_data_file_free );
 
 	return( EXIT_SUCCESS );
 

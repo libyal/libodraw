@@ -118,5 +118,5 @@ enum LIBODRAW_CODEPAGES
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_CODEPAGE_H ) */
 

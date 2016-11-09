@@ -21,6 +21,7 @@
 
 #include <common.h>
 #include <memory.h>
+#include <system_string.h>
 #include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
@@ -33,7 +34,6 @@
 #include "odrawtools_libcerror.h"
 #include "odrawtools_libclocale.h"
 #include "odrawtools_libcnotify.h"
-#include "odrawtools_libcstring.h"
 #include "odrawtools_libcsystem.h"
 #include "odrawtools_libodraw.h"
 #include "log_handle.h"
@@ -113,27 +113,24 @@ void odrawverify_signal_handler(
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain( int argc, wchar_t * const argv[] )
 #else
 int main( int argc, char * const argv[] )
 #endif
 {
-	libcerror_error_t *error                                      = NULL;
-
-	libcstring_system_character_t *log_filename                   = NULL;
-	libcstring_system_character_t *option_additional_digest_types = NULL;
-	libcstring_system_character_t *option_process_buffer_size     = NULL;
-	libcstring_system_character_t *program                        = _LIBCSTRING_SYSTEM_STRING( "odrawverify" );
-	libcstring_system_character_t *source                         = NULL;
-
-	log_handle_t *log_handle                                      = NULL;
-
-	libcstring_system_integer_t option                            = 0;
-	uint8_t calculate_md5                                         = 1;
-	uint8_t print_status_information                              = 1;
-	uint8_t verbose                                               = 0;
-	int result                                                    = 0;
+	libcerror_error_t *error                           = NULL;
+	log_handle_t *log_handle                           = NULL;
+	system_character_t *log_filename                   = NULL;
+	system_character_t *option_additional_digest_types = NULL;
+	system_character_t *option_process_buffer_size     = NULL;
+	system_character_t *program                        = _SYSTEM_STRING( "odrawverify" );
+	system_character_t *source                         = NULL;
+	system_integer_t option                            = 0;
+	uint8_t calculate_md5                              = 1;
+	uint8_t print_status_information                   = 1;
+	uint8_t verbose                                    = 0;
+	int result                                         = 0;
 
 	libcnotify_stream_set(
 	 stderr,
@@ -168,15 +165,15 @@ int main( int argc, char * const argv[] )
 	while( ( option = libcsystem_getopt(
 	                   argc,
 	                   argv,
-	                   _LIBCSTRING_SYSTEM_STRING( "d:hl:p:qvV" ) ) ) != (libcstring_system_integer_t) -1 )
+	                   _SYSTEM_STRING( "d:hl:p:qvV" ) ) ) != (system_integer_t) -1 )
 	{
 		switch( option )
 		{
-			case (libcstring_system_integer_t) '?':
+			case (system_integer_t) '?':
 			default:
 				fprintf(
 				 stderr,
-				 "Invalid argument: %" PRIs_LIBCSTRING_SYSTEM "\n",
+				 "Invalid argument: %" PRIs_SYSTEM "\n",
 				 argv[ optind - 1 ] );
 
 				usage_fprint(
@@ -184,38 +181,38 @@ int main( int argc, char * const argv[] )
 
 				goto on_error;
 
-			case (libcstring_system_integer_t) 'd':
+			case (system_integer_t) 'd':
 				option_additional_digest_types = optarg;
 
 				break;
 
-			case (libcstring_system_integer_t) 'h':
+			case (system_integer_t) 'h':
 				usage_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );
 
-			case (libcstring_system_integer_t) 'l':
+			case (system_integer_t) 'l':
 				log_filename = optarg;
 
 				break;
 
-			case (libcstring_system_integer_t) 'p':
+			case (system_integer_t) 'p':
 				option_process_buffer_size = optarg;
 
 				break;
 
-			case (libcstring_system_integer_t) 'q':
+			case (system_integer_t) 'q':
 				print_status_information = 0;
 
 				break;
 
-			case (libcstring_system_integer_t) 'v':
+			case (system_integer_t) 'v':
 				verbose = 1;
 
 				break;
 
-			case (libcstring_system_integer_t) 'V':
+			case (system_integer_t) 'V':
 				odrawoutput_copyright_fprint(
 				 stdout );
 
@@ -318,7 +315,7 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to open file: %" PRIs_LIBCSTRING_SYSTEM ".\n",
+		 "Unable to open file: %" PRIs_SYSTEM ".\n",
 		 source );
 
 		goto on_error;
@@ -342,7 +339,7 @@ int main( int argc, char * const argv[] )
 		{
 			fprintf(
 			 stderr,
-			 "Unable to open log file: %" PRIs_LIBCSTRING_SYSTEM ".\n",
+			 "Unable to open log file: %" PRIs_SYSTEM ".\n",
 			 log_filename );
 
 			goto on_error;
@@ -425,7 +422,7 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stdout,
-		 "%" PRIs_LIBCSTRING_SYSTEM ": ABORTED\n",
+		 "%" PRIs_SYSTEM ": ABORTED\n",
 		 program );
 
 		return( EXIT_FAILURE );
@@ -434,14 +431,14 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stdout,
-		 "%" PRIs_LIBCSTRING_SYSTEM ": FAILURE\n",
+		 "%" PRIs_SYSTEM ": FAILURE\n",
 		 program );
 
 		return( EXIT_FAILURE );
 	}
 	fprintf(
 	 stdout,
-	 "%" PRIs_LIBCSTRING_SYSTEM ": SUCCESS\n",
+	 "%" PRIs_SYSTEM ": SUCCESS\n",
 	 program );
 
 	return( EXIT_SUCCESS );

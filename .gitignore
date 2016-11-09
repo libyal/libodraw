@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20160507
+# Version: 20161030
 
 # Generic auto-generated build files
 *~
@@ -57,6 +57,7 @@ stamp-h[1-9]
 /test-driver
 /ylwrap
 /m4/codeset.m4
+/m4/extern-inline.m4
 /m4/fcntl-o.m4
 /m4/gettext.m4
 /m4/glibc2.m4
@@ -126,12 +127,13 @@ stamp-h[1-9]
 /odrawtools/odrawinfo
 /odrawtools/odrawverify
 /tests/input
+/tests/odraw_test_data_file
 /tests/odraw_test_error
+/tests/odraw_test_handle
 /tests/odraw_test_notify
 /tests/odraw_test_open_close
 /tests/odraw_test_read
 /tests/odraw_test_seek
-/tests/odraw_test_set_ascii_codepage
 /tests/odraw_test_support
 /tests/tmp*
 
@@ -144,7 +146,6 @@ stamp-h[1-9]
 /libcnotify
 /libcpath
 /libcsplit
-/libcstring
 /libcsystem
 /libcthreads
 /libhmac

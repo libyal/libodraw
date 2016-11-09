@@ -39,7 +39,7 @@ enum LIBODRAW_ERROR_DOMAINS
 	LIBODRAW_ERROR_DOMAIN_INPUT			= (int) 'i',
 	LIBODRAW_ERROR_DOMAIN_MEMORY			= (int) 'm',
 	LIBODRAW_ERROR_DOMAIN_OUTPUT			= (int) 'o',
-	LIBODRAW_ERROR_DOMAIN_RUNTIME			= (int) 'r',
+	LIBODRAW_ERROR_DOMAIN_RUNTIME			= (int) 'r'
 };
 
 /* The argument error codes
@@ -208,6 +208,17 @@ enum LIBODRAW_MEMORY_ERROR
 	LIBODRAW_MEMORY_ERROR_SET_FAILED		= 3
 };
 
+/* The output error codes
+ */
+enum LIBODRAW_OUTPUT_ERROR
+{
+	LIBODRAW_OUTPUT_ERROR_GENERIC			= 0,
+
+	/* There is insuficient space to write the output
+	 */
+	LIBODRAW_OUTPUT_ERROR_INSUFFICIENT_SPACE	= 1
+};
+
 /* The runtime error codes
  * to signify errors regarding runtime processing
  */
@@ -276,16 +287,5 @@ enum LIBODRAW_RUNTIME_ERROR
 	LIBODRAW_RUNTIME_ERROR_ABORT_REQUESTED		= 15
 };
 
-/* The output error codes
- */
-enum LIBODRAW_OUTPUT_ERROR
-{
-	LIBODRAW_OUTPUT_ERROR_GENERIC			= 0,
-
-	/* There is insuficient space to write the output
-	 */
-	LIBODRAW_OUTPUT_ERROR_INSUFFICIENT_SPACE	= 1
-};
-
-#endif
+#endif /* !defined( _LIBODRAW_ERROR_H ) */
 

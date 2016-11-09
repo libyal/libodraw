@@ -26,7 +26,6 @@
 #include <types.h>
 
 #include "odrawtools_libcerror.h"
-#include "odrawtools_libcstring.h"
 #include "odrawtools_libcsystem.h"
 
 #if defined( __cplusplus )
@@ -46,15 +45,15 @@ struct process_status
 {
 	/* The status process string
 	 */
-	const libcstring_system_character_t *status_process_string;
+	const system_character_t *status_process_string;
 
 	/* The status update string
 	 */
-	const libcstring_system_character_t *status_update_string;
+	const system_character_t *status_update_string;
 
 	/* The status summary string
 	 */
-	const libcstring_system_character_t *status_summary_string;
+	const system_character_t *status_summary_string;
 
 	/* The ouput stream
 	 */
@@ -84,7 +83,7 @@ struct process_status
 #if defined( HAVE_CTIME ) || defined( HAVE_CTIME_R ) || defined( WINAPI )
 int process_status_get_ctime_string(
      const time_t *timestamp,
-     libcstring_system_character_t *string,
+     system_character_t *string,
      size_t string_size,
      libcerror_error_t **error );
 #endif
@@ -98,9 +97,9 @@ int process_status_get_time_elements_in_utc(
 
 int process_status_initialize(
      process_status_t **process_status,
-     const libcstring_system_character_t *status_process_string,
-     const libcstring_system_character_t *status_update_string,
-     const libcstring_system_character_t *status_summary_string,
+     const system_character_t *status_process_string,
+     const system_character_t *status_update_string,
+     const system_character_t *status_summary_string,
      FILE *output_stream,
      uint8_t print_status_information,
      libcerror_error_t **error );

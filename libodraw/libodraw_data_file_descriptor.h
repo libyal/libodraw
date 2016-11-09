@@ -26,7 +26,6 @@
 #include <types.h>
 
 #include "libodraw_libcerror.h"
-#include "libodraw_libcstring.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -38,7 +37,7 @@ struct libodraw_data_file_descriptor
 {
 	/* The name
 	 */
-	libcstring_system_character_t *name;
+	system_character_t *name;
 
 	/* The name size
 	 */

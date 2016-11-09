@@ -29,7 +29,6 @@
 #include "libodraw_libbfio.h"
 #include "libodraw_libcerror.h"
 #include "libodraw_libclocale.h"
-#include "libodraw_libcstring.h"
 #include "libodraw_support.h"
 
 #if !defined( HAVE_LOCAL_LIBODRAW )
