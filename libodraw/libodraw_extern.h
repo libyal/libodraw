@@ -38,9 +38,9 @@
 #include <libodraw/extern.h>
 
 #else
-#define LIBODRAW_EXTERN	extern
+#define LIBODRAW_EXTERN	/* extern */
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBODRAW ) */
 
 #endif /* !defined( _LIBODRAW_INTERNAL_EXTERN_H ) */
 

@@ -130,5 +130,5 @@ int libodraw_handle_append_track(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_METADATA_H ) */
 

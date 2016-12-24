@@ -1,5 +1,5 @@
 /*
- * Library handle type testing program
+ * Library handle type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -30,15 +30,17 @@
 #include <stdlib.h>
 #endif
 
+#include "odraw_test_getopt.h"
 #include "odraw_test_libcerror.h"
 #include "odraw_test_libclocale.h"
-#include "odraw_test_libcsystem.h"
 #include "odraw_test_libodraw.h"
 #include "odraw_test_libuna.h"
 #include "odraw_test_macros.h"
 #include "odraw_test_memory.h"
 
-#if SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
+#include "../libodraw/libodraw_handle.h"
+
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
 #error Unsupported size of wchar_t
 #endif
 
@@ -256,8 +258,8 @@ int odraw_test_handle_get_wide_source(
      libcerror_error_t **error )
 {
 	static char *function   = "odraw_test_handle_get_wide_source";
-	size_t wide_source_size = 0;
 	size_t source_length    = 0;
+	size_t wide_source_size = 0;
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result              = 0;
@@ -584,11 +586,17 @@ int odraw_test_handle_close_source(
 int odraw_test_handle_initialize(
      void )
 {
-	libcerror_error_t *error = NULL;
-	libodraw_handle_t *handle      = NULL;
-	int result               = 0;
+	libcerror_error_t *error        = NULL;
+	libodraw_handle_t *handle       = NULL;
+	int result                      = 0;
 
-	/* Test libodraw_handle_initialize
+#if defined( HAVE_ODRAW_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
+	/* Test regular cases
 	 */
 	result = libodraw_handle_initialize(
 	          &handle,
@@ -664,79 +672,89 @@ int odraw_test_handle_initialize(
 
 #if defined( HAVE_ODRAW_TEST_MEMORY )
 
-	/* Test libodraw_handle_initialize with malloc failing
-	 */
-	odraw_test_malloc_attempts_before_fail = 0;
-
-	result = libodraw_handle_initialize(
-	          &handle,
-	          &error );
-
-	if( odraw_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		odraw_test_malloc_attempts_before_fail = -1;
+		/* Test libodraw_handle_initialize with malloc failing
+		 */
+		odraw_test_malloc_attempts_before_fail = test_number;
 
-		if( handle != NULL )
+		result = libodraw_handle_initialize(
+		          &handle,
+		          &error );
+
+		if( odraw_test_malloc_attempts_before_fail != -1 )
 		{
-			libodraw_handle_free(
-			 &handle,
-			 NULL );
+			odraw_test_malloc_attempts_before_fail = -1;
+
+			if( handle != NULL )
+			{
+				libodraw_handle_free(
+				 &handle,
+				 NULL );
+			}
+		}
+		else
+		{
+			ODRAW_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			ODRAW_TEST_ASSERT_IS_NULL(
+			 "handle",
+			 handle );
+
+			ODRAW_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
 		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		ODRAW_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libodraw_handle_initialize with memset failing
+		 */
+		odraw_test_memset_attempts_before_fail = test_number;
 
-		ODRAW_TEST_ASSERT_IS_NULL(
-		 "handle",
-		 handle );
+		result = libodraw_handle_initialize(
+		          &handle,
+		          &error );
 
-		ODRAW_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libodraw_handle_initialize with memset failing
-	 */
-	odraw_test_memset_attempts_before_fail = 0;
-
-	result = libodraw_handle_initialize(
-	          &handle,
-	          &error );
-
-	if( odraw_test_memset_attempts_before_fail != -1 )
-	{
-		odraw_test_memset_attempts_before_fail = -1;
-
-		if( handle != NULL )
+		if( odraw_test_memset_attempts_before_fail != -1 )
 		{
-			libodraw_handle_free(
-			 &handle,
-			 NULL );
+			odraw_test_memset_attempts_before_fail = -1;
+
+			if( handle != NULL )
+			{
+				libodraw_handle_free(
+				 &handle,
+				 NULL );
+			}
 		}
-	}
-	else
-	{
-		ODRAW_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		else
+		{
+			ODRAW_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-		ODRAW_TEST_ASSERT_IS_NULL(
-		 "handle",
-		 handle );
+			ODRAW_TEST_ASSERT_IS_NULL(
+			 "handle",
+			 handle );
 
-		ODRAW_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+			ODRAW_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_ODRAW_TEST_MEMORY ) */
 
@@ -795,7 +813,7 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libodraw_handle_open functions
+/* Tests the libodraw_handle_open function
  * Returns 1 if successful or 0 if not
  */
 int odraw_test_handle_open(
@@ -803,9 +821,9 @@ int odraw_test_handle_open(
 {
 	char narrow_source[ 256 ];
 
-	libcerror_error_t *error = NULL;
-	libodraw_handle_t *handle      = NULL;
-	int result               = 0;
+	libcerror_error_t *error  = NULL;
+	libodraw_handle_t *handle = NULL;
+	int result                = 0;
 
 	/* Initialize test
 	 */
@@ -858,21 +876,28 @@ int odraw_test_handle_open(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libodraw_handle_close(
+	result = libodraw_handle_open(
 	          handle,
+	          narrow_source,
+	          LIBODRAW_OPEN_READ,
 	          &error );
 
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libodraw_handle_free(
 	          &handle,
 	          &error );
@@ -909,7 +934,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Tests the libodraw_handle_open_wide functions
+/* Tests the libodraw_handle_open_wide function
  * Returns 1 if successful or 0 if not
  */
 int odraw_test_handle_open_wide(
@@ -917,9 +942,9 @@ int odraw_test_handle_open_wide(
 {
 	wchar_t wide_source[ 256 ];
 
-	libcerror_error_t *error = NULL;
-	libodraw_handle_t *handle      = NULL;
-	int result               = 0;
+	libcerror_error_t *error  = NULL;
+	libodraw_handle_t *handle = NULL;
+	int result                = 0;
 
 	/* Initialize test
 	 */
@@ -972,21 +997,28 @@ int odraw_test_handle_open_wide(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libodraw_handle_close(
+	result = libodraw_handle_open_wide(
 	          handle,
+	          wide_source,
+	          LIBODRAW_OPEN_READ,
 	          &error );
 
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libodraw_handle_free(
 	          &handle,
 	          &error );
@@ -1023,51 +1055,18 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-/* Tests the libodraw_handle_get_ascii_codepage functions
+/* Tests the libodraw_handle_close function
  * Returns 1 if successful or 0 if not
  */
-int odraw_test_handle_get_ascii_codepage(
-     libodraw_handle_t *handle )
+int odraw_test_handle_close(
+     void )
 {
 	libcerror_error_t *error = NULL;
-	int codepage             = 0;
 	int result               = 0;
-
-	result = libodraw_handle_get_ascii_codepage(
-	          handle,
-	          &codepage,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
 
 	/* Test error cases
 	 */
-	result = libodraw_handle_get_ascii_codepage(
-	          NULL,
-	          &codepage,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libodraw_handle_get_ascii_codepage(
-	          handle,
+	result = libodraw_handle_close(
 	          NULL,
 	          &error );
 
@@ -1094,11 +1093,525 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libodraw_handle_set_ascii_codepage functions
+/* Tests the libodraw_handle_open and libodraw_handle_close functions
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_open_close(
+     const system_character_t *source )
+{
+	libcerror_error_t *error  = NULL;
+	libodraw_handle_t *handle = NULL;
+	int result                = 0;
+
+	/* Initialize test
+	 */
+	result = libodraw_handle_initialize(
+	          &handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
+         "handle",
+         handle );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libodraw_handle_open_wide(
+	          handle,
+	          source,
+	          LIBODRAW_OPEN_READ,
+	          &error );
+#else
+	result = libodraw_handle_open(
+	          handle,
+	          source,
+	          LIBODRAW_OPEN_READ,
+	          &error );
+#endif
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libodraw_handle_close(
+	          handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close a second time to validate clean up on close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libodraw_handle_open_wide(
+	          handle,
+	          source,
+	          LIBODRAW_OPEN_READ,
+	          &error );
+#else
+	result = libodraw_handle_open(
+	          handle,
+	          source,
+	          LIBODRAW_OPEN_READ,
+	          &error );
+#endif
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libodraw_handle_close(
+	          handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Clean up
+	 */
+	result = libodraw_handle_free(
+	          &handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "handle",
+         handle );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( handle != NULL )
+	{
+		libodraw_handle_free(
+		 &handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_handle_signal_abort function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_signal_abort(
+     libodraw_handle_t *handle )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test regular cases
+	 */
+	result = libodraw_handle_signal_abort(
+	          handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        ODRAW_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libodraw_handle_signal_abort(
+	          NULL,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        ODRAW_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_handle_get_offset function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_get_offset(
+     libodraw_handle_t *handle )
+{
+	libcerror_error_t *error = NULL;
+	off64_t offset           = 0;
+	int offset_is_set        = 0;
+	int result               = 0;
+
+	/* Test regular cases
+	 */
+	result = libodraw_handle_get_offset(
+	          handle,
+	          &offset,
+	          &error );
+
+	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	offset_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libodraw_handle_get_offset(
+	          NULL,
+	          &offset,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( offset_is_set != 0 )
+	{
+		result = libodraw_handle_get_offset(
+		          handle,
+		          NULL,
+		          &error );
+
+		ODRAW_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		ODRAW_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+#if defined( __GNUC__ )
+
+/* Tests the libodraw_handle_get_basename_size function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_get_basename_size(
+     libodraw_handle_t *handle )
+{
+	libcerror_error_t *error = NULL;
+	size_t basename_size     = 0;
+	int basename_size_is_set = 0;
+	int result               = 0;
+
+	/* Test regular cases
+	 */
+	result = libodraw_handle_get_basename_size(
+	          (libodraw_internal_handle_t *) handle,
+	          &basename_size,
+	          &error );
+
+	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	basename_size_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libodraw_handle_get_basename_size(
+	          NULL,
+	          &basename_size,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( basename_size_is_set != 0 )
+	{
+		result = libodraw_handle_get_basename_size(
+		          (libodraw_internal_handle_t *) handle,
+		          NULL,
+		          &error );
+
+		ODRAW_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		ODRAW_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+#if defined( HAVE_WIDE_CHARACTER_TYPE )
+
+/* Tests the libodraw_handle_get_basename_size_wide function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_get_basename_size_wide(
+     libodraw_handle_t *handle )
+{
+	libcerror_error_t *error      = NULL;
+	size_t basename_size_wide     = 0;
+	int basename_size_wide_is_set = 0;
+	int result                    = 0;
+
+	/* Test regular cases
+	 */
+	result = libodraw_handle_get_basename_size_wide(
+	          (libodraw_internal_handle_t *) handle,
+	          &basename_size_wide,
+	          &error );
+
+	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	basename_size_wide_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libodraw_handle_get_basename_size_wide(
+	          NULL,
+	          &basename_size_wide,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( basename_size_wide_is_set != 0 )
+	{
+		result = libodraw_handle_get_basename_size_wide(
+		          (libodraw_internal_handle_t *) handle,
+		          NULL,
+		          &error );
+
+		ODRAW_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		ODRAW_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
+
+#endif /* defined( __GNUC__ ) */
+
+/* Tests the libodraw_handle_get_ascii_codepage function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_get_ascii_codepage(
+     libodraw_handle_t *handle )
+{
+	libcerror_error_t *error  = NULL;
+	int ascii_codepage        = 0;
+	int ascii_codepage_is_set = 0;
+	int result                = 0;
+
+	/* Test regular cases
+	 */
+	result = libodraw_handle_get_ascii_codepage(
+	          handle,
+	          &ascii_codepage,
+	          &error );
+
+	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	ascii_codepage_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libodraw_handle_get_ascii_codepage(
+	          NULL,
+	          &ascii_codepage,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( ascii_codepage_is_set != 0 )
+	{
+		result = libodraw_handle_get_ascii_codepage(
+		          handle,
+		          NULL,
+		          &error );
+
+		ODRAW_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		ODRAW_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_handle_set_ascii_codepage function
  * Returns 1 if successful or 0 if not
  */
 int odraw_test_handle_set_ascii_codepage(
-     void )
+     libodraw_handle_t *handle )
 {
 	int supported_codepages[ 15 ] = {
 		LIBODRAW_CODEPAGE_ASCII,
@@ -1137,29 +1650,9 @@ int odraw_test_handle_set_ascii_codepage(
 		LIBODRAW_CODEPAGE_KOI8_U };
 
 	libcerror_error_t *error = NULL;
-	libodraw_handle_t *handle      = NULL;
 	int codepage             = 0;
 	int index                = 0;
 	int result               = 0;
-
-	/* Initialize test
-	 */
-	result = libodraw_handle_initialize(
-	          &handle,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "handle",
-         handle );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
 
 	/* Test set ASCII codepage
 	 */
@@ -1227,18 +1720,15 @@ int odraw_test_handle_set_ascii_codepage(
 	}
 	/* Clean up
 	 */
-	result = libodraw_handle_free(
-	          &handle,
+	result = libodraw_handle_set_ascii_codepage(
+	          handle,
+	          LIBODRAW_CODEPAGE_WINDOWS_1252,
 	          &error );
 
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "handle",
-         handle );
 
         ODRAW_TEST_ASSERT_IS_NULL(
          "error",
@@ -1252,359 +1742,76 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( handle != NULL )
-	{
-		libodraw_handle_free(
-		 &handle,
-		 NULL );
-	}
 	return( 0 );
 }
 
-/* Tests the libodraw_handle_get_number_of_data_files functions
+/* Tests the libodraw_handle_get_number_of_data_files function
  * Returns 1 if successful or 0 if not
  */
 int odraw_test_handle_get_number_of_data_files(
      libodraw_handle_t *handle )
 {
-	libcerror_error_t *error = NULL;
-	int number_of_data_files    = 0;
-	int result               = 0;
+	libcerror_error_t *error        = NULL;
+	int number_of_data_files        = 0;
+	int number_of_data_files_is_set = 0;
+	int result                      = 0;
 
+	/* Test regular cases
+	 */
 	result = libodraw_handle_get_number_of_data_files(
 	          handle,
+	          &number_of_data_files,
+	          &error );
+
+	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	number_of_data_files_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libodraw_handle_get_number_of_data_files(
+	          NULL,
 	          &number_of_data_files,
 	          &error );
 
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
-
-	/* Test error cases
-	 */
-	result = libodraw_handle_get_number_of_data_files(
-	          NULL,
-	          &number_of_data_files,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
 
-	result = libodraw_handle_get_number_of_data_files(
-	          handle,
-	          NULL,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
+	if( number_of_data_files_is_set != 0 )
 	{
+		result = libodraw_handle_get_number_of_data_files(
+		          handle,
+		          NULL,
+		          &error );
+
+		ODRAW_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		ODRAW_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
 		libcerror_error_free(
 		 &error );
 	}
-	return( 0 );
-}
-
-/* Tests the libodraw_handle_get_number_of_sectors functions
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_handle_get_number_of_sectors(
-     libodraw_handle_t *handle )
-{
-	libcerror_error_t *error   = NULL;
-	uint16_t number_of_sectors = 0;
-	int result                 = 0;
-
-	result = libodraw_handle_get_number_of_sectors(
-	          handle,
-	          &number_of_sectors,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
-
-	/* Test error cases
-	 */
-	result = libodraw_handle_get_number_of_sectors(
-	          NULL,
-	          &number_of_sectors,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libodraw_handle_get_number_of_sectors(
-	          handle,
-	          NULL,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	return( 0 );
-}
-
-/* Tests the libodraw_handle_get_number_of_sessions functions
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_handle_get_number_of_sessions(
-     libodraw_handle_t *handle )
-{
-	libcerror_error_t *error = NULL;
-	int number_of_sessions    = 0;
-	int result               = 0;
-
-	result = libodraw_handle_get_number_of_sessions(
-	          handle,
-	          &number_of_sessions,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
-
-	/* Test error cases
-	 */
-	result = libodraw_handle_get_number_of_sessions(
-	          NULL,
-	          &number_of_sessions,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libodraw_handle_get_number_of_sessions(
-	          handle,
-	          NULL,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	return( 0 );
-}
-
-/* Tests the libodraw_handle_get_number_of_lead_outs functions
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_handle_get_number_of_lead_outs(
-     libodraw_handle_t *handle )
-{
-	libcerror_error_t *error = NULL;
-	int number_of_lead_outs    = 0;
-	int result               = 0;
-
-	result = libodraw_handle_get_number_of_lead_outs(
-	          handle,
-	          &number_of_lead_outs,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
-
-	/* Test error cases
-	 */
-	result = libodraw_handle_get_number_of_lead_outs(
-	          NULL,
-	          &number_of_lead_outs,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libodraw_handle_get_number_of_lead_outs(
-	          handle,
-	          NULL,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	return( 0 );
-}
-
-/* Tests the libodraw_handle_get_number_of_tracks functions
- * Returns 1 if successful or 0 if not
- */
-int odraw_test_handle_get_number_of_tracks(
-     libodraw_handle_t *handle )
-{
-	libcerror_error_t *error = NULL;
-	int number_of_tracks    = 0;
-	int result               = 0;
-
-	result = libodraw_handle_get_number_of_tracks(
-	          handle,
-	          &number_of_tracks,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
-
-	/* Test error cases
-	 */
-	result = libodraw_handle_get_number_of_tracks(
-	          NULL,
-	          &number_of_tracks,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libodraw_handle_get_number_of_tracks(
-	          handle,
-	          NULL,
-	          &error );
-
-	ODRAW_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
 	return( 1 );
 
 on_error:
@@ -1629,12 +1836,12 @@ int main(
 #endif
 {
 	libcerror_error_t *error   = NULL;
+	libodraw_handle_t *handle  = NULL;
 	system_character_t *source = NULL;
-	libodraw_handle_t *handle        = NULL;
 	system_integer_t option    = 0;
 	int result                 = 0;
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = odraw_test_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "" ) ) ) != (system_integer_t) -1 )
@@ -1671,10 +1878,6 @@ int main(
 	 "libodraw_handle_free",
 	 odraw_test_handle_free );
 
-	ODRAW_TEST_RUN(
-	 "libodraw_handle_set_ascii_codepage",
-	 odraw_test_handle_set_ascii_codepage );
-
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
 	if( source != NULL )
 	{
@@ -1698,7 +1901,14 @@ int main(
 
 #endif /* defined( LIBODRAW_HAVE_BFIO ) */
 
-		/* TODO add test for libodraw_handle_close */
+		ODRAW_TEST_RUN(
+		 "libodraw_handle_close",
+		 odraw_test_handle_close );
+
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_open_close",
+		 odraw_test_handle_open_close,
+		 source );
 
 		/* Initialize test
 		 */
@@ -1721,8 +1931,105 @@ int main(
 	         error );
 
 		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_signal_abort",
+		 odraw_test_handle_signal_abort,
+		 handle );
+
+		/* TODO: add tests for libodraw_handle_open_data_files */
+
+		/* TODO: add tests for libodraw_handle_open_data_files_file_io_pool */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libodraw_handle_open_data_file */
+
+		/* TODO: add tests for libodraw_handle_open_data_file_wide */
+
+		/* TODO: add tests for libodraw_handle_open_data_file_io_handle */
+
+		/* TODO: add tests for libodraw_handle_open_read */
+
+#endif /* defined( __GNUC__ ) */
+
+		/* TODO: add tests for libodraw_handle_read_buffer */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libodraw_handle_read_buffer_from_run_out */
+
+		/* TODO: add tests for libodraw_handle_read_buffer_from_lead_out */
+
+		/* TODO: add tests for libodraw_handle_read_buffer_from_unspecified_sector */
+
+		/* TODO: add tests for libodraw_handle_read_buffer_from_track */
+
+#endif /* defined( __GNUC__ ) */
+
+		/* TODO: add tests for libodraw_handle_read_buffer_at_offset */
+
+		/* TODO: add tests for libodraw_handle_write_buffer */
+
+		/* TODO: add tests for libodraw_handle_write_buffer_at_offset */
+
+		/* TODO: add tests for libodraw_handle_seek_offset */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libodraw_handle_get_run_out_at_offset */
+
+		/* TODO: add tests for libodraw_handle_get_lead_out_at_offset */
+
+		/* TODO: add tests for libodraw_handle_get_track_at_offset */
+
+#endif /* defined( __GNUC__ ) */
+
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_get_offset",
+		 odraw_test_handle_get_offset,
+		 handle );
+
+#if defined( __GNUC__ )
+
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_get_basename_size",
+		 odraw_test_handle_get_basename_size,
+		 handle );
+
+		/* TODO: add tests for libodraw_handle_get_basename */
+
+		/* TODO: add tests for libodraw_handle_set_basename */
+
+#if defined( HAVE_WIDE_CHARACTER_TYPE )
+
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_get_basename_size_wide",
+		 odraw_test_handle_get_basename_size_wide,
+		 handle );
+
+		/* TODO: add tests for libodraw_handle_get_basename_wide */
+
+		/* TODO: add tests for libodraw_handle_set_basename_wide */
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
+
+#endif /* defined( __GNUC__ ) */
+
+		/* TODO: add tests for libodraw_handle_set_maximum_number_of_open_handles */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libodraw_handle_set_media_values */
+
+#endif /* defined( __GNUC__ ) */
+
+		ODRAW_TEST_RUN_WITH_ARGS(
 		 "libodraw_handle_get_ascii_codepage",
 		 odraw_test_handle_get_ascii_codepage,
+		 handle );
+
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_set_ascii_codepage",
+		 odraw_test_handle_set_ascii_codepage,
 		 handle );
 
 		ODRAW_TEST_RUN_WITH_ARGS(
@@ -1730,25 +2037,11 @@ int main(
 		 odraw_test_handle_get_number_of_data_files,
 		 handle );
 
-		ODRAW_TEST_RUN_WITH_ARGS(
-		 "libodraw_handle_get_number_of_sectors",
-		 odraw_test_handle_get_number_of_sectors,
-		 handle );
+		/* TODO: add tests for libodraw_handle_get_data_file */
 
-		ODRAW_TEST_RUN_WITH_ARGS(
-		 "libodraw_handle_get_number_of_sessions",
-		 odraw_test_handle_get_number_of_sessions,
-		 handle );
+		/* TODO: add tests for libodraw_handle_append_data_file */
 
-		ODRAW_TEST_RUN_WITH_ARGS(
-		 "libodraw_handle_get_number_of_lead_outs",
-		 odraw_test_handle_get_number_of_lead_outs,
-		 handle );
-
-		ODRAW_TEST_RUN_WITH_ARGS(
-		 "libodraw_handle_get_number_of_tracks",
-		 odraw_test_handle_get_number_of_tracks,
-		 handle );
+		/* TODO: add tests for libodraw_handle_append_data_file_wide */
 
 		/* Clean up
 		 */

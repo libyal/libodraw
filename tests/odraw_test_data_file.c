@@ -1,5 +1,5 @@
 /*
- * Library data_file type testing program
+ * Library data_file type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,6 +32,8 @@
 #include "odraw_test_macros.h"
 #include "odraw_test_memory.h"
 #include "odraw_test_unused.h"
+
+#include "../libodraw/libodraw_data_file.h"
 
 /* Tests the libodraw_data_file_free function
  * Returns 1 if successful or 0 if not
@@ -71,6 +73,10 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -86,9 +92,33 @@ int main(
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argc )
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libodraw_data_file_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	ODRAW_TEST_RUN(
 	 "libodraw_data_file_free",
 	 odraw_test_data_file_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libodraw_data_file_get_filename_size */
+
+	/* TODO: add tests for libodraw_data_file_get_filename */
+
+	/* TODO: add tests for libodraw_data_file_set_filename */
+
+	/* TODO: add tests for libodraw_data_file_get_filename_size_wide */
+
+	/* TODO: add tests for libodraw_data_file_get_filename_wide */
+
+	/* TODO: add tests for libodraw_data_file_set_filename_wide */
+
+	/* TODO: add tests for libodraw_data_file_get_type */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 

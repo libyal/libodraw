@@ -624,5 +624,5 @@ int libodraw_data_file_get_type(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_H ) */
 

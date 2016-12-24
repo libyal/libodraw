@@ -414,5 +414,5 @@ int libodraw_handle_append_data_file_wide(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_INTERNAL_FILE_H ) */
 

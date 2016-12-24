@@ -67,5 +67,5 @@ int libodraw_set_codepage(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_SUPPORT_H ) */
 

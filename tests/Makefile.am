@@ -36,10 +36,10 @@ check_PROGRAMS = \
 	odraw_test_error \
 	odraw_test_handle \
 	odraw_test_notify \
-	odraw_test_open_close \
 	odraw_test_read \
 	odraw_test_seek \
-	odraw_test_support
+	odraw_test_support \
+	odraw_test_track_value
 
 odraw_test_data_file_SOURCES = \
 	odraw_test_data_file.c \
@@ -63,17 +63,17 @@ odraw_test_error_LDADD = \
 	../libodraw/libodraw.la
 
 odraw_test_handle_SOURCES = \
+	odraw_test_getopt.c odraw_test_getopt.h \
 	odraw_test_handle.c \
 	odraw_test_libcerror.h \
 	odraw_test_libclocale.h \
-	odraw_test_libcsystem.h \
+	odraw_test_libcnotify.h \
 	odraw_test_libodraw.h \
 	odraw_test_libuna.h \
 	odraw_test_memory.c odraw_test_memory.h \
 	odraw_test_unused.h
 
 odraw_test_handle_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
 	@LIBUNA_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
@@ -89,18 +89,6 @@ odraw_test_notify_SOURCES = \
 
 odraw_test_notify_LDADD = \
 	../libodraw/libodraw.la
-
-odraw_test_open_close_SOURCES = \
-	odraw_test_libcerror.h \
-	odraw_test_libodraw.h \
-	odraw_test_open_close.c \
-	odraw_test_unused.h
-
-odraw_test_open_close_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libodraw/libodraw.la \
-	@LIBCERROR_LIBADD@
-	@PTHREAD_LIBADD@
 
 odraw_test_read_SOURCES = \
 	odraw_test_libcerror.h \
@@ -135,6 +123,18 @@ odraw_test_support_SOURCES = \
 	odraw_test_unused.h
 
 odraw_test_support_LDADD = \
+	../libodraw/libodraw.la \
+	@LIBCERROR_LIBADD@
+
+odraw_test_track_value_SOURCES = \
+	odraw_test_libcerror.h \
+	odraw_test_libodraw.h \
+	odraw_test_macros.h \
+	odraw_test_memory.c odraw_test_memory.h \
+	odraw_test_track_value.c \
+	odraw_test_unused.h
+
+odraw_test_track_value_LDADD = \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@
 

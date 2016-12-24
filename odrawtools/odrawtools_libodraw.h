@@ -27,11 +27,11 @@
 /* If Cygwin libtool DLL support is enabled set LIBODRAW_DLL_IMPORT
  * before including libodraw.h
  */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
+#if defined( _WIN32 ) && defined( DLL_IMPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
 #define LIBODRAW_DLL_IMPORT
 #endif
 
 #include <libodraw.h>
 
-#endif
+#endif /* !defined( _ODRAWTOOLS_LIBODRAW_H ) */
 

@@ -80,5 +80,5 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_IO_HANDLE_H ) */
 

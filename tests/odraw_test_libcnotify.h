@@ -1,5 +1,5 @@
 /*
- * Debug functions
+ * The internal libcnotify header
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,30 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBODRAW_DEBUG_H )
-#define _LIBODRAW_DEBUG_H
+#if !defined( _ODRAW_TEST_LIBCNOTIFY_H )
+#define _ODRAW_TEST_LIBCNOTIFY_H
 
 #include <common.h>
-#include <types.h>
 
-#include "libodraw_libbfio.h"
-#include "libodraw_libcerror.h"
+/* Define HAVE_LOCAL_LIBCNOTIFY for local use of libcnotify
+ */
+#if defined( HAVE_LOCAL_LIBCNOTIFY )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libcnotify_definitions.h>
+#include <libcnotify_print.h>
+#include <libcnotify_stream.h>
+#include <libcnotify_verbose.h>
+
+#else
+
+/* If libtool DLL support is enabled set LIBCNOTIFY_DLL_IMPORT
+ * before including libcnotify.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBCNOTIFY_DLL_IMPORT
 #endif
 
-#if defined( HAVE_DEBUG_OUTPUT )
+#include <libcnotify.h>
 
-int libodraw_debug_print_read_offsets(
-     libbfio_handle_t *file_io_handle,
-     libcerror_error_t **error );
+#endif /* defined( HAVE_LOCAL_LIBCNOTIFY ) */
 
-#endif
-
-#if defined( __cplusplus )
-}
-#endif
-
-#endif /* !defined( _LIBODRAW_DEBUG_H ) */
+#endif /* !defined( _ODRAW_TEST_LIBCNOTIFY_H ) */
 

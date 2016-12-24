@@ -111,5 +111,5 @@ int libodraw_data_file_get_type(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_INTERNAL_DATA_FILE_H ) */
 

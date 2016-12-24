@@ -193,5 +193,5 @@ int verification_handle_hash_values_fprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _VERIFICATION_HANDLE_H ) */
 

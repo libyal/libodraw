@@ -46,5 +46,5 @@ void odrawoutput_version_detailed_fprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _ODRAWOUTPUT_H ) */
 

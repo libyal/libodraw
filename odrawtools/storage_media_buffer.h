@@ -72,5 +72,5 @@ int storage_media_buffer_get_data(
 }
 #endif
 
-#endif
+#endif /* !defined( _STORAGE_MEDIA_BUFFER_H ) */
 

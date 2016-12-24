@@ -100,5 +100,5 @@ int libodraw_data_file_descriptor_set_name_wide(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_DATA_FILE_DESCRIPTOR_H ) */
 

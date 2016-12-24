@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="odraw_test_open_close"
-	ProjectGUID="{F84858ED-33C7-4287-905A-6380D87E8BBE}"
-	RootNamespace="odraw_test_open_close"
+	Name="odraw_test_track_value"
+	ProjectGUID="{42062CA1-2D11-445E-BEF9-3FB9DABDA9F2}"
+	RootNamespace="odraw_test_track_value"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\odraw_test_open_close.c"
+				RelativePath="..\..\tests\odraw_test_memory.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\odraw_test_track_value.c"
 				>
 			</File>
 		</Filter>
@@ -191,6 +195,14 @@
 			</File>
 			<File
 				RelativePath="..\..\tests\odraw_test_libodraw.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\odraw_test_macros.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\odraw_test_memory.h"
 				>
 			</File>
 			<File

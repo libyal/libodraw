@@ -72,5 +72,5 @@ int libodraw_sector_range_set(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_SECTOR_RANGE_H ) */
 

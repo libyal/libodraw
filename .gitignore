@@ -131,10 +131,10 @@ stamp-h[1-9]
 /tests/odraw_test_error
 /tests/odraw_test_handle
 /tests/odraw_test_notify
-/tests/odraw_test_open_close
 /tests/odraw_test_read
 /tests/odraw_test_seek
 /tests/odraw_test_support
+/tests/odraw_test_track_value
 /tests/tmp*
 
 # Local library dependencies specific files

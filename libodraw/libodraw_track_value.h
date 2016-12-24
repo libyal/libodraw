@@ -103,5 +103,5 @@ int libodraw_track_value_get_bytes_per_sector(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBODRAW_TRACK_VALUE_H ) */
 

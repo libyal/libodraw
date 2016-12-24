@@ -33,6 +33,7 @@
 #include "odrawtools_libcsplit.h"
 #include "odrawtools_libhmac.h"
 #include "odrawtools_libodraw.h"
+#include "odrawtools_system_split_string.h"
 #include "process_status.h"
 #include "storage_media_buffer.h"
 #include "verification_handle.h"
@@ -1355,21 +1356,16 @@ int verification_handle_set_additional_digest_types(
      const system_character_t *string,
      libcerror_error_t **error )
 {
-	system_character_t *string_segment               = NULL;
-	static char *function                            = "verification_handle_set_additional_digest_types";
-	size_t string_length                             = 0;
-	size_t string_segment_size                       = 0;
-	uint8_t calculate_sha1                           = 0;
-	uint8_t calculate_sha256                         = 0;
-	int number_of_segments                           = 0;
-	int result                                       = 0;
-	int segment_index                                = 0;
-
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	libcsplit_wide_split_string_t *string_elements   = NULL;
-#else
-	libcsplit_narrow_split_string_t *string_elements = NULL;
-#endif
+	system_character_t *string_segment     = NULL;
+	system_split_string_t *string_elements = NULL;
+	static char *function                  = "verification_handle_set_additional_digest_types";
+	size_t string_length                   = 0;
+	size_t string_segment_size             = 0;
+	uint8_t calculate_sha1                 = 0;
+	uint8_t calculate_sha256               = 0;
+	int number_of_segments                 = 0;
+	int result                             = 0;
+	int segment_index                      = 0;
 
 	if( verification_handle == NULL )
 	{
@@ -1385,21 +1381,12 @@ int verification_handle_set_additional_digest_types(
 	string_length = system_string_length(
 	                 string );
 
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcsplit_wide_string_split(
+	if( system_string_split(
 	     string,
 	     string_length + 1,
-	     (wchar_t) ',',
+	     (system_character_t) ',',
 	     &string_elements,
 	     error ) != 1 )
-#else
-	if( libcsplit_narrow_string_split(
-	     string,
-	     string_length + 1,
-	     (char) ',',
-	     &string_elements,
-	     error ) != 1 )
-#endif
 	{
 		libcerror_error_set(
 		 error,
@@ -1410,17 +1397,10 @@ int verification_handle_set_additional_digest_types(
 
 		goto on_error;
 	}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcsplit_wide_split_string_get_number_of_segments(
+	if( system_split_string_get_number_of_segments(
 	     string_elements,
 	     &number_of_segments,
 	     error ) != 1 )
-#else
-	if( libcsplit_narrow_split_string_get_number_of_segments(
-	     string_elements,
-	     &number_of_segments,
-	     error ) != 1 )
-#endif
 	{
 		libcerror_error_set(
 		 error,
@@ -1435,21 +1415,12 @@ int verification_handle_set_additional_digest_types(
 	     segment_index < number_of_segments;
 	     segment_index++ )
 	{
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		if( libcsplit_wide_split_string_get_segment_by_index(
+		if( system_split_string_get_segment_by_index(
 		     string_elements,
 		     segment_index,
 		     &string_segment,
 		     &string_segment_size,
 		     error ) != 1 )
-#else
-		if( libcsplit_narrow_split_string_get_segment_by_index(
-		     string_elements,
-		     segment_index,
-		     &string_segment,
-		     &string_segment_size,
-		     error ) != 1 )
-#endif
 		{
 			libcerror_error_set(
 			 error,
@@ -1608,15 +1579,9 @@ int verification_handle_set_additional_digest_types(
 		}
 		verification_handle->calculate_sha256 = 1;
 	}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcsplit_wide_split_string_free(
+	if( system_split_string_free(
 	     &string_elements,
 	     error ) != 1 )
-#else
-	if( libcsplit_narrow_split_string_free(
-	     &string_elements,
-	     error ) != 1 )
-#endif
 	{
 		libcerror_error_set(
 		 error,
@@ -1632,15 +1597,9 @@ int verification_handle_set_additional_digest_types(
 on_error:
 	if( string_elements != NULL )
 	{
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		libcsplit_wide_split_string_free(
+		system_split_string_free(
 		 &string_elements,
 		 NULL );
-#else
-		libcsplit_narrow_split_string_free(
-		 &string_elements,
-		 NULL );
-#endif
 	}
 	return( -1 );
 }
