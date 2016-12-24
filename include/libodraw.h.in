@@ -385,6 +385,7 @@ int libodraw_handle_append_data_file(
      libodraw_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 /* Appends a data file
  * Returns 1 if successful or -1 on error
  */
@@ -395,7 +396,8 @@ int libodraw_handle_append_data_file_wide(
      size_t name_length,
      uint8_t type,
      libodraw_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* -------------------------------------------------------------------------
  * Meta data functions
@@ -420,6 +422,7 @@ int libodraw_handle_get_bytes_per_sector(
      libodraw_error_t **error );
 
 #ifdef TODO
+
 /* Sets the number of bytes per sector
  * Returns 1 if successful or -1 on error
  */
@@ -428,7 +431,8 @@ int libodraw_handle_set_bytes_per_sector(
      libodraw_handle_t *handle,
      uint32_t bytes_per_sector,
      libodraw_error_t **error );
-#endif
+
+#endif /* TODO */
 
 /* Retrieves the number of sectors
  * Returns 1 if successful or -1 on error
@@ -579,6 +583,7 @@ int libodraw_data_file_set_filename(
      libodraw_error_t **error );
 
 #if defined( LIBODRAW_HAVE_WIDE_CHARACTER_TYPE )
+
 /* Retrieves the filename size
  * The filename size includes the end of string character
  * Returns 1 if successful or -1 on error
@@ -609,7 +614,8 @@ int libodraw_data_file_set_filename_wide(
      const wchar_t *filename,
      size_t filename_length,
      libodraw_error_t **error );
-#endif
+
+#endif /* defined( LIBODRAW_HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Retrieves the file type
  * Returns 1 if successful or -1 on error

@@ -518,6 +518,19 @@ int odraw_test_handle_open_source(
 
 		goto on_error;
 	}
+	if( libodraw_handle_open_data_files(
+	     *handle,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_OPEN_FAILED,
+		 "%s: unable to open data files.",
+		 function );
+
+		goto on_error;
+	}
 	return( 1 );
 
 on_error:
@@ -1287,6 +1300,292 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libodraw_handle_read_buffer function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_read_buffer(
+     libodraw_handle_t *handle )
+{
+	uint8_t buffer[ 128 ];
+
+	libcerror_error_t *error = NULL;
+	off64_t offset           = 0;
+	ssize_t read_count       = 0;
+
+	/* Test regular cases
+	 */
+	read_count = libodraw_handle_read_buffer(
+	              handle,
+	              buffer,
+	              16,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) 16 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Reset offset to 0
+	 */
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          0,
+	          SEEK_SET,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) 0 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	read_count = libodraw_handle_read_buffer(
+	              NULL,
+	              buffer,
+	              16,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	read_count = libodraw_handle_read_buffer(
+	              handle,
+	              NULL,
+	              16,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	read_count = libodraw_handle_read_buffer(
+	              handle,
+	              buffer,
+	              (size_t) SSIZE_MAX + 1,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_handle_seek_offset function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_handle_seek_offset(
+     libodraw_handle_t *handle )
+{
+	libcerror_error_t *error = NULL;
+	off64_t offset           = 0;
+	size64_t size            = 0;
+
+	/* Test regular cases
+	 */
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          1024,
+	          SEEK_SET,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) 1024 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          -512,
+	          SEEK_CUR,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) 512 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          0,
+	          SEEK_END,
+	          &error );
+
+	ODRAW_TEST_ASSERT_NOT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	size = (size64_t) offset;
+
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          (off64_t) ( size + 512 ),
+	          SEEK_SET,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) ( size + 512 ) );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Reset offset to 0
+	 */
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          0,
+	          SEEK_SET,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) 0 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	offset = libodraw_handle_seek_offset(
+	          NULL,
+	          0,
+	          SEEK_SET,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          -1,
+	          SEEK_SET,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          -1,
+	          SEEK_CUR,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	offset = libodraw_handle_seek_offset(
+	          handle,
+	          (off64_t) ( -1 * ( size + 1 ) ),
+	          SEEK_END,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT64(
+	 "offset",
+	 offset,
+	 (int64_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
 /* Tests the libodraw_handle_get_offset function
  * Returns 1 if successful or 0 if not
  */
@@ -1951,7 +2250,10 @@ int main(
 
 #endif /* defined( __GNUC__ ) */
 
-		/* TODO: add tests for libodraw_handle_read_buffer */
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_read_buffer",
+		 odraw_test_handle_read_buffer,
+		 handle );
 
 #if defined( __GNUC__ )
 
@@ -1971,7 +2273,10 @@ int main(
 
 		/* TODO: add tests for libodraw_handle_write_buffer_at_offset */
 
-		/* TODO: add tests for libodraw_handle_seek_offset */
+		ODRAW_TEST_RUN_WITH_ARGS(
+		 "libodraw_handle_seek_offset",
+		 odraw_test_handle_seek_offset,
+		 handle );
 
 #if defined( __GNUC__ )
 

@@ -36,8 +36,6 @@ check_PROGRAMS = \
 	odraw_test_error \
 	odraw_test_handle \
 	odraw_test_notify \
-	odraw_test_read \
-	odraw_test_seek \
 	odraw_test_support \
 	odraw_test_track_value
 
@@ -89,31 +87,6 @@ odraw_test_notify_SOURCES = \
 
 odraw_test_notify_LDADD = \
 	../libodraw/libodraw.la
-
-odraw_test_read_SOURCES = \
-	odraw_test_libcerror.h \
-	odraw_test_libodraw.h \
-	odraw_test_read.c \
-	odraw_test_unused.h
-
-odraw_test_read_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libodraw/libodraw.la \
-	@LIBCTHREADS_LIBADD@ \
-	@LIBCERROR_LIBADD@
-	@PTHREAD_LIBADD@
-
-odraw_test_seek_SOURCES = \
-	odraw_test_libcerror.h \
-	odraw_test_libodraw.h \
-	odraw_test_seek.c \
-	odraw_test_unused.h
-
-odraw_test_seek_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libodraw/libodraw.la \
-	@LIBCERROR_LIBADD@
-	@PTHREAD_LIBADD@
 
 odraw_test_support_SOURCES = \
 	odraw_test_libcerror.h \

@@ -11,7 +11,7 @@ $TestPrefix = Split-Path -path ${TestPrefix} -leaf
 $TestPrefix = ${TestPrefix}.Substring(3)
 
 $TestFunctions = "error notify support"
-$TestFunctionsWithInput = "seek read"
+$TestFunctionsWithInput = ""
 
 $TestToolDirectory = "..\msvscpp\Release"
 

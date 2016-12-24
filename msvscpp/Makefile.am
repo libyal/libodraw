@@ -16,8 +16,6 @@ MSVSCPP_FILES = \
 	odraw_test_error/odraw_test_error.vcproj \
 	odraw_test_handle/odraw_test_handle.vcproj \
 	odraw_test_notify/odraw_test_notify.vcproj \
-	odraw_test_read/odraw_test_read.vcproj \
-	odraw_test_seek/odraw_test_seek.vcproj \
 	odraw_test_support/odraw_test_support.vcproj \
 	odraw_test_track_value/odraw_test_track_value.vcproj \
 	odrawinfo/odrawinfo.vcproj \

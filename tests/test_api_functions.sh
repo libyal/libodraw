@@ -12,7 +12,7 @@ TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib\([^-]*\).*$/\1/'`;
 
 TEST_PROFILE="lib${TEST_PREFIX}";
 TEST_FUNCTIONS="error notify support";
-TEST_FUNCTIONS_WITH_INPUT="seek read";
+TEST_FUNCTIONS_WITH_INPUT="";
 OPTION_SETS="";
 
 TEST_TOOL_DIRECTORY=".";
