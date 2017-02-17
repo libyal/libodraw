@@ -128,9 +128,12 @@ stamp-h[1-9]
 /odrawtools/odrawverify
 /tests/input
 /tests/odraw_test_data_file
+/tests/odraw_test_data_file_descriptor
 /tests/odraw_test_error
 /tests/odraw_test_handle
+/tests/odraw_test_io_handle
 /tests/odraw_test_notify
+/tests/odraw_test_sector_range
 /tests/odraw_test_support
 /tests/odraw_test_track_value
 /tests/tmp*

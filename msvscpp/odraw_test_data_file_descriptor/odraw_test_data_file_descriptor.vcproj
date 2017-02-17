@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="odrawverify"
-	ProjectGUID="{E47BC48E-4CDC-49CC-B82E-4468DE2540DE}"
-	RootNamespace="odrawverify"
+	Name="odraw_test_data_file_descriptor"
+	ProjectGUID="{52F7E2EC-6630-46AD-82B2-6D93DCC1B6C5}"
+	RootNamespace="odraw_test_data_file_descriptor"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -41,8 +41,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcerror;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio;..\..\libhmac"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBCSPLIT;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;HAVE_LOCAL_LIBHMAC;HAVE_WINCRYPT;LIBODRAW_DLL_IMPORT"
+				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcerror;..\..\libcthreads;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCTHREADS;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBCSPLIT;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;LIBODRAW_DLL_IMPORT"
 				RuntimeLibrary="2"
 				WarningLevel="4"
 				CompileAs="1"
@@ -58,7 +58,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="advapi32.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
 				SubSystem="1"
@@ -115,8 +114,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcerror;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio;..\..\libhmac"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBCSPLIT;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;HAVE_LOCAL_LIBHMAC;HAVE_WINCRYPT;LIBODRAW_DLL_IMPORT"
+				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcerror;..\..\libcthreads;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCTHREADS;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBCSPLIT;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;LIBODRAW_DLL_IMPORT"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
 				RuntimeLibrary="3"
@@ -135,7 +134,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="advapi32.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
@@ -178,43 +176,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\odrawtools\byte_size_string.c"
+				RelativePath="..\..\tests\odraw_test_data_file_descriptor.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\odrawtools\digest_hash.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\log_handle.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_getopt.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_output.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_signal.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawverify.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\process_status.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\storage_media_buffer.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\verification_handle.c"
+				RelativePath="..\..\tests\odraw_test_memory.c"
 				>
 			</File>
 		</Filter>
@@ -224,79 +190,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\odrawtools\byte_size_string.h"
+				RelativePath="..\..\tests\odraw_test_libcerror.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\odrawtools\digest_hash.h"
+				RelativePath="..\..\tests\odraw_test_libodraw.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\odrawtools\log_handle.h"
+				RelativePath="..\..\tests\odraw_test_macros.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\odrawtools\odrawtools_getopt.h"
+				RelativePath="..\..\tests\odraw_test_memory.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\odrawtools\odrawtools_i18n.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libcerror.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libclocale.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libcnotify.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libcsplit.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libhmac.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libodraw.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_libuna.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_output.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_signal.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_system_split_string.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\odrawtools_unused.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\process_status.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\storage_media_buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\odrawtools\verification_handle.h"
+				RelativePath="..\..\tests\odraw_test_unused.h"
 				>
 			</File>
 		</Filter>

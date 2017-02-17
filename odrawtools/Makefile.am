@@ -59,6 +59,7 @@ odrawverify_SOURCES = \
 	odrawtools_libuna.h \
 	odrawtools_output.c odrawtools_output.h \
 	odrawtools_signal.c odrawtools_signal.h \
+	odrawtools_system_split_string.h \
 	odrawtools_unused.h \
 	storage_media_buffer.c storage_media_buffer.h \
 	verification_handle.c verification_handle.h
