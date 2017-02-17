@@ -1,6 +1,6 @@
-# Library API type testing script
+# Tests C library functions and types.
 #
-# Version: 20161110
+# Version: 20170115
 
 $ExitSuccess = 0
 $ExitFailure = 1
@@ -10,17 +10,17 @@ $TestPrefix = Split-Path -path ${Pwd}.Path -parent
 $TestPrefix = Split-Path -path ${TestPrefix} -leaf
 $TestPrefix = ${TestPrefix}.Substring(3)
 
-$TestTypes = "data_file track_value"
-$TestTypesWithInput = "handle"
+$LibraryTests = "data_file data_file_descriptor error io_handle notify sector_range support track_value"
+$LibraryTestsWithInput = "handle"
 
 $TestToolDirectory = "..\msvscpp\Release"
 
-Function TestAPIType
+Function RunTest
 {
 	param( [string]$TestType )
 
-	$TestDescription = "Testing API type: ${TestType}"
-	$TestExecutable = "${TestToolDirectory}\${TestPrefix}_test_${TestType}.exe"
+	$TestDescription = "Testing: ${TestName}"
+	$TestExecutable = "${TestToolDirectory}\${TestPrefix}_test_${TestName}.exe"
 
 	$Output = Invoke-Expression ${TestExecutable}
 	$Result = ${LastExitCode}
@@ -55,9 +55,9 @@ If (-Not (Test-Path ${TestToolDirectory}))
 
 $Result = ${ExitIgnore}
 
-Foreach (${TestType} in ${TestTypes} -split " ")
+Foreach (${TestName} in ${LibraryTests} -split " ")
 {
-	$Result = TestAPIType ${TestType}
+	$Result = RunTest ${TestName}
 
 	If (${Result} -ne ${ExitSuccess})
 	{
@@ -65,9 +65,10 @@ Foreach (${TestType} in ${TestTypes} -split " ")
 	}
 }
 
-Foreach (${TestType} in ${TestTypesWithInput} -split " ")
+Foreach (${TestName} in ${LibraryTestsWithInput} -split " ")
 {
-	$Result = TestAPIType ${TestType}
+	# TODO: add RunTestWithInput
+	$Result = RunTest ${TestName}
 
 	If (${Result} -ne ${ExitSuccess})
 	{

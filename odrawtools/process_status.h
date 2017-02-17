@@ -26,7 +26,6 @@
 #include <types.h>
 
 #include "odrawtools_libcerror.h"
-#include "odrawtools_libcsystem.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -81,19 +80,23 @@ struct process_status
 };
 
 #if defined( HAVE_CTIME ) || defined( HAVE_CTIME_R ) || defined( WINAPI )
+
 int process_status_get_ctime_string(
      const time_t *timestamp,
      system_character_t *string,
      size_t string_size,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_CTIME ) || defined( HAVE_CTIME_R ) || defined( WINAPI ) */
 
 #if defined( HAVE_GMTIME ) || defined( HAVE_GMTIME_R ) || defined( WINAPI )
+
 int process_status_get_time_elements_in_utc(
      const time_t *timestamp,
      struct tm *time_elements,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_GMTIME ) || defined( HAVE_GMTIME_R ) || defined( WINAPI ) */
 
 int process_status_initialize(
      process_status_t **process_status,

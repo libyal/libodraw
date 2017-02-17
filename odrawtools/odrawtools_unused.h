@@ -1,5 +1,5 @@
 /*
- * Memory allocation functions for testing
+ * The unused definition
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,34 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAW_TEST_MEMORY_H )
-#define _ODRAW_TEST_MEMORY_H
+#if !defined( _ODRAWTOOLS_UNUSED_H )
+#define _ODRAWTOOLS_UNUSED_H
 
 #include <common.h>
 
-#if defined( __cplusplus )
-extern "C" {
-#endif
+#if !defined( ODRAWTOOLS_ATTRIBUTE_UNUSED )
 
-#if defined( HAVE_GNU_DL_DLSYM ) && defined( __GNUC__ ) && !defined( __clang__ ) && !defined( __arm__ ) && !defined( __mips__ ) && !defined( __hppa__ ) && !defined( __sparc__ )
-#define HAVE_ODRAW_TEST_MEMORY		1
-#endif
+#if defined( __GNUC__ ) && __GNUC__ >= 3
+#define ODRAWTOOLS_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
 
-#if defined( HAVE_ODRAW_TEST_MEMORY )
+#else
+#define ODRAWTOOLS_ATTRIBUTE_UNUSED
 
-extern int odraw_test_malloc_attempts_before_fail;
+#endif /* defined( __GNUC__ ) && __GNUC__ >= 3 */
 
-extern int odraw_test_memcpy_attempts_before_fail;
+#endif /* !defined( ODRAWTOOLS_ATTRIBUTE_UNUSED ) */
 
-extern int odraw_test_memset_attempts_before_fail;
+#if defined( _MSC_VER )
+#define ODRAWTOOLS_UNREFERENCED_PARAMETER( parameter ) \
+	UNREFERENCED_PARAMETER( parameter );
 
-extern int odraw_test_realloc_attempts_before_fail;
+#else
+#define ODRAWTOOLS_UNREFERENCED_PARAMETER( parameter ) \
+	/* parameter */
 
-#endif /* defined( HAVE_ODRAW_TEST_MEMORY ) */
+#endif /* defined( _MSC_VER ) */
 
-#if defined( __cplusplus )
-}
-#endif
-
-#endif /* !defined( _ODRAW_TEST_MEMORY_H ) */
+#endif /* !defined( _ODRAWTOOLS_UNUSED_H ) */
 

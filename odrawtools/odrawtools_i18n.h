@@ -1,5 +1,5 @@
 /*
- * Common output functions for the odrawtools
+ * Internationalization (i18n) functions
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,30 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAWOUTPUT_H )
-#define _ODRAWOUTPUT_H
+#if !defined( _ODRAWTOOLS_I18N_H )
+#define _ODRAWTOOLS_I18N_H
 
 #include <common.h>
-#include <file_stream.h>
-#include <types.h>
 
+#if defined( HAVE_LIBINTL_H )
+#include <libintl.h>
+#endif
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-void odrawoutput_copyright_fprint(
-      FILE *stream );
+/* TODO for now do nothing i18n-like
+#define	_( string ) \
+	gettext( string )
+*/
 
-void odrawoutput_version_fprint(
-      FILE *stream,
-      const system_character_t *program );
-
-void odrawoutput_version_detailed_fprint(
-      FILE *stream,
-      const system_character_t *program );
+#define	_( string ) \
+	string
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif /* !defined( _ODRAWOUTPUT_H ) */
+#endif /* !defined( _ODRAWTOOLS_I18N_H ) */
 

@@ -24,8 +24,8 @@ Header files and libraries for developing applications for libodraw.
 %package tools
 Summary: Several tools for accessing optical disc (split) RAW formats
 Group: Applications/System
-Requires: libodraw = %{version}-%{release} @ax_libcrypto_spec_requires@ @ax_libcsystem_spec_requires@ @ax_libhmac_spec_requires@
-@libodraw_tools_spec_build_requires@ @ax_libcrypto_spec_build_requires@ @ax_libcsystem_spec_build_requires@ @ax_libhmac_spec_build_requires@
+Requires: libodraw = %{version}-%{release} @ax_libcrypto_spec_requires@ @ax_libhmac_spec_requires@
+@libodraw_tools_spec_build_requires@ @ax_libcrypto_spec_build_requires@ @ax_libhmac_spec_build_requires@
 
 %description tools
 Several tools for accessing optical disc (split) RAW formats

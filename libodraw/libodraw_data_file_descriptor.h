@@ -78,6 +78,7 @@ int libodraw_data_file_descriptor_set_name(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 int libodraw_data_file_descriptor_get_name_size_wide(
      libodraw_data_file_descriptor_t *data_file_descriptor,
      size_t *name_size,
@@ -94,7 +95,8 @@ int libodraw_data_file_descriptor_set_name_wide(
      const wchar_t *name,
      size_t name_length,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( __cplusplus )
 }

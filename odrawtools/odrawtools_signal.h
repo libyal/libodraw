@@ -1,5 +1,5 @@
 /*
- * Memory allocation functions for testing
+ * Signal handling functions
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,34 +19,54 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _ODRAW_TEST_MEMORY_H )
-#define _ODRAW_TEST_MEMORY_H
+#if !defined( _ODRAWTOOLS_SIGNAL_H )
+#define _ODRAWTOOLS_SIGNAL_H
 
 #include <common.h>
+#include <types.h>
+
+#include "odrawtools_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-#if defined( HAVE_GNU_DL_DLSYM ) && defined( __GNUC__ ) && !defined( __clang__ ) && !defined( __arm__ ) && !defined( __mips__ ) && !defined( __hppa__ ) && !defined( __sparc__ )
-#define HAVE_ODRAW_TEST_MEMORY		1
+#if !defined( HAVE_SIGNAL_H ) && !defined( WINAPI )
+#error missing signal functions
 #endif
 
-#if defined( HAVE_ODRAW_TEST_MEMORY )
+#if defined( WINAPI )
+typedef unsigned long odrawtools_signal_t;
 
-extern int odraw_test_malloc_attempts_before_fail;
+#else
+typedef int odrawtools_signal_t;
 
-extern int odraw_test_memcpy_attempts_before_fail;
+#endif /* defined( WINAPI ) */
 
-extern int odraw_test_memset_attempts_before_fail;
+#if defined( WINAPI )
 
-extern int odraw_test_realloc_attempts_before_fail;
+BOOL WINAPI odrawtools_signal_handler(
+             odrawtools_signal_t signal );
 
-#endif /* defined( HAVE_ODRAW_TEST_MEMORY ) */
+#if defined( _MSC_VER )
+
+void odrawtools_signal_initialize_memory_debug(
+      void );
+
+#endif /* defined( _MSC_VER ) */
+
+#endif /* defined( WINAPI ) */
+
+int odrawtools_signal_attach(
+     void (*signal_handler)( odrawtools_signal_t ),
+     libcerror_error_t **error );
+
+int odrawtools_signal_detach(
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif /* !defined( _ODRAW_TEST_MEMORY_H ) */
+#endif /* !defined( _ODRAWTOOLS_SIGNAL_H ) */
 

@@ -634,6 +634,7 @@ int libodraw_data_file_descriptor_set_name(
 }
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 /* Retrieves the size of the name
  * Returns 1 if successful or -1 on error
  */
@@ -1121,5 +1122,6 @@ int libodraw_data_file_descriptor_set_name_wide(
 #endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
+
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 

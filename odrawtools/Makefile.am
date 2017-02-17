@@ -10,7 +10,6 @@ AM_CPPFLAGS = \
 	@LIBCFILE_CPPFLAGS@ \
 	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
-	@LIBCSYSTEM_CPPFLAGS@ \
 	@LIBHMAC_CPPFLAGS@ \
 	@LIBCRYPTO_CPPFLAGS@ \
 	@LIBODRAW_DLL_IMPORT@
@@ -24,20 +23,22 @@ bin_PROGRAMS = \
 odrawinfo_SOURCES = \
 	info_handle.c info_handle.h \
 	odrawinfo.c \
-	odrawoutput.c odrawoutput.h \
+	odrawtools_getopt.c odrawtools_getopt.h \
+	odrawtools_i18n.h \
 	odrawtools_libbfio.h \
 	odrawtools_libcerror.h \
 	odrawtools_libclocale.h \
 	odrawtools_libcnotify.h \
-	odrawtools_libcsystem.h \
 	odrawtools_libodraw.h \
-	odrawtools_libuna.h
+	odrawtools_libuna.h \
+	odrawtools_output.c odrawtools_output.h \
+	odrawtools_signal.c odrawtools_signal.h \
+	odrawtools_unused.h
 
 odrawinfo_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libodraw/libodraw.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 
@@ -47,26 +48,28 @@ odrawverify_SOURCES = \
 	log_handle.c log_handle.h \
 	process_status.c process_status.h \
 	odrawverify.c \
-	odrawoutput.c odrawoutput.h \
+	odrawtools_getopt.c odrawtools_getopt.h \
+	odrawtools_i18n.h \
 	odrawtools_libcerror.h \
 	odrawtools_libclocale.h \
 	odrawtools_libcnotify.h \
 	odrawtools_libcsplit.h \
-	odrawtools_libcsystem.h \
 	odrawtools_libhmac.h \
 	odrawtools_libodraw.h \
 	odrawtools_libuna.h \
+	odrawtools_output.c odrawtools_output.h \
+	odrawtools_signal.c odrawtools_signal.h \
+	odrawtools_unused.h \
 	storage_media_buffer.c storage_media_buffer.h \
 	verification_handle.c verification_handle.h
 
 odrawverify_LDADD = \
 	@LIBHMAC_LIBADD@ \
 	@LIBCRYPTO_LIBADD@ \
-	@LIBCSYSTEM_LIBADD@ \
 	@LIBCSPLIT_LIBADD@ \
-	../libodraw/libodraw.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 

@@ -34,12 +34,14 @@
 #endif
 
 #include "info_handle.h"
-#include "odrawoutput.h"
+#include "odrawtools_getopt.h"
 #include "odrawtools_libcerror.h"
 #include "odrawtools_libclocale.h"
 #include "odrawtools_libcnotify.h"
-#include "odrawtools_libcsystem.h"
 #include "odrawtools_libodraw.h"
+#include "odrawtools_output.h"
+#include "odrawtools_signal.h"
+#include "odrawtools_unused.h"
 
 info_handle_t *odrawinfo_info_handle = NULL;
 int odrawinfo_abort                  = 0;
@@ -70,12 +72,12 @@ void usage_fprint(
 /* Signal handler for odrawinfo
  */
 void odrawinfo_signal_handler(
-      libcsystem_signal_t signal LIBCSYSTEM_ATTRIBUTE_UNUSED )
+      odrawtools_signal_t signal ODRAWTOOLS_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
 	static char *function   = "odrawinfo_signal_handler";
 
-	LIBCSYSTEM_UNREFERENCED_PARAMETER( signal )
+	ODRAWTOOLS_UNREFERENCED_PARAMETER( signal )
 
 	odrawinfo_abort = 1;
 
@@ -95,8 +97,13 @@ void odrawinfo_signal_handler(
 	}
 	/* Force stdin to close otherwise any function reading it will remain blocked
 	 */
-	if( libcsystem_file_io_close(
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
 	     0 ) != 0 )
+#else
+	if( close(
+	     0 ) != 0 )
+#endif
 	{
 		libcnotify_printf(
 		 "%s: unable to close stdin.\n",
@@ -135,13 +142,13 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-        if( libcsystem_initialize(
+        if( odrawtools_output_initialize(
              _IONBF,
              &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
@@ -149,7 +156,7 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = odrawtools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "ihvV" ) ) ) != (system_integer_t) -1 )
@@ -231,7 +238,7 @@ int main( int argc, char * const argv[] )
 	}
 	odrawinfo_info_handle->ignore_data_files = ignore_data_files;
 
-	if( libcsystem_signal_attach(
+	if( odrawtools_signal_attach(
 	     odrawinfo_signal_handler,
 	     &error ) != 1 )
 	{
@@ -276,7 +283,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libcsystem_signal_detach(
+	if( odrawtools_signal_detach(
 	     &error ) != 1 )
 	{
 		fprintf(

@@ -11,19 +11,16 @@ AM_CPPFLAGS = \
 	@LIBCFILE_CPPFLAGS@ \
 	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
-	@LIBCSYSTEM_CPPFLAGS@ \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBODRAW_DLL_IMPORT@
 
 TESTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh
 
 check_SCRIPTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh \
 	test_runner.sh
@@ -33,9 +30,12 @@ EXTRA_DIST = \
 
 check_PROGRAMS = \
 	odraw_test_data_file \
+	odraw_test_data_file_descriptor \
 	odraw_test_error \
 	odraw_test_handle \
+	odraw_test_io_handle \
 	odraw_test_notify \
+	odraw_test_sector_range \
 	odraw_test_support \
 	odraw_test_track_value
 
@@ -48,6 +48,18 @@ odraw_test_data_file_SOURCES = \
 	odraw_test_unused.h
 
 odraw_test_data_file_LDADD = \
+	../libodraw/libodraw.la \
+	@LIBCERROR_LIBADD@
+
+odraw_test_data_file_descriptor_SOURCES = \
+	odraw_test_data_file_descriptor.c \
+	odraw_test_libcerror.h \
+	odraw_test_libodraw.h \
+	odraw_test_macros.h \
+	odraw_test_memory.c odraw_test_memory.h \
+	odraw_test_unused.h
+
+odraw_test_data_file_descriptor_LDADD = \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@
 
@@ -68,14 +80,28 @@ odraw_test_handle_SOURCES = \
 	odraw_test_libcnotify.h \
 	odraw_test_libodraw.h \
 	odraw_test_libuna.h \
-	odraw_test_memory.c odraw_test_memory.h \
-	odraw_test_unused.h
+	odraw_test_macros.h \
+	odraw_test_memory.c odraw_test_memory.h
 
 odraw_test_handle_LDADD = \
 	@LIBUNA_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
+	../libodraw/libodraw.la \
+	@LIBCTHREADS_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@PTHREAD_LIBADD@
+
+odraw_test_io_handle_SOURCES = \
+	odraw_test_io_handle.c \
+	odraw_test_libcerror.h \
+	odraw_test_libodraw.h \
+	odraw_test_macros.h \
+	odraw_test_memory.c odraw_test_memory.h \
+	odraw_test_unused.h
+
+odraw_test_io_handle_LDADD = \
 	../libodraw/libodraw.la \
 	@LIBCERROR_LIBADD@
 
@@ -87,6 +113,18 @@ odraw_test_notify_SOURCES = \
 
 odraw_test_notify_LDADD = \
 	../libodraw/libodraw.la
+
+odraw_test_sector_range_SOURCES = \
+	odraw_test_libcerror.h \
+	odraw_test_libodraw.h \
+	odraw_test_macros.h \
+	odraw_test_memory.c odraw_test_memory.h \
+	odraw_test_sector_range.c \
+	odraw_test_unused.h
+
+odraw_test_sector_range_LDADD = \
+	../libodraw/libodraw.la \
+	@LIBCERROR_LIBADD@
 
 odraw_test_support_SOURCES = \
 	odraw_test_libcerror.h \

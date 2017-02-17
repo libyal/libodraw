@@ -393,6 +393,8 @@ on_error:
 	return( 0 );
 }
 
+#if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 /* Tests the libodraw_data_file_descriptor_get_name_size_wide function
  * Returns 1 if successful or 0 if not
  */
@@ -516,6 +518,8 @@ on_error:
 	return( 0 );
 }
 
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
+
 #endif /* defined( __GNUC__ ) */
 
 /* The main program
@@ -543,21 +547,21 @@ int main(
 	 "libodraw_data_file_descriptor_free",
 	 odraw_test_data_file_descriptor_free );
 
-	ODRAW_TEST_RUN(
-	 "libodraw_data_file_descriptor_get_name_size",
-	 odraw_test_data_file_descriptor_get_name_size );
+	/* TODO: add tests for libodraw_data_file_descriptor_get_name_size */
 
 	/* TODO: add tests for libodraw_data_file_descriptor_get_name */
 
 	/* TODO: add tests for libodraw_data_file_descriptor_set_name */
 
-	ODRAW_TEST_RUN(
-	 "libodraw_data_file_descriptor_get_name_size_wide",
-	 odraw_test_data_file_descriptor_get_name_size_wide );
+#if defined( HAVE_WIDE_CHARACTER_TYPE )
+
+	/* TODO: add tests for libodraw_data_file_descriptor_get_name_size_wide */
 
 	/* TODO: add tests for libodraw_data_file_descriptor_get_name_wide */
 
 	/* TODO: add tests for libodraw_data_file_descriptor_set_name_wide */
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 #endif /* defined( __GNUC__ ) */
 

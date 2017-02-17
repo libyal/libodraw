@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libodraw],
- [20161224],
+ [20170217],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -90,8 +90,8 @@ AX_LIBODRAW_CHECK_LOCAL
 dnl Check for enabling libhmac for message digest hash function support
 AX_LIBHMAC_CHECK_ENABLE
 
-dnl Check for enabling libcsystem for cross-platform C generic system functions
-AX_LIBCSYSTEM_CHECK_ENABLE
+dnl Check for odrawtools function support
+AX_ODRAWTOOLS_CHECK_LOCAL
 
 dnl Check for headers and functions used in tools
 
@@ -185,24 +185,7 @@ AS_IF(
  AC_CHECK_FUNCS([time])
  ])
 
-dnl Date and time functions used in libcsystem/libcsystem_date_time.c
-AC_CHECK_FUNCS([localtime localtime_r mktime])
-
-AS_IF(
- [test "x$ac_cv_func_localtime" != xyes && test "x$ac_cv_func_localtime_r" != xyes],
- [AC_MSG_FAILURE(
-  [Missing functions: localtime and localtime_r],
-  [1])
- ])
- 
-AS_IF(
- [test "x$ac_cv_func_mktime" != xyes],
- [AC_MSG_FAILURE(
-  [Missing function: mktime],
-  [1])
- ])
- 
-dnl Date and time functions used in libcsystem/libcsystem_date_time.h
+dnl Date and time functions used in odrawtools/process_status.c
 AX_ODRAWTOOLS_CHECK_FUNC_CTIME
  
 AC_CHECK_FUNCS([gmtime gmtime_r time])
@@ -278,7 +261,7 @@ AS_IF(
  ])
 
 AS_IF(
- [test "x$ac_cv_libcsystem" = xyes || test "x$ac_cv_libhmac" = xyes || test "x$ac_cv_libcrypto" = xyes],
+ [test "x$ac_cv_libhmac" = xyes || test "x$ac_cv_libcrypto" = xyes],
  [AC_SUBST(
   [libodraw_tools_spec_build_requires],
   [BuildRequires:])
@@ -314,7 +297,6 @@ AC_CONFIG_FILES([libcfile/Makefile])
 AC_CONFIG_FILES([libcpath/Makefile])
 AC_CONFIG_FILES([libbfio/Makefile])
 AC_CONFIG_FILES([libodraw/Makefile])
-AC_CONFIG_FILES([libcsystem/Makefile])
 AC_CONFIG_FILES([libhmac/Makefile])
 AC_CONFIG_FILES([odrawtools/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
@@ -357,7 +339,6 @@ Building:
    MD5 support:                                $ac_cv_libhmac_md5
    SHA1 support:                               $ac_cv_libhmac_sha1
    SHA256 support:                             $ac_cv_libhmac_sha256
-   libcsystem support:                         $ac_cv_libcsystem
 
 Features:
    Multi-threading support:                    $ac_cv_libcthreads_multi_threading

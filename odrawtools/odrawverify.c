@@ -30,13 +30,15 @@
 
 #include "byte_size_string.h"
 #include "digest_hash.h"
-#include "odrawoutput.h"
+#include "log_handle.h"
+#include "odrawtools_getopt.h"
 #include "odrawtools_libcerror.h"
 #include "odrawtools_libclocale.h"
 #include "odrawtools_libcnotify.h"
-#include "odrawtools_libcsystem.h"
 #include "odrawtools_libodraw.h"
-#include "log_handle.h"
+#include "odrawtools_output.h"
+#include "odrawtools_signal.h"
+#include "odrawtools_unused.h"
 #include "verification_handle.h"
 
 verification_handle_t *odrawverify_verification_handle = NULL;
@@ -75,12 +77,12 @@ void usage_fprint(
 /* Signal handler for odrawverify
  */
 void odrawverify_signal_handler(
-      libcsystem_signal_t signal LIBCSYSTEM_ATTRIBUTE_UNUSED )
+      odrawtools_signal_t signal ODRAWTOOLS_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
 	static char *function   = "odrawverify_signal_handler";
 
-	LIBCSYSTEM_UNREFERENCED_PARAMETER( signal )
+	ODRAWTOOLS_UNREFERENCED_PARAMETER( signal )
 
 	odrawverify_abort = 1;
 
@@ -102,8 +104,13 @@ void odrawverify_signal_handler(
 	}
 	/* Force stdin to close otherwise any function reading it will remain blocked
 	 */
-	if( libcsystem_file_io_close(
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
 	     0 ) != 0 )
+#else
+	if( close(
+	     0 ) != 0 )
+#endif
 	{
 		libcnotify_printf(
 		 "%s: unable to close stdin.\n",
@@ -148,13 +155,13 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libcsystem_initialize(
+	if( odrawtools_output_initialize(
 	     _IONBF,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
@@ -162,7 +169,7 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = odrawtools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "d:hl:p:qvV" ) ) ) != (system_integer_t) -1 )
@@ -295,7 +302,7 @@ int main( int argc, char * const argv[] )
 			goto on_error;
 		}
 	}
-	if( libcsystem_signal_attach(
+	if( odrawtools_signal_attach(
 	     odrawverify_signal_handler,
 	     &error ) != 1 )
 	{
@@ -385,7 +392,7 @@ int main( int argc, char * const argv[] )
 			goto on_error;
 		}
 	}
-	if( libcsystem_signal_detach(
+	if( odrawtools_signal_detach(
 	     &error ) != 1 )
 	{
 		fprintf(
