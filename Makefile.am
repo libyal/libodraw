@@ -27,11 +27,10 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libodraw-dev.docs \
-	dpkg/libodraw.docs \
-	dpkg/libodraw-tools.docs \
+	dpkg/libodraw-dev.install \
+	dpkg/libodraw.install \
+	dpkg/libodraw-tools.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \
