@@ -35,7 +35,7 @@
 
 #include "../libodraw/libodraw_track_value.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 /* Tests the libodraw_track_value_initialize function
  * Returns 1 if successful or 0 if not
@@ -393,7 +393,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -410,7 +410,7 @@ int main(
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argc )
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 	ODRAW_TEST_RUN(
 	 "libodraw_track_value_initialize",
@@ -428,7 +428,7 @@ int main(
 	 "libodraw_track_value_get_bytes_per_sector",
 	 odraw_test_track_value_get_bytes_per_sector );
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

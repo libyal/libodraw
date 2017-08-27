@@ -73,9 +73,9 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -92,17 +92,17 @@ int main(
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argc )
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 	/* TODO: add tests for libodraw_data_file_initialize */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 	ODRAW_TEST_RUN(
 	 "libodraw_data_file_free",
 	 odraw_test_data_file_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 	/* TODO: add tests for libodraw_data_file_get_filename_size */
 
@@ -118,7 +118,7 @@ int main(
 
 	/* TODO: add tests for libodraw_data_file_get_type */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

@@ -35,7 +35,7 @@
 
 #include "../libodraw/libodraw_data_file_descriptor.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 /* Tests the libodraw_data_file_descriptor_initialize function
  * Returns 1 if successful or 0 if not
@@ -520,7 +520,7 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -537,7 +537,7 @@ int main(
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argc )
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 	ODRAW_TEST_RUN(
 	 "libodraw_data_file_descriptor_initialize",
@@ -563,7 +563,7 @@ int main(
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

@@ -35,7 +35,7 @@
 
 #include "../libodraw/libodraw_io_handle.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 /* Tests the libodraw_io_handle_initialize function
  * Returns 1 if successful or 0 if not
@@ -270,7 +270,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -287,7 +287,7 @@ int main(
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argc )
 	ODRAW_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 	ODRAW_TEST_RUN(
 	 "libodraw_io_handle_initialize",
@@ -301,7 +301,7 @@ int main(
 
 	/* TODO: add tests for libodraw_io_handle_copy_sector_data_to_buffer */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

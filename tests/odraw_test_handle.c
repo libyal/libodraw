@@ -1664,7 +1664,7 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 /* Tests the libodraw_handle_get_basename_size function
  * Returns 1 if successful or 0 if not
@@ -1826,7 +1826,7 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* Tests the libodraw_handle_get_ascii_codepage function
  * Returns 1 if successful or 0 if not
@@ -2238,7 +2238,7 @@ int main(
 
 		/* TODO: add tests for libodraw_handle_open_data_files_file_io_pool */
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 		/* TODO: add tests for libodraw_handle_open_data_file */
 
@@ -2248,14 +2248,14 @@ int main(
 
 		/* TODO: add tests for libodraw_handle_open_read */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 		ODRAW_TEST_RUN_WITH_ARGS(
 		 "libodraw_handle_read_buffer",
 		 odraw_test_handle_read_buffer,
 		 handle );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 		/* TODO: add tests for libodraw_handle_read_buffer_from_run_out */
 
@@ -2265,7 +2265,7 @@ int main(
 
 		/* TODO: add tests for libodraw_handle_read_buffer_from_track */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 		/* TODO: add tests for libodraw_handle_read_buffer_at_offset */
 
@@ -2278,7 +2278,7 @@ int main(
 		 odraw_test_handle_seek_offset,
 		 handle );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 		/* TODO: add tests for libodraw_handle_get_run_out_at_offset */
 
@@ -2286,14 +2286,14 @@ int main(
 
 		/* TODO: add tests for libodraw_handle_get_track_at_offset */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 		ODRAW_TEST_RUN_WITH_ARGS(
 		 "libodraw_handle_get_offset",
 		 odraw_test_handle_get_offset,
 		 handle );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 		ODRAW_TEST_RUN_WITH_ARGS(
 		 "libodraw_handle_get_basename_size",
@@ -2317,15 +2317,15 @@ int main(
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 		/* TODO: add tests for libodraw_handle_set_maximum_number_of_open_handles */
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 		/* TODO: add tests for libodraw_handle_set_media_values */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 		ODRAW_TEST_RUN_WITH_ARGS(
 		 "libodraw_handle_get_ascii_codepage",
