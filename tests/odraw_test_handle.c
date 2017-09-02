@@ -620,13 +620,13 @@ int odraw_test_handle_initialize(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libodraw_handle_free(
 	          &handle,
@@ -637,13 +637,13 @@ int odraw_test_handle_initialize(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -656,9 +656,9 @@ int odraw_test_handle_initialize(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -674,9 +674,9 @@ int odraw_test_handle_initialize(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -808,9 +808,9 @@ int odraw_test_handle_free(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -851,9 +851,9 @@ int odraw_test_handle_open(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libodraw_handle_initialize(
 	          &handle,
@@ -864,13 +864,13 @@ int odraw_test_handle_open(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open
 	 */
@@ -885,9 +885,9 @@ int odraw_test_handle_open(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -902,9 +902,9 @@ int odraw_test_handle_open(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -920,13 +920,13 @@ int odraw_test_handle_open(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -972,9 +972,9 @@ int odraw_test_handle_open_wide(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libodraw_handle_initialize(
 	          &handle,
@@ -985,13 +985,13 @@ int odraw_test_handle_open_wide(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open
 	 */
@@ -1006,9 +1006,9 @@ int odraw_test_handle_open_wide(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -1023,9 +1023,9 @@ int odraw_test_handle_open_wide(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -1041,13 +1041,13 @@ int odraw_test_handle_open_wide(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -1088,9 +1088,9 @@ int odraw_test_handle_close(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -1127,13 +1127,13 @@ int odraw_test_handle_open_close(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open and close
 	 */
@@ -1156,9 +1156,9 @@ int odraw_test_handle_open_close(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libodraw_handle_close(
 	          handle,
@@ -1169,9 +1169,9 @@ int odraw_test_handle_open_close(
 	 result,
 	 0 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open and close a second time to validate clean up on close
 	 */
@@ -1194,9 +1194,9 @@ int odraw_test_handle_open_close(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libodraw_handle_close(
 	          handle,
@@ -1207,9 +1207,9 @@ int odraw_test_handle_open_close(
 	 result,
 	 0 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Clean up
 	 */
@@ -1222,13 +1222,13 @@ int odraw_test_handle_open_close(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "handle",
-         handle );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "handle",
+	 handle );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -1267,9 +1267,9 @@ int odraw_test_handle_signal_abort(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -1282,9 +1282,9 @@ int odraw_test_handle_signal_abort(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -1987,9 +1987,9 @@ int odraw_test_handle_set_ascii_codepage(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -2029,9 +2029,9 @@ int odraw_test_handle_set_ascii_codepage(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 

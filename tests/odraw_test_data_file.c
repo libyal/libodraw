@@ -55,9 +55,9 @@ int odraw_test_data_file_free(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

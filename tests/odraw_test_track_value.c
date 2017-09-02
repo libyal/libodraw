@@ -64,13 +64,13 @@ int odraw_test_track_value_initialize(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "track_value",
-         track_value );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "track_value",
+	 track_value );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libodraw_track_value_free(
 	          &track_value,
@@ -81,13 +81,13 @@ int odraw_test_track_value_initialize(
 	 result,
 	 1 );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "track_value",
-         track_value );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "track_value",
+	 track_value );
 
-        ODRAW_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int odraw_test_track_value_initialize(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int odraw_test_track_value_initialize(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int odraw_test_track_value_free(
 	 result,
 	 -1 );
 
-        ODRAW_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
