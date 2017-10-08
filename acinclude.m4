@@ -88,11 +88,11 @@ AC_DEFUN([AX_ODRAWTOOLS_CHECK_FUNC_CTIME],
 
 dnl Function to detect if libodraw dependencies are available
 AC_DEFUN([AX_LIBODRAW_CHECK_LOCAL],
-  [dnl Check for internationalization functions in libodraw/libodraw_i18n.c
-  AC_CHECK_FUNCS([bindtextdomain])
-
-  AM_PROG_LEX
+  [AM_PROG_LEX
   AC_PROG_YACC
+
+  dnl Check for internationalization functions in libodraw/libodraw_i18n.c
+  AC_CHECK_FUNCS([bindtextdomain])
 
   dnl Check if library should be build with verbose output
   AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT

@@ -5,13 +5,13 @@ Summary: Library to access optical disc (split) RAW formats
 Group: System Environment/Libraries
 License: LGPL
 Source: %{name}-%{version}.tar.gz
-URL: https://github.com/libyal/libodraw/
+URL: https://github.com/libyal/libodraw
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 @libodraw_spec_requires@ @ax_libbfio_spec_requires@ @ax_libcdata_spec_requires@ @ax_libcerror_spec_requires@ @ax_libcfile_spec_requires@ @ax_libclocale_spec_requires@ @ax_libcnotify_spec_requires@ @ax_libcpath_spec_requires@ @ax_libcsplit_spec_requires@ @ax_libcthreads_spec_requires@ @ax_libuna_spec_requires@
 @libodraw_spec_build_requires@ @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_requires@ @ax_libcfile_spec_build_requires@ @ax_libclocale_spec_build_requires@ @ax_libcnotify_spec_build_requires@ @ax_libcpath_spec_build_requires@ @ax_libcsplit_spec_build_requires@ @ax_libcthreads_spec_build_requires@ @ax_libuna_spec_build_requires@
 
 %description
-libodraw is a library to access optical disc (split) RAW formats
+Library to access optical disc (split) RAW formats
 
 %package devel
 Summary: Header files and libraries for developing applications for libodraw
@@ -66,8 +66,7 @@ rm -rf %{buildroot}
 %files tools
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING NEWS README
-%attr(755,root,root) %{_bindir}/odrawinfo
-%attr(755,root,root) %{_bindir}/odrawverify
+%attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
 
 %changelog
