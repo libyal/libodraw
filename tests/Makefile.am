@@ -73,18 +73,25 @@ odraw_test_error_LDADD = \
 	../libodraw/libodraw.la
 
 odraw_test_handle_SOURCES = \
+	odraw_test_functions.c odraw_test_functions.h \
 	odraw_test_getopt.c odraw_test_getopt.h \
 	odraw_test_handle.c \
+	odraw_test_libbfio.h \
 	odraw_test_libcerror.h \
 	odraw_test_libclocale.h \
 	odraw_test_libcnotify.h \
 	odraw_test_libodraw.h \
 	odraw_test_libuna.h \
 	odraw_test_macros.h \
-	odraw_test_memory.c odraw_test_memory.h
+	odraw_test_memory.c odraw_test_memory.h \
+	odraw_test_unused.h
 
 odraw_test_handle_LDADD = \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
 	@LIBUNA_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \

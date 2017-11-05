@@ -34,14 +34,6 @@
 #include "libodraw_track_value.h"
 #include "libodraw_types.h"
 
-#if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32_VERSION ) || defined( __MINGW64_VERSION_MAJOR )
-
-/* This inclusion is needed otherwise some linkers
- * mess up exporting the legacy and metadata functions
- */
-#include "libodraw_metadata.h"
-#endif
-
 #if defined( __cplusplus )
 extern "C" {
 #endif
@@ -409,6 +401,99 @@ int libodraw_handle_append_data_file_wide(
      libcerror_error_t **error );
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_media_size(
+     libodraw_handle_t *handle,
+     size64_t *media_size,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_bytes_per_sector(
+     libodraw_handle_t *handle,
+     uint32_t *bytes_per_sector,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_set_bytes_per_sector(
+     libodraw_handle_t *handle,
+     uint32_t bytes_per_sector,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_sectors(
+     libodraw_handle_t *handle,
+     uint64_t *number_of_sectors,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_sessions(
+     libodraw_handle_t *handle,
+     int *number_of_sessions,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_session(
+     libodraw_handle_t *handle,
+     int index,
+     uint64_t *start_sector,
+     uint64_t *number_of_sectors,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_append_session(
+     libodraw_handle_t *handle,
+     uint64_t start_sector,
+     uint64_t number_of_sectors,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_lead_outs(
+     libodraw_handle_t *handle,
+     int *number_of_lead_outs,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_lead_out(
+     libodraw_handle_t *handle,
+     int index,
+     uint64_t *start_sector,
+     uint64_t *number_of_sectors,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_append_lead_out(
+     libodraw_handle_t *handle,
+     uint64_t start_sector,
+     uint64_t number_of_sectors,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_number_of_tracks(
+     libodraw_handle_t *handle,
+     int *number_of_tracks,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_get_track(
+     libodraw_handle_t *handle,
+     int index,
+     uint64_t *start_sector,
+     uint64_t *number_of_sectors,
+     uint8_t *type,
+     int *data_file_index,
+     uint64_t *data_file_start_sector,
+     libcerror_error_t **error );
+
+LIBODRAW_EXTERN \
+int libodraw_handle_append_track(
+     libodraw_handle_t *handle,
+     uint64_t start_sector,
+     uint64_t number_of_sectors,
+     uint8_t type,
+     int data_file_index,
+     uint64_t data_file_start_sector,
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

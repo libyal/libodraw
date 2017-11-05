@@ -33,7 +33,6 @@ libodraw_la_SOURCES = \
 	libodraw_extern.h \
 	libodraw_handle.c libodraw_handle.h \
 	libodraw_io_handle.c libodraw_io_handle.h \
-	libodraw_metadata.c libodraw_metadata.h \
 	libodraw_libbfio.h \
 	libodraw_libcdata.h \
 	libodraw_libcerror.h \

@@ -270,6 +270,134 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libodraw_io_handle_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_io_handle_clear(
+     void )
+{
+	libcerror_error_t *error        = NULL;
+	libodraw_io_handle_t *io_handle = NULL;
+	int result                      = 0;
+
+	/* Initialize test
+	 */
+	result = libodraw_io_handle_initialize(
+	          &io_handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "io_handle",
+	 io_handle );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libodraw_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libodraw_io_handle_clear(
+	          NULL,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_ODRAW_TEST_MEMORY )
+
+	/* Test libodraw_io_handle_clear with memset failing
+	 */
+	odraw_test_memset_attempts_before_fail = 0;
+
+	result = libodraw_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	if( odraw_test_memset_attempts_before_fail != -1 )
+	{
+		odraw_test_memset_attempts_before_fail = -1;
+	}
+	else
+	{
+		ODRAW_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		ODRAW_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_ODRAW_TEST_MEMORY ) */
+
+	/* Clean up
+	 */
+	result = libodraw_io_handle_free(
+	          &io_handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "io_handle",
+	 io_handle );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( io_handle != NULL )
+	{
+		libodraw_io_handle_free(
+		 &io_handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* The main program
@@ -297,7 +425,9 @@ int main(
 	 "libodraw_io_handle_free",
 	 odraw_test_io_handle_free );
 
-	/* TODO: add tests for libodraw_io_handle_clear */
+	ODRAW_TEST_RUN(
+	 "libodraw_io_handle_clear",
+	 odraw_test_io_handle_clear );
 
 	/* TODO: add tests for libodraw_io_handle_copy_sector_data_to_buffer */
 

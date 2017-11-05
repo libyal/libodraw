@@ -32,7 +32,6 @@
 #include "libodraw_handle.h"
 #include "libodraw_libcerror.h"
 #include "libodraw_libcnotify.h"
-#include "libodraw_metadata.h"
 #include "libodraw_types.h"
 
 #define YYMALLOC	cue_scanner_alloc
