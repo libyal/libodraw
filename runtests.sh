@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script that runs the tests
 #
-# Version: 20171104
+# Version: 20171210
 
 EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
@@ -174,17 +174,16 @@ run_configure_make_check_python()
 
 run_setup_py_tests()
 {
+	# Skip this test when running Cygwin on AppVeyor.
+	if test -n "${APPVEYOR}" && test ${TARGET} = "cygwin";
+	then
+		echo "Running: 'setup.py build' skipped";
+
+		return ${EXIT_SUCCESS};
+	fi
 	PYTHON=$1;
 
-	if test -n "${CHECK_WITH_STRACE}" && test ${CHECK_WITH_STRACE} -eq 1;
-	then
-		# strace on Cygwin will fail if it is run on a symbolic link.
-		PYTHON=`readlink -f ${PYTHON}`;
-
-		strace -o strace.log ${PYTHON} setup.py build;
-	else
-		${PYTHON} setup.py build;
-	fi
+	${PYTHON} setup.py build;
 	RESULT=$?;
 
 	if test ${RESULT} -ne ${EXIT_SUCCESS};
@@ -214,7 +213,12 @@ echo "${CONFIGURE_HELP}" | grep -- '--enable-python' > /dev/null;
 
 HAVE_ENABLE_PYTHON=$?;
 
-PYTHON_CONFIG=`whereis python-config | sed 's/^.*:[ ]*//' 2> /dev/null`;
+PYTHON_CONFIG="";
+
+if test -x /usr/bin/whereis;
+then
+	PYTHON_CONFIG=`/usr/bin/whereis python-config | sed 's/^.*:[ ]*//' 2> /dev/null`;
+fi
 
 # Test "./configure && make && make check" without options.
 
