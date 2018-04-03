@@ -25,6 +25,8 @@
 #include <system_string.h>
 #include <types.h>
 
+#include <stdio.h>
+
 #if defined( HAVE_IO_H ) || defined( WINAPI )
 #include <io.h>
 #endif

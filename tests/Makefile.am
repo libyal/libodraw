@@ -113,13 +113,15 @@ odraw_test_io_handle_LDADD = \
 	@LIBCERROR_LIBADD@
 
 odraw_test_notify_SOURCES = \
+	odraw_test_libcerror.h \
 	odraw_test_libodraw.h \
 	odraw_test_macros.h \
 	odraw_test_notify.c \
 	odraw_test_unused.h
 
 odraw_test_notify_LDADD = \
-	../libodraw/libodraw.la
+	../libodraw/libodraw.la \
+	@LIBCERROR_LIBADD@
 
 odraw_test_sector_range_SOURCES = \
 	odraw_test_libcerror.h \

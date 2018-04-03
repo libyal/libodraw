@@ -42,6 +42,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odraw_test_notify", "odraw_test_notify\odraw_test_notify.vcproj", "{ED410336-B045-4B35-9039-023549A664C2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{31355F6F-10AC-432A-A6D1-0143297F093D} = {31355F6F-10AC-432A-A6D1-0143297F093D}
+		{BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C} = {BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odraw_test_sector_range", "odraw_test_sector_range\odraw_test_sector_range.vcproj", "{AA8830D7-DD81-4950-BB1B-02E531C4F34C}"
