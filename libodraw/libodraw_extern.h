@@ -28,17 +28,13 @@
  */
 #if !defined( HAVE_LOCAL_LIBODRAW )
 
-/* If libtool DLL support is enabled set LIBODRAW_DLL_EXPORT
- * before including libodraw/extern.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBODRAW_DLL_EXPORT
-#endif
-
 #include <libodraw/extern.h>
 
+#define LIBODRAW_EXTERN_VARIABLE	LIBODRAW_EXTERN
+
 #else
-#define LIBODRAW_EXTERN	/* extern */
+#define LIBODRAW_EXTERN		/* extern */
+#define LIBODRAW_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBODRAW ) */
 

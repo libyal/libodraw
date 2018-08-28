@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libodraw],
- [20180403],
+ [20180828],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -107,7 +107,7 @@ AS_IF(
  [test "x$enable_shared" = xyes],
  [AS_CASE(
   [$host],
-  [*cygwin* | *mingw*],
+  [*cygwin* | *mingw* | *msys*],
   [AC_DEFINE(
    [HAVE_DLLMAIN],
    [1],
@@ -116,7 +116,10 @@ AS_IF(
    [HAVE_DLLMAIN],
    [1])
 
-  dnl Used in tests
+  AC_SUBST(
+   [LIBODRAW_DLL_EXPORT],
+   ["-DLIBODRAW_DLL_EXPORT"])
+
   AC_SUBST(
    [LIBODRAW_DLL_IMPORT],
    ["-DLIBODRAW_DLL_IMPORT"])

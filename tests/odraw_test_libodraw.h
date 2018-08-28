@@ -1,5 +1,5 @@
 /*
- * The internal libodraw header
+ * The libodraw header wrapper
  *
  * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -23,13 +23,6 @@
 #define _ODRAW_TEST_LIBODRAW_H
 
 #include <common.h>
-
-/* If Cygwin libtool DLL support is enabled and do not want to create static
- * executables set LIBODRAW_DLL_IMPORT before including libodraw.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
-#define LIBODRAW_DLL_IMPORT
-#endif
 
 #include <libodraw.h>
 
