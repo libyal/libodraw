@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libodraw],
- [20180828],
+ [20181020],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -135,9 +135,6 @@ AS_IF(
  [AC_SUBST(
   [libodraw_spec_requires],
   [Requires:])
- AC_SUBST(
-  [libodraw_spec_build_requires],
-  [BuildRequires:])
  ])
 
 AS_IF(
