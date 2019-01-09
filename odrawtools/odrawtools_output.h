@@ -1,7 +1,7 @@
 /*
  * Common output functions for the odrawtools
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -36,14 +36,14 @@ int odrawtools_output_initialize(
      int stdio_mode,
      libcerror_error_t **error );
 
-void odrawoutput_copyright_fprint(
+void odrawtools_output_copyright_fprint(
       FILE *stream );
 
-void odrawoutput_version_fprint(
+void odrawtools_output_version_fprint(
       FILE *stream,
       const system_character_t *program );
 
-void odrawoutput_version_detailed_fprint(
+void odrawtools_output_version_detailed_fprint(
       FILE *stream,
       const system_character_t *program );
 

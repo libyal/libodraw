@@ -1,7 +1,7 @@
 /*
  * Shows information obtained from optical disc (split) RAW file(s)
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -158,7 +158,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	odrawoutput_version_fprint(
+	odrawtools_output_version_fprint(
 	 stdout,
 	 program );
 
@@ -198,7 +198,7 @@ int main( int argc, char * const argv[] )
 				break;
 
 			case (system_integer_t) 'V':
-				odrawoutput_copyright_fprint(
+				odrawtools_output_copyright_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );
@@ -232,7 +232,7 @@ int main( int argc, char * const argv[] )
 	     &odrawinfo_info_handle,
 	     &error ) != 1 )
 	{
-		odrawoutput_version_fprint(
+		odrawtools_output_version_fprint(
 		 stderr,
 		 program );
 

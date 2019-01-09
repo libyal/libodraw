@@ -1,7 +1,7 @@
 /*
  * Common output functions for the odrawtools
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -94,7 +94,7 @@ int odrawtools_output_initialize(
 
 /* Prints the copyright information
  */
-void odrawoutput_copyright_fprint(
+void odrawtools_output_copyright_fprint(
       FILE *stream )
 {
 	if( stream == NULL )
@@ -105,7 +105,7 @@ void odrawoutput_copyright_fprint(
 	 */
 	fprintf(
 	 stream,
-	 _( "Copyright (C) 2010-2018, %s.\n" ),
+	 _( "Copyright (C) 2010-2019, %s.\n" ),
 	 _( "Joachim Metz" ) );
 
 	fprintf(
@@ -126,7 +126,7 @@ void odrawoutput_copyright_fprint(
 
 /* Prints the version information
  */
-void odrawoutput_version_fprint(
+void odrawtools_output_version_fprint(
       FILE *stream,
       const system_character_t *program )
 {
@@ -147,7 +147,7 @@ void odrawoutput_version_fprint(
 
 /* Prints the detailed version information
  */
-void odrawoutput_version_detailed_fprint(
+void odrawtools_output_version_detailed_fprint(
       FILE *stream,
       const system_character_t *program )
 {

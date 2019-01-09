@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libodraw
 Package: libodraw
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libodraw1
+Replaces: libodraw1
 Suggests: libodraw-dbg
 Description: Library to access optical disc (split) RAW formats
  libodraw is a library to access optical disc (split) RAW formats.
@@ -31,6 +33,8 @@ Package: libodraw-tools
 Section: utils
 Architecture: any
 Depends: libodraw (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libodraw-utils
+Replaces: libodraw-utils
 Description: Several tools for accessing optical disc (split) RAW formats
  Several tools for accessing optical disc (split) RAW formats.
 

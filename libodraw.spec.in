@@ -10,24 +10,32 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 @libodraw_spec_requires@ @ax_libbfio_spec_requires@ @ax_libcdata_spec_requires@ @ax_libcerror_spec_requires@ @ax_libcfile_spec_requires@ @ax_libclocale_spec_requires@ @ax_libcnotify_spec_requires@ @ax_libcpath_spec_requires@ @ax_libcsplit_spec_requires@ @ax_libcthreads_spec_requires@ @ax_libuna_spec_requires@
 BuildRequires: gcc @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_requires@ @ax_libcfile_spec_build_requires@ @ax_libclocale_spec_build_requires@ @ax_libcnotify_spec_build_requires@ @ax_libcpath_spec_build_requires@ @ax_libcsplit_spec_build_requires@ @ax_libcthreads_spec_build_requires@ @ax_libuna_spec_build_requires@
 
-%description
+%description -n libodraw
 Library to access optical disc (split) RAW formats
 
-%package devel
+%package -n libodraw-static
+Summary: Library to access optical disc (split) RAW formats
+Group: Development/Libraries
+Requires: libodraw = %{version}-%{release}
+
+%description -n libodraw-static
+Static library version of libodraw.
+
+%package -n libodraw-devel
 Summary: Header files and libraries for developing applications for libodraw
 Group: Development/Libraries
 Requires: libodraw = %{version}-%{release}
 
-%description devel
+%description -n libodraw-devel
 Header files and libraries for developing applications for libodraw.
 
-%package tools
+%package -n libodraw-tools
 Summary: Several tools for accessing optical disc (split) RAW formats
 Group: Applications/System
 Requires: libodraw = %{version}-%{release} @ax_libcrypto_spec_requires@ @ax_libhmac_spec_requires@
 @libodraw_spec_tools_build_requires@ @ax_libcrypto_spec_build_requires@ @ax_libhmac_spec_build_requires@
 
-%description tools
+%description -n libodraw-tools
 Several tools for accessing optical disc (split) RAW formats
 
 %prep
@@ -48,24 +56,29 @@ rm -rf %{buildroot}
 
 %postun -p /sbin/ldconfig
 
-%files
+%files -n libodraw
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
-%files devel
+%files -n libodraw-static
 %defattr(644,root,root,755)
 %license COPYING
-%doc AUTHORS README ChangeLog
-%{_libdir}/*.a
+%doc AUTHORS README
+%attr(755,root,root) %{_libdir}/*.a
+
+%files -n libodraw-devel
+%defattr(644,root,root,755)
+%license COPYING
+%doc AUTHORS README
 %{_libdir}/*.la
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/libodraw.pc
 %{_includedir}/*
 %{_mandir}/man3/*
 
-%files tools
+%files -n libodraw-tools
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
