@@ -856,7 +856,7 @@ int libodraw_handle_open_file_io_handle(
 		 "%s: unable to open file.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	else if( file_io_handle_is_open == 0 )
 	{
@@ -872,7 +872,7 @@ int libodraw_handle_open_file_io_handle(
 			 "%s: unable to open file IO handle.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		file_io_handle_opened_in_library = 1;
 	}
@@ -888,7 +888,7 @@ int libodraw_handle_open_file_io_handle(
 		 "%s: unable to read from handle.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	internal_handle->access_flags                         = access_flags;
 	internal_handle->toc_file_io_handle                   = file_io_handle;
@@ -897,7 +897,8 @@ int libodraw_handle_open_file_io_handle(
 	return( 1 );
 
 on_error:
-	if( file_io_handle_opened_in_library != 0 )
+	if( ( file_io_handle_is_open == 0 )
+	 && ( file_io_handle_opened_in_library != 0 ) )
 	{
 		libbfio_handle_close(
 		 file_io_handle,

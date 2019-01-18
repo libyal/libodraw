@@ -207,36 +207,46 @@ struct cue_parser_state
 typedef size_t yy_size_t;
 typedef struct yy_buffer_state* YY_BUFFER_STATE;
 
-extern int cue_scanner_suppress_error;
+extern \
+int cue_scanner_suppress_error;
 
-extern int cue_scanner_lex_destroy(
-            void );
+extern \
+int cue_scanner_lex_destroy(
+     void );
 
-extern void *cue_scanner_alloc(
-              yy_size_t size );
+extern \
+void *cue_scanner_alloc(
+       yy_size_t size );
 
-extern void *cue_scanner_realloc(
-              void *buffer,
-              yy_size_t size );
+extern \
+void *cue_scanner_realloc(
+       void *buffer,
+       yy_size_t size );
 
-extern void *cue_scanner_free(
-              void *buffer );
+extern \
+void cue_scanner_free(
+      void *buffer );
 
-extern int cue_scanner_lex(
-            void *user_data );
+extern \
+int cue_scanner_lex(
+     void *user_data );
 
-extern void cue_scanner_error(
-             void *parser_state,
-             const char *error_string );
+extern \
+void cue_scanner_error(
+      void *parser_state,
+      const char *error_string );
 
-extern YY_BUFFER_STATE cue_scanner__scan_buffer(
-                        char *buffer,
-                        yy_size_t buffer_size );
+extern \
+YY_BUFFER_STATE cue_scanner__scan_buffer(
+                 char *buffer,
+                 yy_size_t buffer_size );
 
-extern void cue_scanner__delete_buffer(
-             YY_BUFFER_STATE buffer_state );
+extern \
+void cue_scanner__delete_buffer(
+      YY_BUFFER_STATE buffer_state );
 
-extern size_t cue_scanner_buffer_offset;
+extern \
+size_t cue_scanner_buffer_offset;
 
 static char *cue_parser_function = "cue_parser";
 
