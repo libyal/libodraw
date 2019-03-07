@@ -16,11 +16,13 @@ AM_CPPFLAGS = \
 
 TESTS = \
 	test_library.sh \
+	test_manpage.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh
 
 check_SCRIPTS = \
 	test_library.sh \
+	test_manpage.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh \
 	test_runner.sh

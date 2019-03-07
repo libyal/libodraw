@@ -1,11 +1,9 @@
-.Dd September 19, 2017
+.Dd March  7, 2019
 .Dt libodraw 3
 .Os libodraw
 .Sh NAME
 .Nm libodraw.h
 .Nd Library to access optical disc (split) RAW formats
-.Sh LIBRARY
-.Lb libodraw
 .Sh SYNOPSIS
 .In libodraw.h
 .Pp
@@ -19,17 +17,17 @@ Support functions
 .Ft int
 .Fn libodraw_get_access_flags_write "void"
 .Ft int
-.Fn libodraw_get_codepage "int *codepage, libodraw_error_t **error"
+.Fn libodraw_get_codepage "int *codepage" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_set_codepage "int codepage, libodraw_error_t **error"
+.Fn libodraw_set_codepage "int codepage" "libodraw_error_t **error"
 .Pp
 Notify functions
 .Ft void
 .Fn libodraw_notify_set_verbose "int verbose"
 .Ft int
-.Fn libodraw_notify_set_stream "FILE *stream, libodraw_error_t **error"
+.Fn libodraw_notify_set_stream "FILE *stream" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_notify_stream_open "const char *filename, libodraw_error_t **error"
+.Fn libodraw_notify_stream_open "const char *filename" "libodraw_error_t **error"
 .Ft int
 .Fn libodraw_notify_stream_close "libodraw_error_t **error"
 .Pp
@@ -37,111 +35,111 @@ Error functions
 .Ft void
 .Fn libodraw_error_free "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_error_fprint "libodraw_error_t *error, FILE *stream"
+.Fn libodraw_error_fprint "libodraw_error_t *error" "FILE *stream"
 .Ft int
-.Fn libodraw_error_sprint "libodraw_error_t *error, char *string, size_t size"
+.Fn libodraw_error_sprint "libodraw_error_t *error" "char *string" "size_t size"
 .Ft int
-.Fn libodraw_error_backtrace_fprint "libodraw_error_t *error, FILE *stream"
+.Fn libodraw_error_backtrace_fprint "libodraw_error_t *error" "FILE *stream"
 .Ft int
-.Fn libodraw_error_backtrace_sprint "libodraw_error_t *error, char *string, size_t size"
+.Fn libodraw_error_backtrace_sprint "libodraw_error_t *error" "char *string" "size_t size"
 .Pp
 Handle functions
 .Ft int
-.Fn libodraw_handle_initialize "libodraw_handle_t **handle, libodraw_error_t **error"
+.Fn libodraw_handle_initialize "libodraw_handle_t **handle" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_free "libodraw_handle_t **handle, libodraw_error_t **error"
+.Fn libodraw_handle_free "libodraw_handle_t **handle" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_signal_abort "libodraw_handle_t *handle, libodraw_error_t **error"
+.Fn libodraw_handle_signal_abort "libodraw_handle_t *handle" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_open "libodraw_handle_t *handle, const char *filename, int access_flags, libodraw_error_t **error"
+.Fn libodraw_handle_open "libodraw_handle_t *handle" "const char *filename" "int access_flags" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_open_data_files "libodraw_handle_t *handle, libodraw_error_t **error"
+.Fn libodraw_handle_open_data_files "libodraw_handle_t *handle" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_close "libodraw_handle_t *handle, libodraw_error_t **error"
+.Fn libodraw_handle_close "libodraw_handle_t *handle" "libodraw_error_t **error"
 .Ft ssize_t
-.Fn libodraw_handle_read_buffer "libodraw_handle_t *handle, void *buffer, size_t buffer_size, libodraw_error_t **error"
+.Fn libodraw_handle_read_buffer "libodraw_handle_t *handle" "void *buffer" "size_t buffer_size" "libodraw_error_t **error"
 .Ft ssize_t
-.Fn libodraw_handle_read_buffer_at_offset "libodraw_handle_t *handle, void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
+.Fn libodraw_handle_read_buffer_at_offset "libodraw_handle_t *handle" "void *buffer" "size_t buffer_size" "off64_t offset" "libodraw_error_t **error"
 .Ft ssize_t
-.Fn libodraw_handle_write_buffer "libodraw_handle_t *handle, const void *buffer, size_t buffer_size, libodraw_error_t **error"
+.Fn libodraw_handle_write_buffer "libodraw_handle_t *handle" "const void *buffer" "size_t buffer_size" "libodraw_error_t **error"
 .Ft ssize_t
-.Fn libodraw_handle_write_buffer_at_offset "libodraw_handle_t *handle, const void *buffer, size_t buffer_size, off64_t offset, libodraw_error_t **error"
+.Fn libodraw_handle_write_buffer_at_offset "libodraw_handle_t *handle" "const void *buffer" "size_t buffer_size" "off64_t offset" "libodraw_error_t **error"
 .Ft off64_t
-.Fn libodraw_handle_seek_offset "libodraw_handle_t *handle, off64_t offset, int whence, libodraw_error_t **error"
+.Fn libodraw_handle_seek_offset "libodraw_handle_t *handle" "off64_t offset" "int whence" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_offset "libodraw_handle_t *handle, off64_t *offset, libodraw_error_t **error"
+.Fn libodraw_handle_get_offset "libodraw_handle_t *handle" "off64_t *offset" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_set_maximum_number_of_open_handles "libodraw_handle_t *handle, int maximum_number_of_open_handles, libodraw_error_t **error"
+.Fn libodraw_handle_set_maximum_number_of_open_handles "libodraw_handle_t *handle" "int maximum_number_of_open_handles" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_ascii_codepage "libodraw_handle_t *handle, int *ascii_codepage, libodraw_error_t **error"
+.Fn libodraw_handle_get_ascii_codepage "libodraw_handle_t *handle" "int *ascii_codepage" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_set_ascii_codepage "libodraw_handle_t *handle, int ascii_codepage, libodraw_error_t **error"
+.Fn libodraw_handle_set_ascii_codepage "libodraw_handle_t *handle" "int ascii_codepage" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_number_of_data_files "libodraw_handle_t *handle, int *number_of_data_files, libodraw_error_t **error"
+.Fn libodraw_handle_get_number_of_data_files "libodraw_handle_t *handle" "int *number_of_data_files" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_data_file "libodraw_handle_t *handle, int index, libodraw_data_file_t **data_file, libodraw_error_t **error"
+.Fn libodraw_handle_get_data_file "libodraw_handle_t *handle" "int index" "libodraw_data_file_t **data_file" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_append_data_file "libodraw_handle_t *handle, const char *name, size_t name_length, uint8_t type, libodraw_error_t **error"
+.Fn libodraw_handle_append_data_file "libodraw_handle_t *handle" "const char *name" "size_t name_length" "uint8_t type" "libodraw_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
-.Fn libodraw_handle_open_wide "libodraw_handle_t *handle, const wchar_t *filename, int access_flags, libodraw_error_t **error"
+.Fn libodraw_handle_open_wide "libodraw_handle_t *handle" "const wchar_t *filename" "int access_flags" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_append_data_file_wide "libodraw_handle_t *handle, const wchar_t *name, size_t name_length, uint8_t type, libodraw_error_t **error"
+.Fn libodraw_handle_append_data_file_wide "libodraw_handle_t *handle" "const wchar_t *name" "size_t name_length" "uint8_t type" "libodraw_error_t **error"
 .Pp
 Available when compiled with libbfio support:
 .Ft int
-.Fn libodraw_handle_open_handle_io_handle "libodraw_handle_t *handle, libbfio_handle_t *file_io_handle, int access_flags, libodraw_error_t **error"
+.Fn libodraw_handle_open_handle_io_handle "libodraw_handle_t *handle" "libbfio_handle_t *file_io_handle" "int access_flags" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_open_data_files_file_io_pool "libodraw_handle_t *handle, libbfio_pool_t *file_io_pool, libodraw_error_t **error"
+.Fn libodraw_handle_open_data_files_file_io_pool "libodraw_handle_t *handle" "libbfio_pool_t *file_io_pool" "libodraw_error_t **error"
 .Pp
 Meta data functions
 .Ft int
-.Fn libodraw_handle_get_media_size "libodraw_handle_t *handle, size64_t *media_size, libodraw_error_t **error"
+.Fn libodraw_handle_get_media_size "libodraw_handle_t *handle" "size64_t *media_size" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_bytes_per_sector "libodraw_handle_t *handle, uint32_t *bytes_per_sector, libodraw_error_t **error"
+.Fn libodraw_handle_get_bytes_per_sector "libodraw_handle_t *handle" "uint32_t *bytes_per_sector" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_set_bytes_per_sector "libodraw_handle_t *handle, uint32_t bytes_per_sector, libodraw_error_t **error"
+.Fn libodraw_handle_set_bytes_per_sector "libodraw_handle_t *handle" "uint32_t bytes_per_sector" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_number_of_sectors "libodraw_handle_t *handle, uint64_t *number_of_sectors, libodraw_error_t **error"
+.Fn libodraw_handle_get_number_of_sectors "libodraw_handle_t *handle" "uint64_t *number_of_sectors" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_number_of_sessions "libodraw_handle_t *handle, int *number_of_sessions, libodraw_error_t **error"
+.Fn libodraw_handle_get_number_of_sessions "libodraw_handle_t *handle" "int *number_of_sessions" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_session "libodraw_handle_t *handle, int index, uint64_t *start_sector, uint64_t *number_of_sectors, libodraw_error_t **error"
+.Fn libodraw_handle_get_session "libodraw_handle_t *handle" "int index" "uint64_t *start_sector" "uint64_t *number_of_sectors" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_append_session "libodraw_handle_t *handle, uint64_t first_sector, uint64_t number_of_sectors, libodraw_error_t **error"
+.Fn libodraw_handle_append_session "libodraw_handle_t *handle" "uint64_t first_sector" "uint64_t number_of_sectors" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_number_of_lead_outs "libodraw_handle_t *handle, int *number_of_lead_outs, libodraw_error_t **error"
+.Fn libodraw_handle_get_number_of_lead_outs "libodraw_handle_t *handle" "int *number_of_lead_outs" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_lead_out "libodraw_handle_t *handle, int index, uint64_t *start_sector, uint64_t *number_of_sectors, libodraw_error_t **error"
+.Fn libodraw_handle_get_lead_out "libodraw_handle_t *handle" "int index" "uint64_t *start_sector" "uint64_t *number_of_sectors" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_append_lead_out "libodraw_handle_t *handle, uint64_t first_sector, uint64_t number_of_sectors, libodraw_error_t **error"
+.Fn libodraw_handle_append_lead_out "libodraw_handle_t *handle" "uint64_t first_sector" "uint64_t number_of_sectors" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_number_of_tracks "libodraw_handle_t *handle, int *number_of_tracks, libodraw_error_t **error"
+.Fn libodraw_handle_get_number_of_tracks "libodraw_handle_t *handle" "int *number_of_tracks" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_get_track "libodraw_handle_t *handle, int index, uint64_t *start_sector, uint64_t *number_of_sectors, uint8_t *type, int *data_file_index, uint64_t *data_file_start_sector, libodraw_error_t **error"
+.Fn libodraw_handle_get_track "libodraw_handle_t *handle" "int index" "uint64_t *start_sector" "uint64_t *number_of_sectors" "uint8_t *type" "int *data_file_index" "uint64_t *data_file_start_sector" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_handle_append_track "libodraw_handle_t *handle, uint64_t start_sector, uint64_t number_of_sectors, uint8_t type, int data_file_index, uint64_t data_file_start_sector, libodraw_error_t **error"
+.Fn libodraw_handle_append_track "libodraw_handle_t *handle" "uint64_t start_sector" "uint64_t number_of_sectors" "uint8_t type" "int data_file_index" "uint64_t data_file_start_sector" "libodraw_error_t **error"
 .Pp
 Data file functions
 .Ft int
-.Fn libodraw_data_file_free "libodraw_data_file_t **data_file, libodraw_error_t **error"
+.Fn libodraw_data_file_free "libodraw_data_file_t **data_file" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_data_file_get_filename_size "libodraw_data_file_t *data_file, size_t *filename_size, libodraw_error_t **error"
+.Fn libodraw_data_file_get_filename_size "libodraw_data_file_t *data_file" "size_t *filename_size" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_data_file_get_filename "libodraw_data_file_t *data_file, char *filename, size_t filename_size, libodraw_error_t **error"
+.Fn libodraw_data_file_get_filename "libodraw_data_file_t *data_file" "char *filename" "size_t filename_size" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_data_file_set_filename "libodraw_data_file_t *data_file, const char *filename, size_t filename_length, libodraw_error_t **error"
+.Fn libodraw_data_file_set_filename "libodraw_data_file_t *data_file" "const char *filename" "size_t filename_length" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_data_file_get_type "libodraw_data_file_t *data_file, uint8_t *type, libodraw_error_t **error"
+.Fn libodraw_data_file_get_type "libodraw_data_file_t *data_file" "uint8_t *type" "libodraw_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
-.Fn libodraw_data_file_get_filename_size_wide "libodraw_data_file_t *data_file, size_t *filename_size, libodraw_error_t **error"
+.Fn libodraw_data_file_get_filename_size_wide "libodraw_data_file_t *data_file" "size_t *filename_size" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_data_file_get_filename_wide "libodraw_data_file_t *data_file, wchar_t *filename, size_t filename_size, libodraw_error_t **error"
+.Fn libodraw_data_file_get_filename_wide "libodraw_data_file_t *data_file" "wchar_t *filename" "size_t filename_size" "libodraw_error_t **error"
 .Ft int
-.Fn libodraw_data_file_set_filename_wide "libodraw_data_file_t *data_file, const wchar_t *filename, size_t filename_length, libodraw_error_t **error"
+.Fn libodraw_data_file_set_filename_wide "libodraw_data_file_t *data_file" "const wchar_t *filename" "size_t filename_length" "libodraw_error_t **error"
 .Sh DESCRIPTION
 The
 .Fn libodraw_get_version
@@ -154,8 +152,8 @@ None
 .Sh FILES
 None
 .Sh NOTES
-libodraw allows to be compiled with wide character support (wchar_t).
-
+libodraw can be compiled with wide character support (wchar_t).
+.sp
 To compile libodraw with wide character support use:
 .Ar ./configure --enable-wide-character-type=yes
  or define:
@@ -163,7 +161,7 @@ To compile libodraw with wide character support use:
  or
 .Ar UNICODE
  during compilation.
-
+.sp
 .Ar LIBODRAW_WIDE_CHARACTER_TYPE
  in libodraw/features.h can be used to determine if libodraw was compiled with wide character support.
 .Sh BUGS
@@ -172,7 +170,7 @@ Please report bugs of any kind on the project issue tracker: https://github.com/
 These man pages are generated from "libodraw.h".
 .Sh COPYRIGHT
 Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>.
-
+.sp
 This is free software; see the source for copying conditions.
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .Sh SEE ALSO
