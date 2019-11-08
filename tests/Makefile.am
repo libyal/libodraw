@@ -16,7 +16,6 @@ AM_CPPFLAGS = \
 
 TESTS = \
 	test_library.sh \
-	test_manpage.sh \
 	test_odrawinfo.sh \
 	test_odrawverify.sh
 
