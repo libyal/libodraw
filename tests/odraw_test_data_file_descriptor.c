@@ -113,6 +113,8 @@ int odraw_test_data_file_descriptor_initialize(
 	          &data_file_descriptor,
 	          &error );
 
+	data_file_descriptor = NULL;
+
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int odraw_test_data_file_descriptor_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	data_file_descriptor = NULL;
 
 #if defined( HAVE_ODRAW_TEST_MEMORY )
 
@@ -279,7 +279,6 @@ int odraw_test_data_file_descriptor_get_name_size(
 	libcerror_error_t *error                              = NULL;
 	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
 	size_t name_size                                      = 0;
-	int name_size_is_set                                  = 0;
 	int result                                            = 0;
 
 	/* Initialize test
@@ -317,8 +316,6 @@ int odraw_test_data_file_descriptor_get_name_size(
 	 "error",
 	 error );
 
-	name_size_is_set = result;
-
 	/* Test error cases
 	 */
 	result = libodraw_data_file_descriptor_get_name_size(
@@ -338,25 +335,23 @@ int odraw_test_data_file_descriptor_get_name_size(
 	libcerror_error_free(
 	 &error );
 
-	if( name_size_is_set != 0 )
-	{
-		result = libodraw_data_file_descriptor_get_name_size(
-		          data_file_descriptor,
-		          NULL,
-		          &error );
+	result = libodraw_data_file_descriptor_get_name_size(
+	          data_file_descriptor,
+	          NULL,
+	          &error );
 
-		ODRAW_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		ODRAW_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libodraw_data_file_descriptor_free(
@@ -404,7 +399,6 @@ int odraw_test_data_file_descriptor_get_name_size_wide(
 	libcerror_error_t *error                              = NULL;
 	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
 	size_t name_size_wide                                 = 0;
-	int name_size_wide_is_set                             = 0;
 	int result                                            = 0;
 
 	/* Initialize test
@@ -442,8 +436,6 @@ int odraw_test_data_file_descriptor_get_name_size_wide(
 	 "error",
 	 error );
 
-	name_size_wide_is_set = result;
-
 	/* Test error cases
 	 */
 	result = libodraw_data_file_descriptor_get_name_size_wide(
@@ -463,25 +455,23 @@ int odraw_test_data_file_descriptor_get_name_size_wide(
 	libcerror_error_free(
 	 &error );
 
-	if( name_size_wide_is_set != 0 )
-	{
-		result = libodraw_data_file_descriptor_get_name_size_wide(
-		          data_file_descriptor,
-		          NULL,
-		          &error );
+	result = libodraw_data_file_descriptor_get_name_size_wide(
+	          data_file_descriptor,
+	          NULL,
+	          &error );
 
-		ODRAW_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		ODRAW_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libodraw_data_file_descriptor_free(

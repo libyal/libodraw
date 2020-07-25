@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #endif
 
-#include "odraw_test_libcerror.h"
 #include "odraw_test_libodraw.h"
 #include "odraw_test_macros.h"
 #include "odraw_test_unused.h"

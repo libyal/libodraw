@@ -113,6 +113,8 @@ int odraw_test_track_value_initialize(
 	          &track_value,
 	          &error );
 
+	track_value = NULL;
+
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int odraw_test_track_value_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	track_value = NULL;
 
 #if defined( HAVE_ODRAW_TEST_MEMORY )
 
@@ -279,7 +279,6 @@ int odraw_test_track_value_get_bytes_per_sector(
 	libcerror_error_t *error            = NULL;
 	libodraw_track_value_t *track_value = NULL;
 	uint32_t bytes_per_sector           = 0;
-	int bytes_per_sector_is_set         = 0;
 	int result                          = 0;
 
 	/* Initialize test
@@ -308,16 +307,14 @@ int odraw_test_track_value_get_bytes_per_sector(
 	          &bytes_per_sector,
 	          &error );
 
-	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
 
 	ODRAW_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
-
-	bytes_per_sector_is_set = result;
 
 	/* Test error cases
 	 */
@@ -338,25 +335,23 @@ int odraw_test_track_value_get_bytes_per_sector(
 	libcerror_error_free(
 	 &error );
 
-	if( bytes_per_sector_is_set != 0 )
-	{
-		result = libodraw_track_value_get_bytes_per_sector(
-		          track_value,
-		          NULL,
-		          &error );
+	result = libodraw_track_value_get_bytes_per_sector(
+	          track_value,
+	          NULL,
+	          &error );
 
-		ODRAW_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		ODRAW_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libodraw_track_value_free(

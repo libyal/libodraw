@@ -283,31 +283,6 @@ ssize_t libodraw_handle_read_buffer_at_offset(
          off64_t offset,
          libodraw_error_t **error );
 
-#ifdef TODO_WRITE_SUPPORT
-
-/* Writes a buffer to the handle
- * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
- */
-LIBODRAW_EXTERN \
-ssize_t libodraw_handle_write_buffer(
-         libodraw_handle_t *handle,
-         const void *buffer,
-         size_t buffer_size,
-         libodraw_error_t **error );
-
-/* Writes (media) data at a specific offset,
- * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
- */
-LIBODRAW_EXTERN \
-ssize_t libodraw_handle_write_buffer_at_offset(
-         libodraw_handle_t *handle,
-         const void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         libodraw_error_t **error );
-
-#endif /* TODO_WRITE_SUPPORT */
-
 /* Seeks an offset in the handle
  * Returns the number of bytes in the buffer or -1 on error
  */

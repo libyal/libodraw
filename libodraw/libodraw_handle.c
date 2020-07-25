@@ -363,11 +363,6 @@ int libodraw_handle_free(
 
 			result = -1;
 		}
-		if( internal_handle->basename != NULL )
-		{
-			memory_free(
-			 internal_handle->basename );
-		}
 		if( libodraw_io_handle_free(
 		     &( internal_handle->io_handle ),
 		     error ) != 1 )
@@ -455,6 +450,17 @@ int libodraw_handle_open(
 	}
 	internal_handle = (libodraw_internal_handle_t *) handle;
 
+	if( internal_handle->basename != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid handle - basename already set.",
+		 function );
+
+		return( -1 );
+	}
 	if( filename == NULL )
 	{
 		libcerror_error_set(
@@ -503,7 +509,7 @@ int libodraw_handle_open(
 	}
 	if( basename_length > 0 )
 	{
-		if( libodraw_handle_set_basename(
+		if( libodraw_internal_handle_set_basename(
 		     internal_handle,
 		     filename,
 		     basename_length,
@@ -590,6 +596,15 @@ on_error:
 		 &file_io_handle,
 		 NULL );
 	}
+	if( internal_handle->basename != NULL )
+	{
+		memory_free(
+		 internal_handle->basename );
+
+		internal_handle->basename = NULL;
+	}
+	internal_handle->basename_size = 0;
+
 	return( -1 );
 }
 
@@ -624,6 +639,17 @@ int libodraw_handle_open_wide(
 	}
 	internal_handle = (libodraw_internal_handle_t *) handle;
 
+	if( internal_handle->basename != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid handle - basename already set.",
+		 function );
+
+		return( -1 );
+	}
 	if( filename == NULL )
 	{
 		libcerror_error_set(
@@ -673,7 +699,7 @@ int libodraw_handle_open_wide(
 	}
 	if( basename_length > 0 )
 	{
-		if( libodraw_handle_set_basename_wide(
+		if( libodraw_internal_handle_set_basename_wide(
 		     internal_handle,
 		     filename,
 		     basename_length,
@@ -761,6 +787,15 @@ on_error:
 		 &file_io_handle,
 		 NULL );
 	}
+	if( internal_handle->basename != NULL )
+	{
+		memory_free(
+		 internal_handle->basename );
+
+		internal_handle->basename = NULL;
+	}
+	internal_handle->basename_size = 0;
+
 	return( -1 );
 }
 
@@ -1815,9 +1850,10 @@ int libodraw_handle_close(
 		memory_free(
 		 internal_handle->basename );
 
-		internal_handle->basename      = NULL;
-		internal_handle->basename_size = 0;
+		internal_handle->basename = NULL;
 	}
+	internal_handle->basename_size = 0;
+
 	return( result );
 }
 
@@ -3840,89 +3876,6 @@ ssize_t libodraw_handle_read_buffer_at_offset(
 	return( read_count );
 }
 
-#ifdef TODO_WRITE_SUPPORT
-
-/* Writes a buffer
- * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
- */
-ssize_t libodraw_handle_write_buffer(
-         libodraw_handle_t *handle,
-         const void *buffer,
-         size_t buffer_size,
-         libcerror_error_t **error )
-{
-	libodraw_internal_handle_t *internal_handle = NULL;
-	static char *function                       = "libodraw_handle_write_buffer";
-	ssize_t write_count                         = 0;
-
-	if( handle == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid handle.",
-		 function );
-
-		return( -1 );
-	}
-	internal_handle = (libodraw_internal_handle_t *) handle;
-
-/* TODO */
-
-	return( write_count );
-}
-
-/* Writes (media) data at a specific offset,
- * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
- */
-ssize_t libodraw_handle_write_buffer_at_offset(
-         libodraw_handle_t *handle,
-         const void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         libcerror_error_t **error )
-{
-	static char *function = "libodraw_handle_write_buffer_at_offset";
-	ssize_t write_count   = 0;
-
-	if( libodraw_handle_seek_offset(
-	     handle,
-	     offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek offset.",
-		 function );
-
-		return( -1 );
-	}
-	write_count = libodraw_handle_write_buffer(
-	               handle,
-	               buffer,
-	               buffer_size,
-	               error );
-
-	if( write_count <= -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_WRITE_FAILED,
-		 "%s: unable to write buffer.",
-		 function );
-
-		return( -1 );
-	}
-	return( write_count );
-}
-
-#endif /* TODO_WRITE_SUPPORT */
-
 /* Seeks a certain offset of the (media) data
  * This function is not multi-thread safe acquire write lock before call
  * Returns the offset if seek is successful or -1 on error
@@ -4725,12 +4678,12 @@ int libodraw_handle_get_offset(
 /* Retrieves the size of the basename
  * Returns 1 if successful, 0 if value not present or -1 on error
  */
-int libodraw_handle_get_basename_size(
+int libodraw_internal_handle_get_basename_size(
      libodraw_internal_handle_t *internal_handle,
      size_t *basename_size,
      libcerror_error_t **error )
 {
-	static char *function = "libodraw_handle_get_basename_size";
+	static char *function = "libodraw_internal_handle_get_basename_size";
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
@@ -4822,13 +4775,13 @@ int libodraw_handle_get_basename_size(
 /* Retrieves the basename
  * Returns 1 if successful, 0 if value not present or -1 on error
  */
-int libodraw_handle_get_basename(
+int libodraw_internal_handle_get_basename(
      libodraw_internal_handle_t *internal_handle,
      char *basename,
      size_t basename_size,
      libcerror_error_t **error )
 {
-	static char *function       = "libodraw_handle_get_basename";
+	static char *function       = "libodraw_internal_handle_get_basename";
 	size_t narrow_basename_size = 0;
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -5004,13 +4957,13 @@ int libodraw_handle_get_basename(
 /* Sets the basename
  * Returns 1 if successful or -1 on error
  */
-int libodraw_handle_set_basename(
+int libodraw_internal_handle_set_basename(
      libodraw_internal_handle_t *internal_handle,
      const char *basename,
      size_t basename_length,
      libcerror_error_t **error )
 {
-	static char *function = "libodraw_handle_set_basename";
+	static char *function = "libodraw_internal_handle_set_basename";
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
@@ -5207,12 +5160,12 @@ int libodraw_handle_set_basename(
 /* Retrieves the size of the basename
  * Returns 1 if successful, 0 if value not present or -1 on error
  */
-int libodraw_handle_get_basename_size_wide(
+int libodraw_internal_handle_get_basename_size_wide(
      libodraw_internal_handle_t *internal_handle,
      size_t *basename_size,
      libcerror_error_t **error )
 {
-	static char *function = "libodraw_handle_get_basename_size_wide";
+	static char *function = "libodraw_internal_handle_get_basename_size_wide";
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
@@ -5303,13 +5256,13 @@ int libodraw_handle_get_basename_size_wide(
 /* Retrieves the basename
  * Returns 1 if successful, 0 if value not present or -1 on error
  */
-int libodraw_handle_get_basename_wide(
+int libodraw_internal_handle_get_basename_wide(
      libodraw_internal_handle_t *internal_handle,
      wchar_t *basename,
      size_t basename_size,
      libcerror_error_t **error )
 {
-	static char *function     = "libodraw_handle_get_basename_wide";
+	static char *function     = "libodraw_internal_handle_get_basename_wide";
 	size_t wide_basename_size = 0;
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -5483,13 +5436,13 @@ int libodraw_handle_get_basename_wide(
 /* Sets the basename
  * Returns 1 if successful or -1 on error
  */
-int libodraw_handle_set_basename_wide(
+int libodraw_internal_handle_set_basename_wide(
      libodraw_internal_handle_t *internal_handle,
      const wchar_t *basename,
      size_t basename_length,
      libcerror_error_t **error )
 {
-	static char *function = "libodraw_handle_set_basename_wide";
+	static char *function = "libodraw_internal_handle_set_basename_wide";
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;

@@ -19,8 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBODRAW_INTERNAL_FILE_H )
-#define _LIBODRAW_INTERNAL_FILE_H
+#if !defined( _LIBODRAW_HANDLE_H )
+#define _LIBODRAW_HANDLE_H
 
 #include <common.h>
 #include <types.h>
@@ -247,25 +247,6 @@ ssize_t libodraw_handle_read_buffer_at_offset(
          off64_t offset,
          libcerror_error_t **error );
 
-#ifdef TODO_WRITE_SUPPORT
-
-LIBODRAW_EXTERN \
-ssize_t libodraw_handle_write_buffer(
-         libodraw_handle_t *handle,
-         const void *buffer,
-         size_t buffer_size,
-         libcerror_error_t **error );
-
-LIBODRAW_EXTERN \
-ssize_t libodraw_handle_write_buffer_at_offset(
-         libodraw_handle_t *handle,
-         const void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         libcerror_error_t **error );
-
-#endif /* TODO_WRITE_SUPPORT */
-
 off64_t libodraw_internal_handle_seek_offset(
          libodraw_internal_handle_t *internal_handle,
          off64_t offset,
@@ -309,18 +290,18 @@ int libodraw_handle_get_offset(
      off64_t *offset,
      libcerror_error_t **error );
 
-int libodraw_handle_get_basename_size(
+int libodraw_internal_handle_get_basename_size(
      libodraw_internal_handle_t *internal_handle,
      size_t *basename_size,
      libcerror_error_t **error );
 
-int libodraw_handle_get_basename(
+int libodraw_internal_handle_get_basename(
      libodraw_internal_handle_t *internal_handle,
      char *basename,
      size_t basename_size,
      libcerror_error_t **error );
 
-int libodraw_handle_set_basename(
+int libodraw_internal_handle_set_basename(
      libodraw_internal_handle_t *internal_handle,
      const char *basename,
      size_t basename_length,
@@ -328,18 +309,18 @@ int libodraw_handle_set_basename(
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-int libodraw_handle_get_basename_size_wide(
+int libodraw_internal_handle_get_basename_size_wide(
      libodraw_internal_handle_t *internal_handle,
      size_t *basename_size,
      libcerror_error_t **error );
 
-int libodraw_handle_get_basename_wide(
+int libodraw_internal_handle_get_basename_wide(
      libodraw_internal_handle_t *internal_handle,
      wchar_t *basename,
      size_t basename_size,
      libcerror_error_t **error );
 
-int libodraw_handle_set_basename_wide(
+int libodraw_internal_handle_set_basename_wide(
      libodraw_internal_handle_t *internal_handle,
      const wchar_t *basename,
      size_t basename_length,
@@ -499,5 +480,5 @@ int libodraw_handle_append_track(
 }
 #endif
 
-#endif /* !defined( _LIBODRAW_INTERNAL_FILE_H ) */
+#endif /* !defined( _LIBODRAW_HANDLE_H ) */
 

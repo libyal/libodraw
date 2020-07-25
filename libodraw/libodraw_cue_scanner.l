@@ -31,6 +31,7 @@
 
 #include "libodraw_cue_parser.h"
 #include "libodraw_libcnotify.h"
+#include "libodraw_unused.h"
 
 #define YYLEX_PARAM	NULL
 
@@ -374,9 +375,11 @@ int cue_scanner_wrap(
 }
 
 void cue_scanner_error(
-      void *parser_state,
+      void *parser_state LIBODRAW_ATTRIBUTE_UNUSED,
       const char *error_string )
 {
+	LIBODRAW_UNREFERENCED_PARAMETER( parser_state )
+
 	if( cue_scanner_suppress_error == 0 )
 	{
 	        fprintf(

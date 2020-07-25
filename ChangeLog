@@ -47,57 +47,8 @@ Deployment
 
 Tests:
 
-20160317
-* code clean up
-* remove read random functions
-
-20160110
-* 2016 update
-
-20150629
-* Code clean up
-
-20150105
-* 2015 update
-
-20141229
-* updated dpkg files
-* updated dependencies
-* updated .gitignore
-
-20141129
-* code clean up
-
-20141027
-* changes for deployment
-
-20141021
-* changes for deployment
-
-20141007
-* small changes to build files
-
-20140930
-* removed README.macosx
-* changes for project site move
-
-20140731
-* updated dependencies
-* updated msvscpp files
-
-20140119
-* 2014 update
-* updated dependencies
-
-20131012
-* updated dependencies
-
-20130901
-* added odrawverify
-* added verification test
-* updated msvscpp files
-
 20130831
+* see `git log' for more recent change log
 * updated dependencies
 * removed examples
 * added macosx files

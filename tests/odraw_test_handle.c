@@ -268,6 +268,8 @@ int odraw_test_handle_initialize(
 	          &handle,
 	          &error );
 
+	handle = NULL;
+
 	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -279,8 +281,6 @@ int odraw_test_handle_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	handle = NULL;
 
 #if defined( HAVE_ODRAW_TEST_MEMORY )
 
@@ -1265,10 +1265,10 @@ on_error:
 
 #if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
-/* Tests the libodraw_handle_get_basename_size function
+/* Tests the libodraw_internal_handle_get_basename_size function
  * Returns 1 if successful or 0 if not
  */
-int odraw_test_handle_get_basename_size(
+int odraw_test_internal_handle_get_basename_size(
      libodraw_handle_t *handle )
 {
 	libcerror_error_t *error = NULL;
@@ -1278,7 +1278,7 @@ int odraw_test_handle_get_basename_size(
 
 	/* Test regular cases
 	 */
-	result = libodraw_handle_get_basename_size(
+	result = libodraw_internal_handle_get_basename_size(
 	          (libodraw_internal_handle_t *) handle,
 	          &basename_size,
 	          &error );
@@ -1296,7 +1296,7 @@ int odraw_test_handle_get_basename_size(
 
 	/* Test error cases
 	 */
-	result = libodraw_handle_get_basename_size(
+	result = libodraw_internal_handle_get_basename_size(
 	          NULL,
 	          &basename_size,
 	          &error );
@@ -1315,7 +1315,7 @@ int odraw_test_handle_get_basename_size(
 
 	if( basename_size_is_set != 0 )
 	{
-		result = libodraw_handle_get_basename_size(
+		result = libodraw_internal_handle_get_basename_size(
 		          (libodraw_internal_handle_t *) handle,
 		          NULL,
 		          &error );
@@ -1345,10 +1345,10 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Tests the libodraw_handle_get_basename_size_wide function
+/* Tests the libodraw_internal_handle_get_basename_size_wide function
  * Returns 1 if successful or 0 if not
  */
-int odraw_test_handle_get_basename_size_wide(
+int odraw_test_internal_handle_get_basename_size_wide(
      libodraw_handle_t *handle )
 {
 	libcerror_error_t *error      = NULL;
@@ -1358,7 +1358,7 @@ int odraw_test_handle_get_basename_size_wide(
 
 	/* Test regular cases
 	 */
-	result = libodraw_handle_get_basename_size_wide(
+	result = libodraw_internal_handle_get_basename_size_wide(
 	          (libodraw_internal_handle_t *) handle,
 	          &basename_size_wide,
 	          &error );
@@ -1376,7 +1376,7 @@ int odraw_test_handle_get_basename_size_wide(
 
 	/* Test error cases
 	 */
-	result = libodraw_handle_get_basename_size_wide(
+	result = libodraw_internal_handle_get_basename_size_wide(
 	          NULL,
 	          &basename_size_wide,
 	          &error );
@@ -1395,7 +1395,7 @@ int odraw_test_handle_get_basename_size_wide(
 
 	if( basename_size_wide_is_set != 0 )
 	{
-		result = libodraw_handle_get_basename_size_wide(
+		result = libodraw_internal_handle_get_basename_size_wide(
 		          (libodraw_internal_handle_t *) handle,
 		          NULL,
 		          &error );
@@ -1895,24 +1895,24 @@ int main(
 #if defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT )
 
 		ODRAW_TEST_RUN_WITH_ARGS(
-		 "libodraw_handle_get_basename_size",
-		 odraw_test_handle_get_basename_size,
+		 "libodraw_internal_handle_get_basename_size",
+		 odraw_test_internal_handle_get_basename_size,
 		 handle );
 
-		/* TODO: add tests for libodraw_handle_get_basename */
+		/* TODO: add tests for libodraw_internal_handle_get_basename */
 
-		/* TODO: add tests for libodraw_handle_set_basename */
+		/* TODO: add tests for libodraw_internal_handle_set_basename */
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
 		ODRAW_TEST_RUN_WITH_ARGS(
-		 "libodraw_handle_get_basename_size_wide",
-		 odraw_test_handle_get_basename_size_wide,
+		 "libodraw_internal_handle_get_basename_size_wide",
+		 odraw_test_internal_handle_get_basename_size_wide,
 		 handle );
 
-		/* TODO: add tests for libodraw_handle_get_basename_wide */
+		/* TODO: add tests for libodraw_internal_handle_get_basename_wide */
 
-		/* TODO: add tests for libodraw_handle_set_basename_wide */
+		/* TODO: add tests for libodraw_internal_handle_set_basename_wide */
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
