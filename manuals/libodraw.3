@@ -1,4 +1,4 @@
-.Dd March  7, 2019
+.Dd October  3, 2019
 .Dt libodraw 3
 .Os libodraw
 .Sh NAME
@@ -60,10 +60,6 @@ Handle functions
 .Fn libodraw_handle_read_buffer "libodraw_handle_t *handle" "void *buffer" "size_t buffer_size" "libodraw_error_t **error"
 .Ft ssize_t
 .Fn libodraw_handle_read_buffer_at_offset "libodraw_handle_t *handle" "void *buffer" "size_t buffer_size" "off64_t offset" "libodraw_error_t **error"
-.Ft ssize_t
-.Fn libodraw_handle_write_buffer "libodraw_handle_t *handle" "const void *buffer" "size_t buffer_size" "libodraw_error_t **error"
-.Ft ssize_t
-.Fn libodraw_handle_write_buffer_at_offset "libodraw_handle_t *handle" "const void *buffer" "size_t buffer_size" "off64_t offset" "libodraw_error_t **error"
 .Ft off64_t
 .Fn libodraw_handle_seek_offset "libodraw_handle_t *handle" "off64_t offset" "int whence" "libodraw_error_t **error"
 .Ft int
