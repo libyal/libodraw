@@ -30,7 +30,11 @@
 
 #include <libodraw/extern.h>
 
+#if defined( __CYGWIN__ )
+#define LIBODRAW_EXTERN_VARIABLE	extern
+#else
 #define LIBODRAW_EXTERN_VARIABLE	LIBODRAW_EXTERN
+#endif
 
 #else
 #define LIBODRAW_EXTERN		/* extern */
