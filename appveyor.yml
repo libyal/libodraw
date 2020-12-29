@@ -109,7 +109,7 @@ install:
 - cmd: git clone https://github.com/codecov/codecov-bash.git ..\codecov-bash
 - cmd: if [%BUILD_ENVIRONMENT%]==[msbuild] (
     git clone https://github.com/libyal/vstools.git ..\vstools )
-- ps: If ($env:BUILD_ENVIRONMENT -eq "msbuild") {
+- ps: If ($env:BUILD_ENVIRONMENT -eq "msbuild" -or ($env:BUILD_ENVIRONMENT -eq "python" -and $isWindows)) {
     .\syncwinflexbison.ps1 }
 - sh: if test ${BUILD_ENVIRONMENT} = "xcode" || test ${BUILD_ENVIRONMENT} = "python"; then brew update -q; fi
 - sh: if test ${BUILD_ENVIRONMENT} = "xcode" || test ${BUILD_ENVIRONMENT} = "python"; then brew install -q gettext gnu-sed || true; fi

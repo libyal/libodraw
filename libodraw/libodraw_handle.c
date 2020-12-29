@@ -2000,29 +2000,6 @@ int libodraw_handle_open_read(
 
 		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading TOC file header at offset: 0 (0x00000000)\n",
-		 function );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     0,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek TOC file offset: 0.",
-		 function );
-
-		goto on_error;
-	}
 	/* Lex wants 2 zero bytes at the end of the buffer
 	 */
 	buffer_size = (size_t) file_size + 2;
@@ -2041,10 +2018,19 @@ int libodraw_handle_open_read(
 
 		goto on_error;
 	}
-	read_count = libbfio_handle_read_buffer(
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: reading TOC file header at offset: 0 (0x00000000)\n",
+		 function );
+	}
+#endif
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              buffer,
 	              (size_t) file_size,
+	              0,
 	              error );
 
 	if( read_count != (ssize_t) file_size )
@@ -2053,7 +2039,7 @@ int libodraw_handle_open_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read TOC file data.",
+		 "%s: unable to read TOC file data at offset: 0 (0x00000000).",
 		 function );
 
 		goto on_error;
