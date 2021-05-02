@@ -58,14 +58,6 @@
 #define CD_FRAMES		75
 #endif
 
-/* Note that the MSF are relative, so there is no need for the MSF offset correction
- */
-#define cue_parser_copy_relative_msf_to_lba( msf_string, lba ) \
-        lba  = ( ( msf_string[ 0 ] - '0' ) * 10 ) + ( msf_string[ 1 ] - '0' ); \
-        lba *= CD_SECS; \
-        lba += ( ( msf_string[ 3 ] - '0' ) * 10 ) + ( msf_string[ 4 ] - '0' ); \
-        lba *= CD_FRAMES; \
-        lba += ( ( msf_string[ 6 ] - '0' ) * 10 ) + ( msf_string[ 7 ] - '0' );
 %}
 
 /* %name-prefix="cue_scanner_" replaced by -p cue_scanner_ */
@@ -250,6 +242,24 @@ size_t cue_scanner_buffer_offset;
 
 static char *cue_parser_function = "cue_parser";
 
+int cue_parser_parse_number(
+     const char *token,
+     size_t token_size,
+     int *number,
+     libcerror_error_t **error );
+
+int cue_parser_parse_msf(
+     const char *token,
+     size_t token_size,
+     uint64_t *lba,
+     libcerror_error_t **error );
+
+int cue_parser_parse_track_type(
+     const char *token,
+     size_t token_size,
+     uint8_t *track_type,
+     libcerror_error_t **error );
+
 int cue_parser_parse_buffer(
      libodraw_handle_t *handle,
      const uint8_t *buffer,
@@ -276,11 +286,14 @@ int cue_parser_parse_buffer(
 /* Reserved words
  */
 %token CUE_CATALOG
+%token CUE_CD_ROM
 %token CUE_CDTEXTFILE
+%token CUE_DATAFILE
 %token CUE_FLAGS
 %token CUE_FILE
 %token CUE_INDEX
 %token CUE_ISRC
+%token CUE_NO_COPY
 %token CUE_POSTGAP
 %token CUE_PREGAP
 %token CUE_REMARK
@@ -315,7 +328,8 @@ int cue_parser_parse_buffer(
  */
 
 cue_main
-	: cue_main_items cue_file cue_main_items cue_main_tracks
+	: cue_cd_rom cue_main_items cue_main_tracks
+	| cue_main_items cue_file cue_main_items cue_main_tracks
 	;
 
 cue_main_items
@@ -383,6 +397,8 @@ cue_main_track_trailing_items
 
 cue_main_track_trailing_item
 	: cue_cdtext
+	| cue_datafile
+	| cue_no_copy
 	| cue_postgap
 	| cue_remark_item
 	| cue_empty_line
@@ -420,11 +436,100 @@ cue_cdtext_type
 /* TODO IRSC definition */
 	;
 
+cue_cd_rom
+	: CUE_CD_ROM CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_cd_rom" );
+	}
+	;
+
 cue_cdtextfile
 	: CUE_CDTEXTFILE CUE_STRING CUE_END_OF_LINE
 	{
 		cue_parser_rule_print(
 		 "cue_cdtextfile" );
+	}
+	;
+
+cue_datafile
+	: CUE_DATAFILE CUE_STRING CUE_MSF CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_datafile" );
+
+		if( $2.data == NULL )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid filename.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		if( cue_parser_parse_msf(
+		     $3.data,
+		     $3.length,
+		     &( ( (cue_parser_state_t *) parser_state )->track_number_of_sectors ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse datafile MSF.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		( (cue_parser_state_t *) parser_state )->file_type = LIBODRAW_FILE_TYPE_BINARY_LITTLE_ENDIAN;
+
+		if( libodraw_handle_append_data_file(
+		     ( (cue_parser_state_t *) parser_state )->handle,
+		     $2.data,
+		     $2.length,
+		     ( (cue_parser_state_t *) parser_state )->file_type,
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append data file.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		if( ( (cue_parser_state_t *) parser_state )->previous_file_index < 0 )
+		{
+			( (cue_parser_state_t *) parser_state )->file_sector = ( (cue_parser_state_t *) parser_state )->previous_track_start_sector;
+
+			( (cue_parser_state_t *) parser_state )->previous_file_index += 1;
+		}
+		( (cue_parser_state_t *) parser_state )->previous_file_sector = ( (cue_parser_state_t *) parser_state )->previous_track_start_sector
+		                                                              - ( (cue_parser_state_t *) parser_state )->file_sector;
+
+		if( libodraw_handle_append_track(
+		     ( (cue_parser_state_t *) parser_state )->handle,
+		     ( (cue_parser_state_t *) parser_state )->previous_track_start_sector,
+		     ( (cue_parser_state_t *) parser_state )->track_number_of_sectors,
+		     ( (cue_parser_state_t *) parser_state )->current_track_type,
+		     ( (cue_parser_state_t *) parser_state )->previous_file_index,
+		     ( (cue_parser_state_t *) parser_state )->previous_file_sector,
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append track.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		( (cue_parser_state_t *) parser_state )->current_file_index += 1;
 	}
 	;
 
@@ -445,7 +550,6 @@ cue_file
 
 			YYABORT;
 		}
-/* TODO what about the string quotation marks */
 		if( $3.data == NULL )
 		{
 			libcerror_error_set(
@@ -545,50 +649,22 @@ cue_index
 		cue_parser_rule_print(
 		 "cue_index" );
 
-		if( $2.data == NULL )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid index number.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
 		( (cue_parser_state_t *) parser_state )->previous_index = ( (cue_parser_state_t *) parser_state )->current_index;
 
-		if( ( ( $2.data )[ 0 ] < '0' )
-		 || ( ( $2.data )[ 0 ] > '9' ) )
+		if( cue_parser_parse_number(
+		     $2.data,
+		     $2.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_index ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported index number.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse index number.",
 			 cue_parser_function );
 
 			YYABORT;
-		}
-		( (cue_parser_state_t *) parser_state )->current_index = ( $2.data )[ 0 ] - '0';
-
-		if( $2.length == 2 )
-		{
-			( (cue_parser_state_t *) parser_state )->current_index *= 10;
-
-			if( ( ( $2.data )[ 1 ] < '0' )
-			 || ( ( $2.data )[ 1 ] > '9' ) )
-			{
-				libcerror_error_set(
-				 ( (cue_parser_state_t *) parser_state )->error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-				 "%s: unsupported index number.",
-				 cue_parser_function );
-
-				YYABORT;
-			}
-			( (cue_parser_state_t *) parser_state )->current_index += ( $2.data )[ 1 ] - '0';
 		}
 		if( ( ( (cue_parser_state_t *) parser_state )->current_index != 0 )
 		 && ( ( (cue_parser_state_t *) parser_state )->current_index != ( ( (cue_parser_state_t *) parser_state )->previous_index + 1 ) ) )
@@ -602,46 +678,21 @@ cue_index
 
 			YYABORT;
 		}
-		if( ( $3.data == NULL )
-		 || ( $3.length != 8 ) )
+		if( cue_parser_parse_msf(
+		     $3.data,
+		     $3.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_start_sector ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid index MSF.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse index MSF.",
 			 cue_parser_function );
 
 			YYABORT;
 		}
-		if( ( ( $3.data )[ 0 ] < '0' )
-		 || ( ( $3.data )[ 0 ] > '9' )
-		 || ( ( $3.data )[ 1 ] < '0' )
-		 || ( ( $3.data )[ 1 ] > '9' )
-		 || ( ( $3.data )[ 2 ] != ':' )
-		 || ( ( $3.data )[ 3 ] < '0' )
-		 || ( ( $3.data )[ 3 ] > '9' )
-		 || ( ( $3.data )[ 4 ] < '0' )
-		 || ( ( $3.data )[ 4 ] > '9' )
-		 || ( ( $3.data )[ 5 ] != ':' )
-		 || ( ( $3.data )[ 6 ] < '0' )
-		 || ( ( $3.data )[ 6 ] > '9' )
-		 || ( ( $3.data )[ 7 ] < '0' )
-		 || ( ( $3.data )[ 7 ] > '9' ) )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported index MSF.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		cue_parser_copy_relative_msf_to_lba(
-		 $3.data,
-		 ( (cue_parser_state_t *) parser_state )->current_start_sector );
-
 		/* The MSF can be relative to the start of the file
 		 */
 		if( ( (cue_parser_state_t *) parser_state )->current_start_sector != 0 )
@@ -796,6 +847,14 @@ cue_isrc
 	}
 	;
 
+cue_no_copy
+	: CUE_NO_COPY CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_no_copy" );
+	}
+	;
+
 cue_postgap
 	: CUE_POSTGAP CUE_MSF CUE_END_OF_LINE
 	{
@@ -826,46 +885,21 @@ cue_lead_out
 		cue_parser_rule_print(
 		 "cue_lead_out" );
 
-		if( ( $2.data == NULL )
-		 || ( $2.length != 8 ) )
+		if( cue_parser_parse_msf(
+		     $2.data,
+		     $2.length,
+		     &( ( (cue_parser_state_t *) parser_state )->previous_lead_out_start_sector ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid index MSF.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse lead-out MSF.",
 			 cue_parser_function );
 
 			YYABORT;
 		}
-		if( ( ( $2.data )[ 0 ] < '0' )
-		 || ( ( $2.data )[ 0 ] > '9' )
-		 || ( ( $2.data )[ 1 ] < '0' )
-		 || ( ( $2.data )[ 1 ] > '9' )
-		 || ( ( $2.data )[ 2 ] != ':' )
-		 || ( ( $2.data )[ 3 ] < '0' )
-		 || ( ( $2.data )[ 3 ] > '9' )
-		 || ( ( $2.data )[ 4 ] < '0' )
-		 || ( ( $2.data )[ 4 ] > '9' )
-		 || ( ( $2.data )[ 5 ] != ':' )
-		 || ( ( $2.data )[ 6 ] < '0' )
-		 || ( ( $2.data )[ 6 ] > '9' )
-		 || ( ( $2.data )[ 7 ] < '0' )
-		 || ( ( $2.data )[ 7 ] > '9' ) )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported index MSF.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		cue_parser_copy_relative_msf_to_lba(
-		 $2.data,
-		 ( (cue_parser_state_t *) parser_state )->previous_lead_out_start_sector );
-
 		if( ( (cue_parser_state_t *) parser_state )->track_number_of_sectors == 0 )
 		{
 			if( ( (cue_parser_state_t *) parser_state )->previous_lead_out_start_sector < ( (cue_parser_state_t *) parser_state )->previous_track_start_sector )
@@ -920,46 +954,21 @@ cue_run_out
 		cue_parser_rule_print(
 		 "cue_run_out" );
 
-		if( ( $2.data == NULL )
-		 || ( $2.length != 8 ) )
+		if( cue_parser_parse_msf(
+		     $2.data,
+		     $2.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_start_sector ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid index MSF.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse run-out MSF.",
 			 cue_parser_function );
 
 			YYABORT;
 		}
-		if( ( ( $2.data )[ 0 ] < '0' )
-		 || ( ( $2.data )[ 0 ] > '9' )
-		 || ( ( $2.data )[ 1 ] < '0' )
-		 || ( ( $2.data )[ 1 ] > '9' )
-		 || ( ( $2.data )[ 2 ] != ':' )
-		 || ( ( $2.data )[ 3 ] < '0' )
-		 || ( ( $2.data )[ 3 ] > '9' )
-		 || ( ( $2.data )[ 4 ] < '0' )
-		 || ( ( $2.data )[ 4 ] > '9' )
-		 || ( ( $2.data )[ 5 ] != ':' )
-		 || ( ( $2.data )[ 6 ] < '0' )
-		 || ( ( $2.data )[ 6 ] > '9' )
-		 || ( ( $2.data )[ 7 ] < '0' )
-		 || ( ( $2.data )[ 7 ] > '9' ) )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported index MSF.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		cue_parser_copy_relative_msf_to_lba(
-		 $2.data,
-		 ( (cue_parser_state_t *) parser_state )->current_start_sector );
-
 		if( ( (cue_parser_state_t *) parser_state )->track_number_of_sectors == 0 )
 		{
 			if( ( (cue_parser_state_t *) parser_state )->current_start_sector < ( (cue_parser_state_t *) parser_state )->previous_track_start_sector )
@@ -985,50 +994,22 @@ cue_session
 		cue_parser_rule_print(
 		 "cue_session" );
 
-		if( $2.data == NULL )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid session number.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
 		( (cue_parser_state_t *) parser_state )->previous_session = ( (cue_parser_state_t *) parser_state )->current_session;
 
-		if( ( ( $2.data )[ 0 ] < '0' )
-		 || ( ( $2.data )[ 0 ] > '9' ) )
+		if( cue_parser_parse_number(
+		     $2.data,
+		     $2.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_session ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported session number.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse session number.",
 			 cue_parser_function );
 
 			YYABORT;
-		}
-		( (cue_parser_state_t *) parser_state )->current_session = ( $2.data )[ 0 ] - '0';
-
-		if( $2.length == 2 )
-		{
-			( (cue_parser_state_t *) parser_state )->current_session *= 10;
-
-			if( ( ( $2.data )[ 1 ] < '0' )
-			 || ( ( $2.data )[ 1 ] > '9' ) )
-			{
-				libcerror_error_set(
-				 ( (cue_parser_state_t *) parser_state )->error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-				 "%s: unsupported session number.",
-				 cue_parser_function );
-
-				YYABORT;
-			}
-			( (cue_parser_state_t *) parser_state )->current_session += ( $2.data )[ 1 ] - '0';
 		}
 		if( ( ( (cue_parser_state_t *) parser_state )->current_session != 0 )
 		 && ( ( (cue_parser_state_t *) parser_state )->current_session != ( ( (cue_parser_state_t *) parser_state )->previous_session + 1 ) ) )
@@ -1046,55 +1027,63 @@ cue_session
 	;
 
 cue_track
-	: CUE_TRACK CUE_2DIGIT CUE_KEYWORD_STRING CUE_END_OF_LINE
+	: CUE_TRACK CUE_KEYWORD_STRING CUE_END_OF_LINE
 	{
 		cue_parser_rule_print(
 		 "cue_track" );
 
-		if( $2.data == NULL )
+		if( ( (cue_parser_state_t *) parser_state )->current_track != 0 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid track number.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+			 "%s: unsupported track number - only single track supported.",
 			 cue_parser_function );
 
 			YYABORT;
 		}
+		( (cue_parser_state_t *) parser_state )->previous_track_type = ( (cue_parser_state_t *) parser_state )->current_track_type;
+
+		if( cue_parser_parse_track_type(
+		     $2.data,
+		     $2.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_track_type ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse track type.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		( (cue_parser_state_t *) parser_state )->previous_index = 0;
+		( (cue_parser_state_t *) parser_state )->current_index  = 0;
+	}
+	| CUE_TRACK CUE_2DIGIT CUE_KEYWORD_STRING CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_track" );
+
 		( (cue_parser_state_t *) parser_state )->previous_track = ( (cue_parser_state_t *) parser_state )->current_track;
 
-		if( ( ( $2.data )[ 0 ] < '0' )
-		 || ( ( $2.data )[ 0 ] > '9' ) )
+		if( cue_parser_parse_number(
+		     $2.data,
+		     $2.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_track ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported track number.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse track number.",
 			 cue_parser_function );
 
 			YYABORT;
-		}
-		( (cue_parser_state_t *) parser_state )->current_track = ( $2.data )[ 0 ] - '0';
-
-		if( $2.length == 2 )
-		{
-			( (cue_parser_state_t *) parser_state )->current_track *= 10;
-
-			if( ( ( $2.data )[ 1 ] < '0' )
-			 || ( ( $2.data )[ 1 ] > '9' ) )
-			{
-				libcerror_error_set(
-				 ( (cue_parser_state_t *) parser_state )->error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-				 "%s: unsupported track number.",
-				 cue_parser_function );
-
-				YYABORT;
-			}
-			( (cue_parser_state_t *) parser_state )->current_track += ( $2.data )[ 1 ] - '0';
 		}
 		if( ( ( (cue_parser_state_t *) parser_state )->current_track != 0 )
 		 && ( ( (cue_parser_state_t *) parser_state )->current_track != ( ( (cue_parser_state_t *) parser_state )->previous_track + 1 ) ) )
@@ -1108,129 +1097,25 @@ cue_track
 
 			YYABORT;
 		}
-		if( $3.data == NULL )
+		( (cue_parser_state_t *) parser_state )->previous_track_type = ( (cue_parser_state_t *) parser_state )->current_track_type;
+
+		if( cue_parser_parse_track_type(
+		     $3.data,
+		     $3.length,
+		     &( ( (cue_parser_state_t *) parser_state )->current_track_type ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
 		{
 			libcerror_error_set(
 			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid track number.",
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse track type.",
 			 cue_parser_function );
 
 			YYABORT;
 		}
-		( (cue_parser_state_t *) parser_state )->previous_track_type = ( (cue_parser_state_t *) parser_state )->current_track_type;
-
-		( (cue_parser_state_t *) parser_state )->previous_index     = 0;
-		( (cue_parser_state_t *) parser_state )->current_index      = 0;
-		( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_UNKNOWN;
-
-		if( $3.length == 3 )
-		{
-			if( narrow_string_compare(
-			     $3.data,
-			     "CDG",
-			     3 ) == 0 )
-			{
-				( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_CDG;
-			}
-		}
-		else if( $3.length == 5 )
-		{
-			if( narrow_string_compare(
-			     $3.data,
-			     "AUDIO",
-			     5 ) == 0 )
-			{
-				( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_AUDIO;
-			}
-		}
-		else if( $3.length == 8 )
-		{
-			if( narrow_string_compare(
-			     $3.data,
-			     "CDI",
-			     3 ) == 0 )
-			{
-				if( ( $3.data )[ 3 ] == '/' )
-				{
-					if( narrow_string_compare(
-					     &( ( $3.data )[ 4 ] ),
-					     "2336",
-					     4 ) == 0 )
-					{
-						 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_CDI_2336;
-					}
-					else if( narrow_string_compare(
-						  &( ( $3.data )[ 4 ] ),
-						  "2352",
-						  4 ) == 0 )
-					{
-						 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_CDI_2352;
-					}
-				}
-			}
-		}
-		else if( $3.length == 10 )
-		{
-			if( narrow_string_compare(
-			     $3.data,
-			     "MODE",
-			     4 ) == 0 )
-			{
-				if( ( $3.data )[ 5 ] == '/' )
-				{
-					if( ( $3.data )[ 4 ] == '1' )
-					{
-						if( narrow_string_compare(
-						     &( ( $3.data )[ 6 ] ),
-						     "2048",
-						     4 ) == 0 )
-						{
-							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE1_2048;
-						}
-						else if( narrow_string_compare(
-						          &( ( $3.data )[ 6 ] ),
-						          "2352",
-						          4 ) == 0 )
-						{
-							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE1_2352;
-						}
-					}
-					else if( ( $3.data )[ 4 ] == '2' )
-					{
-						if( narrow_string_compare(
-						     &( ( $3.data )[ 6 ] ),
-						     "2048",
-						     4 ) == 0 )
-						{
-							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2048;
-						}
-						else if( narrow_string_compare(
-						          &( ( $3.data )[ 6 ] ),
-						          "2324",
-						          4 ) == 0 )
-						{
-							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2324;
-						}
-						else if( narrow_string_compare(
-						          &( ( $3.data )[ 6 ] ),
-						          "2336",
-						          4 ) == 0 )
-						{
-							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2336;
-						}
-						else if( narrow_string_compare(
-						          &( ( $3.data )[ 6 ] ),
-						          "2352",
-						          4 ) == 0 )
-						{
-							 ( (cue_parser_state_t *) parser_state )->current_track_type = LIBODRAW_TRACK_TYPE_MODE2_2352;
-						}
-					}
-				}
-			}
-		}
+		( (cue_parser_state_t *) parser_state )->previous_index = 0;
+		( (cue_parser_state_t *) parser_state )->current_index  = 0;
 	}
 	;
 
@@ -1240,6 +1125,339 @@ cue_empty_line
 
 %%
 
+/* Parses a number
+ * Returns 1 if successful or -1 on error
+ */
+int cue_parser_parse_number(
+     const char *token,
+     size_t token_size,
+     int *number,
+     libcerror_error_t **error )
+{
+	static char *function = "cue_parser_parse_number";
+	int safe_number       = 0;
+
+	if( token == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid token.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( token_size < 1 )
+	 || ( token_size > 2 ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid token size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( number == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid number.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( token[ 0 ] < '0' )
+	 || ( token[ 0 ] > '9' ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported first digit of number token.",
+		 function );
+
+		return( -1 );
+	}
+	safe_number = token[ 0 ] - '0';
+
+	if( token_size == 2 )
+	{
+		safe_number *= 10;
+
+		if( ( token[ 1 ] < '0' )
+		 || ( token[ 1 ] > '9' ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+			 "%s: unsupported second digit of number token.",
+			 function );
+
+			return( -1 );
+		}
+		safe_number += token[ 1 ] - '0';
+	}
+	*number = safe_number;
+
+	return( 1 );
+}
+
+/* Parses a MFS (minutes:seconds:frames) value and converts it into a logical block address (LBA)
+ * Returns 1 if successful or -1 on error
+ */
+int cue_parser_parse_msf(
+     const char *token,
+     size_t token_size,
+     uint64_t *lba,
+     libcerror_error_t **error )
+{
+	static char *function = "cue_parser_parse_msf";
+	uint64_t safe_lba     = 0;
+
+	if( token == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid token.",
+		 function );
+
+		return( -1 );
+	}
+	if( token_size != 8 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid token size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( lba == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid LBA.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( token[ 0 ] < '0' )
+	 || ( token[ 0 ] > '9' )
+	 || ( token[ 1 ] < '0' )
+	 || ( token[ 1 ] > '9' )
+	 || ( token[ 2 ] != ':' )
+	 || ( token[ 3 ] < '0' )
+	 || ( token[ 3 ] > '9' )
+	 || ( token[ 4 ] < '0' )
+	 || ( token[ 4 ] > '9' )
+	 || ( token[ 5 ] != ':' )
+	 || ( token[ 6 ] < '0' )
+	 || ( token[ 6 ] > '9' )
+	 || ( token[ 7 ] < '0' )
+	 || ( token[ 7 ] > '9' ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported MSF token.",
+		 function );
+
+		return( -1 );
+	}
+	/* Note that the MSF are relative, so there is no need for the MSF offset correction
+	 */
+        safe_lba  = ( ( token[ 0 ] - '0' ) * 10 ) + ( token[ 1 ] - '0' ); \
+        safe_lba *= CD_SECS; \
+        safe_lba += ( ( token[ 3 ] - '0' ) * 10 ) + ( token[ 4 ] - '0' ); \
+        safe_lba *= CD_FRAMES; \
+        safe_lba += ( ( token[ 6 ] - '0' ) * 10 ) + ( token[ 7 ] - '0' );
+
+	*lba = safe_lba;
+
+	return( 1 );
+}
+
+/* Parses a track type
+ * Returns 1 if successful or -1 on error
+ */
+int cue_parser_parse_track_type(
+     const char *token,
+     size_t token_size,
+     uint8_t *track_type,
+     libcerror_error_t **error )
+{
+	static char *function = "cue_parser_parse_track_type";
+
+	if( token == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid token.",
+		 function );
+
+		return( -1 );
+	}
+	if( token_size < 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid token size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( track_type == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid track type.",
+		 function );
+
+		return( -1 );
+	}
+	*track_type = LIBODRAW_TRACK_TYPE_UNKNOWN;
+
+	if( token_size == 3 )
+	{
+		if( narrow_string_compare(
+		     token,
+		     "CDG",
+		     3 ) == 0 )
+		{
+			*track_type = LIBODRAW_TRACK_TYPE_CDG;
+		}
+	}
+	else if( token_size == 5 )
+	{
+		if( narrow_string_compare(
+		     token,
+		     "AUDIO",
+		     5 ) == 0 )
+		{
+			*track_type = LIBODRAW_TRACK_TYPE_AUDIO;
+		}
+	}
+	else if( token_size == 8 )
+	{
+		if( narrow_string_compare(
+		     token,
+		     "CDI",
+		     3 ) == 0 )
+		{
+			if( token[ 3 ] == '/' )
+			{
+				if( narrow_string_compare(
+				     &( token[ 4 ] ),
+				     "2336",
+				     4 ) == 0 )
+				{
+					 *track_type = LIBODRAW_TRACK_TYPE_CDI_2336;
+				}
+				else if( narrow_string_compare(
+					  &( token[ 4 ] ),
+					  "2352",
+					  4 ) == 0 )
+				{
+					 *track_type = LIBODRAW_TRACK_TYPE_CDI_2352;
+				}
+			}
+		}
+	}
+	else if( token_size == 9 )
+	{
+		if( narrow_string_compare(
+		     token,
+		     "MODE1_RAW",
+		     9 ) == 0 )
+		{
+			*track_type = LIBODRAW_TRACK_TYPE_MODE1_2352;
+		}
+	}
+	else if( token_size == 10 )
+	{
+		if( narrow_string_compare(
+		     token,
+		     "MODE",
+		     4 ) == 0 )
+		{
+			if( token[ 5 ] == '/' )
+			{
+				if( token[ 4 ] == '1' )
+				{
+					if( narrow_string_compare(
+					     &( token[ 6 ] ),
+					     "2048",
+					     4 ) == 0 )
+					{
+						 *track_type = LIBODRAW_TRACK_TYPE_MODE1_2048;
+					}
+					else if( narrow_string_compare(
+						  &( token[ 6 ] ),
+						  "2352",
+						  4 ) == 0 )
+					{
+						 *track_type = LIBODRAW_TRACK_TYPE_MODE1_2352;
+					}
+				}
+				else if( token[ 4 ] == '2' )
+				{
+					if( narrow_string_compare(
+					     &( token[ 6 ] ),
+					     "2048",
+					     4 ) == 0 )
+					{
+						 *track_type = LIBODRAW_TRACK_TYPE_MODE2_2048;
+					}
+					else if( narrow_string_compare(
+						  &( token[ 6 ] ),
+						  "2324",
+						  4 ) == 0 )
+					{
+						 *track_type = LIBODRAW_TRACK_TYPE_MODE2_2324;
+					}
+					else if( narrow_string_compare(
+						  &( token[ 6 ] ),
+						  "2336",
+						  4 ) == 0 )
+					{
+						 *track_type = LIBODRAW_TRACK_TYPE_MODE2_2336;
+					}
+					else if( narrow_string_compare(
+						  &( token[ 6 ] ),
+						  "2352",
+						  4 ) == 0 )
+					{
+						 *track_type = LIBODRAW_TRACK_TYPE_MODE2_2352;
+					}
+				}
+			}
+		}
+	}
+	return( 1 );
+}
+
+/* Parses a CUE file
+ * Returns 1 if successful or -1 on error
+ */
 int cue_parser_parse_buffer(
      libodraw_handle_t *handle,
      const uint8_t *buffer,

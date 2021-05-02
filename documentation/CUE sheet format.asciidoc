@@ -7,15 +7,17 @@ Analysis of the CUE format
 :numbered!:
 [abstract]
 == Summary
-The extension CUE is used to specify the table of contents (TOC) of optical 
-media images, e.g. BIN or ISO.
 
-This document is intended as a working document for the CUE sheet 
-specification. Which should allow other tooling to be able to process this file 
-type.
+The extension CUE is used to specify the table of contents (TOC) of optical
+media images, e.g. BIN or ISO. This specification is based on publicly available
+work on the format and was enhanced by analyzing test data.
+
+This document is intended as a working document of the data format specification
+for the libodraw project.
 
 [preface]
 == Document information
+
 [cols="1,5"]
 |===
 | Author(s): | Joachim Metz <joachim.metz@gmail.com>
@@ -26,17 +28,19 @@ type.
 
 [preface]
 == License
+
 ....
-Copyright (C) 2010-2015, Joachim Metz <joachim.metz@gmail.com>.
-Permission is granted to copy, distribute and/or modify this document under the 
-terms of the GNU Free Documentation License, Version 1.3 or any later version 
-published by the Free Software Foundation; with no Invariant Sections, no 
-Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included 
+Copyright (C) 2010-2021, Joachim Metz <joachim.metz@gmail.com>.
+Permission is granted to copy, distribute and/or modify this document under the
+terms of the GNU Free Documentation License, Version 1.3 or any later version
+published by the Free Software Foundation; with no Invariant Sections, no
+Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included
 in the section entitled "GNU Free Documentation License".
 ....
 
 [preface]
 == Revision history
+
 [cols="1,1,1,5",options="header"]
 |===
 | Version | Author | Date | Comments
@@ -48,16 +52,18 @@ Changed MODE2/2342 into MODE2/2324.
 | 0.0.5 | J.B. Metz | March 2011 | Additional information about gap between tracks.
 | 0.0.6 | J.B. Metz | December 2014 | Switched to asccidoc format.
 | 0.0.7 | J.B. Metz | July 2015 | Small changes.
+| 0.0.8 | J.B. Metz | May 2021 | Changes to formatting and additional information about cdrdao generated CUE file format.
 |===
 
 :numbered:
 == Overview
-The extension CUE is used to specify the table of contents (TOC) of optical 
+
+The extension CUE is used to specify the table of contents (TOC) of optical
 media images, e.g. BIN or ISO.
 
 The CUE sheet originates from CDRWIN, but various additions have been made.
 
-The CUE sheet is a text file; the format defines no restrictions on the format 
+The CUE sheet is a text file; the format defines no restrictions on the format
 of the text itself, e.g. extended ASCII or UTF-8.
 
 The CUE sheet consists of multiple sections:
@@ -71,7 +77,9 @@ Each section contains keywords which are commonly referred to as commands.
 Main section specific commands:
 
 * CATALOG
+* CD_ROM
 * CDTEXTFILE
+* DATAFILE
 * FILE
 * REM ORIGINAL MEDIA-TYPE
 * REM SESSION
@@ -97,50 +105,84 @@ Note that the following commands can be present in both sections:
 * REM (remarks)
 
 Come CUE sheets contain comments which are defined by a semi-colon (;), e.g.
+
 ....
 ; Just commenting
 ....
 
+or by `//`, which is used by cdrdao.
+
+....
+// Just commenting
+....
+
 == Commands
+
 === CATALOG
-The CATALOG command is used to specify the "Media Catalog Number". It will 
+
+The CATALOG command is used to specify the "Media Catalog Number". It will
 typically be used when mastering a CDROM for commercial production.
 
 The CATALOG command is defined as:
+
 ....
 CATALOG [media catalog number]
 ....
 
-The media catalog number must be a numeric value of 13 digits and encoded 
-according to UPC/EAN (Universal Product Code/European Article Number) rules. 
+The media catalog number must be a numeric value of 13 digits and encoded
+according to UPC/EAN (Universal Product Code/European Article Number) rules.
 
-The CATALOG command can appear only once in the CUE sheet. It will usually be 
+The CATALOG command can appear only once in the CUE sheet. It will usually be
 the first command in the CUE sheet, but this is not mandatory.
 
+=== CD_ROM
+
+The CD_ROM command is used to specify a CUE file describes a CD-ROM.
+
+....
+CR_ROM
+....
+
+[yellow-background]*Seen used by cdrdao as the first command*
+
 === CDTEXTFILE
-The CDTEXTFILE is used to specify the name of a file that contains the CD-TEXT 
+
+The CDTEXTFILE is used to specify the name of a file that contains the CD-TEXT
 information.
 
 ....
 CDTEXTFILE [filename]
 ....
 
-If the filename contains any spaces, then it must be enclosed in quotation 
+If the filename contains any spaces, then it must be enclosed in quotation
 marks.
 
 [yellow-background]*TODO format of this file? Binary data from the “Read TOC CD-Text command” without the 4 bytes header.*
 
+=== DATAFILE
+
+[yellow-background]*Seen used by cdrdao*
+
+The DATAFILE command is used to specify a file that contains data.
+
+....
+DATAFILE [filename] [MSF]
+....
+
+Also see section: <<msf,MSF>>
+
 === FILE
+
 The FILE command is used to specify a file that contains data.
 
 ....
 FILE [filename] [file type]
 ....
 
-If the filename contains any spaces, then it must be enclosed in quotation 
+If the filename contains any spaces, then it must be enclosed in quotation
 marks.
 
-The first FILE command should be the commands in the CUE sheet with the 
+The first FILE command should be the commands in the CUE sheet with the
 exception of the CATALOG command.
 
 ==== File types
@@ -156,6 +198,7 @@ exception of the CATALOG command.
 |===
 
 === REM
+
 The REM command is used to specify remarks.
 
 ....
@@ -166,21 +209,28 @@ Note that the remarks also contain additional commands, see section:
 <<remarks_commands,Remarks commands>>.
 
 === TRACK
+
 The TRACK command is used to specify a track.
 
 ....
 TRACK [track number] [track type]
 ....
 
-The track number should be a number ranging from 1 to 99. 
-[yellow-background]*It is unclear of the index number should always be 
+The track number should be a number ranging from 1 to 99.
+[yellow-background]*It is unclear of the index number should always be
 represented by 2 digits.*
 
-The first track number can be greater than one, but all track numbers after the 
+The first track number can be greater than one, but all track numbers after the
 first must be sequential. The CUE sheet should at least contain 1 TRACK command.
 
 [NOTE]
 An unspecified gap between tracks is allowed.
+
+Alternative notation for single track CD_ROM CUE file seen used by cdrdao
+
+....
+TRACK [track type]
+....
 
 ==== Track types
 
@@ -189,6 +239,7 @@ An unspecified gap between tracks is allowed.
 | Value | Description
 | AUDIO | Audio (sector size: 2352)
 | CDG | Karaoke CD+G (sector size: 2448)
+| MODE1_RAW | CD-ROM Mode 1 data (raw) (sector size: 2352), seen used by cdrdao
 | MODE1/2048 | CD-ROM Mode 1 data (cooked) (sector size: 2048)
 | MODE1/2352 | CD-ROM Mode 1 data (raw) (sector size: 2352)
 | MODE2/2048 | CD-ROM Mode 2 XA form-1 data (sector size: 2048)
@@ -202,6 +253,7 @@ An unspecified gap between tracks is allowed.
 == CD-Text commands
 
 [yellow-background]*TODO*
+
 ....
 ARRANGER
 COMPOSER
@@ -216,50 +268,54 @@ UPC_EAN
 ....
 
 === PERFORMER
+
 The PERFORMER command is used to specify the name of a performer.
 
 ....
 PERFORMER [string]
 ....
 
-If the string contains any spaces it must be enclosed in quotation marks. 
+If the string contains any spaces it must be enclosed in quotation marks.
 Strings should be limited to a maximum of 80 characters.
 
-If the PERFORMER command appears before any TRACK commands it represents the 
-performer of the entire disc. If the command appears after a TRACK command it 
+If the PERFORMER command appears before any TRACK commands it represents the
+performer of the entire disc. If the command appears after a TRACK command it
 represents the performer of the current track.
 
 === SONGWRITER
+
 The SONGWRITER command is used to specify the name of a song writer.
 
 ....
 SONGWRITER [string]
 ....
 
-If the string contains any spaces it must be enclosed in quotation marks. 
+If the string contains any spaces it must be enclosed in quotation marks.
 Strings should be limited to a maximum of 80 characters.
 
-If the SONGWRITER command appears before any TRACK commands it represents the 
-song writer of the entire disc. If the command appears after a TRACK command it 
+If the SONGWRITER command appears before any TRACK commands it represents the
+song writer of the entire disc. If the command appears after a TRACK command it
 represents the song writer of the current track.
 
 === TITLE
+
 The TITLE command is used to specify the name of a title.
 
 ....
 TITLE [string]
 ....
 
-If the string contains any spaces it must be enclosed in quotation marks. 
+If the string contains any spaces it must be enclosed in quotation marks.
 Strings should be limited to a maximum of 80 characters.
 
-If the TITLE command appears before any TRACK commands it represents the title 
-of the entire disc. If the command appears after a TRACK command it represents 
+If the TITLE command appears before any TRACK commands it represents the title
+of the entire disc. If the command appears after a TRACK command it represents
 the title of the current track.
 
 == [[remarks_commands]]Remarks commands
 
 [yellow-background]*TODO*
+
 ....
 REM DATE
 REM REPLAYGAIN_ALBUM_GAIN
@@ -269,17 +325,18 @@ REM REPLAYGAIN_TRACK_PEAK
 ....
 
 === REM LEAD-OUT
+
 The REM LEAD-OUT command is used to specify the length of a lead-out.
 
 ....
 REM LEAD-OUT [MSF]
 ....
 
-The lead-out data can either be stored or not stored in the file specified by 
+The lead-out data can either be stored or not stored in the file specified by
 the FILE command. The only indication is the size of the file.
 
-The REM LEAD-OUT command must appear after a REM SESSION command and a REM 
-RUN-OUT command if specified. Only one REM LEAD-OUT command is allowed per 
+The REM LEAD-OUT command must appear after a REM SESSION command and a REM
+RUN-OUT command if specified. Only one REM LEAD-OUT command is allowed per
 track.
 
 Also see section: <<msf,MSF>>
@@ -287,6 +344,7 @@ Also see section: <<msf,MSF>>
 This command is an IsoBuster add-on.
 
 === REM MSF
+
 The REM LEAD-OUT command is used to specify the LBA corresponding to an MSF.
 
 ....
@@ -298,6 +356,7 @@ Also see section: <<msf,MSF>>
 This command is an IsoBuster add-on.
 
 === REM ORIGINAL MEDIA-TYPE
+
 The REM ORIGINAL MEDIA-TYPE command is used to specify the original media type.
 
 ....
@@ -352,17 +411,18 @@ DVD+(MRW) DL | [yellow-background]*TODO (double layered)*
 |===
 
 === REM RUN-OUT
+
 The REM RUN-OUT command is used to specify the length of a run-out.
 
 ....
 REM RUN-OUT [MSF]
 ....
 
-[yellow-background]*The run-out data is considered not to be stored in the file 
-specified by the FILE command if the FILE command was specified after the REM 
+[yellow-background]*The run-out data is considered not to be stored in the file
+specified by the FILE command if the FILE command was specified after the REM
 SESSION command.*
 
-The REM RUN-OUT command must appear after a REM SESSION command, but before a 
+The REM RUN-OUT command must appear after a REM SESSION command, but before a
 REM LEAD-OUT command. Only one REM LEAD-OUT command is allowed per track.
 
 Also see section: <<msf,MSF>>
@@ -370,6 +430,7 @@ Also see section: <<msf,MSF>>
 This command is an IsoBuster add-on.
 
 === REM SESSION
+
 The REM SESSION command is used to specify sessions
 
 ....
@@ -378,18 +439,20 @@ REM SESSION [session number]
 
 The session number should be a number ranging from 1 to
 [yellow-background]*99*.
-[yellow-background]*It is unclear of the index number should always be 
+[yellow-background]*It is unclear of the index number should always be
 represented by 2 digits.*
 
 [yellow-background]*TODO maximum of 50 sessions on a CD?*
 
 This command is an IsoBuster add-on.
 
-[yellow-background]*A session can contain a single data track or one or more 
+[yellow-background]*A session can contain a single data track or one or more
 audio tracks.*
 
 == Track commands
+
 === FLAGS
+
 The FLAGS command is used to define special sub-code flags for a track.
 
 ....
@@ -398,7 +461,7 @@ FLAGS [flag types]
 
 The flags types contain one or more track flags.
 
-The FLAGS command must appear after a TRACK command, but before any INDEX 
+The FLAGS command must appear after a TRACK command, but before any INDEX
 commands. Only one FLAGS command is allowed per track.
 
 ==== Flag types
@@ -414,10 +477,11 @@ commands. Only one FLAGS command is allowed per track.
 
 [yellow-background]*TODO add more info about flags*
 
-There is also a sub-code flag "DATA" which is set for all non-audio tracks. 
+There is also a sub-code flag "DATA" which is set for all non-audio tracks.
 This flag is set automatically based on the track type.
 
 === INDEX
+
 The INDEX command is used to specify indexes or sub-indexes of the track.
 
 ....
@@ -425,7 +489,7 @@ INDEX [index number] [MSF]
 ....
 
 The index number should be a number ranging from 0 to 99.
-[yellow-background]*It is unclear of the index number should always be 
+[yellow-background]*It is unclear of the index number should always be
 represented by 2 digits.*
 
 The index number have the following meaning:
@@ -437,58 +501,63 @@ The index number have the following meaning:
 Also see section: <<msf,MSF>>
 
 === ISRC
-The ISRC command is used to specify the International Standard Recording Code 
-(ISRC) of a track. t will typically be used when mastering a CD for commercial 
+
+The ISRC command is used to specify the International Standard Recording Code
+(ISRC) of a track. t will typically be used when mastering a CD for commercial
 production.
 
 ....
 ISRC [ISRC code]
 ....
 
-The IRSC code must be 12 characters in length. The first five characters are 
+The IRSC code must be 12 characters in length. The first five characters are
 alphanumeric and the last seven are numeric.
 
-The ISRC command must be specified after a TRACK command, but before any INDEX 
+The ISRC command must be specified after a TRACK command, but before any INDEX
 commands.
 
 === POSTGAP
+
 The POSTGAP command is used to specify the length of a track post-gap.
 
 ....
 POSTGAP [MSF]
 ....
 
-The post-gap data is considered not to be stored in the file specified by the 
+The post-gap data is considered not to be stored in the file specified by the
 FILE command.
 
-The POSTGAP command must appear after all INDEX commands for the current track. 
+The POSTGAP command must appear after all INDEX commands for the current track.
 Only one POSTGAP command is allowed per track.
 
 Also see section: <<msf,MSF>>
 
 === PREGAP
+
 The PREGAP command is used to specify the length of a track pre-gap.
 
 ....
 PREGAP [MSF]
 ....
 
-The pre-gap data is considered not to be stored in the file specified by the 
+The pre-gap data is considered not to be stored in the file specified by the
 FILE command.
 
-The PREGAP command must appear after a TRACK command, but before any INDEX 
+The PREGAP command must appear after a TRACK command, but before any INDEX
 commands. Only one PREGAP command is allowed per track.
 
 Also see section: <<msf,MSF>>
 
 == Data types
+
 === [[msf]]MSF
-The MSF consists of minutes:seconds:frames (mm:ss:ff), the MSF is either 
-relative to the last FILE command or relative to the start of the optical 
+
+The MSF consists of minutes:seconds:frames (mm:ss:ff), the MSF is either
+relative to the last FILE command or relative to the start of the optical
 media. There are 75 frames per second, 60 seconds per minute.
 
-Note that the MSF is defined without the 2 seconds MFS offset, therefore MSF 
-00:00:00 equals LBA 0. This is different from the MSF for the CD itself where 
+Note that the MSF is defined without the 2 seconds MFS offset, therefore MSF
+00:00:00 equals LBA 0. This is different from the MSF for the CD itself where
 MSF 00:02:00 equals LBA 0.
 
 :numbered!:
@@ -527,383 +596,396 @@ http://www.gnu.org/software/libcdio/libcdio.html#SEC22
 [cols="1,5",options="header"]
 |===
 | Title: | Cue sheet (computing)
-| URL: | http://en.wikipedia.org/wiki/Cue_sheet_(computing)
+| URL: | https://en.wikipedia.org/wiki/Cue_sheet_(computing)
 |===
 
 [appendix]
 == GNU Free Documentation License
+
 Version 1.3, 3 November 2008
-Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc. 
+Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
 <http://fsf.org/>
 
-Everyone is permitted to copy and distribute verbatim copies of this license 
+Everyone is permitted to copy and distribute verbatim copies of this license
 document, but changing it is not allowed.
 
 === 0. PREAMBLE
-The purpose of this License is to make a manual, textbook, or other functional 
-and useful document "free" in the sense of freedom: to assure everyone the 
-effective freedom to copy and redistribute it, with or without modifying it, 
-either commercially or noncommercially. Secondarily, this License preserves for 
-the author and publisher a way to get credit for their work, while not being 
+
+The purpose of this License is to make a manual, textbook, or other functional
+and useful document "free" in the sense of freedom: to assure everyone the
+effective freedom to copy and redistribute it, with or without modifying it,
+either commercially or noncommercially. Secondarily, this License preserves for
+the author and publisher a way to get credit for their work, while not being
 considered responsible for modifications made by others.
 
-This License is a kind of "copyleft", which means that derivative works of the 
-document must themselves be free in the same sense. It complements the GNU 
+This License is a kind of "copyleft", which means that derivative works of the
+document must themselves be free in the same sense. It complements the GNU
 General Public License, which is a copyleft license designed for free software.
 
-We have designed this License in order to use it for manuals for free software, 
-because free software needs free documentation: a free program should come with 
-manuals providing the same freedoms that the software does. But this License is 
-not limited to software manuals; it can be used for any textual work, 
-regardless of subject matter or whether it is published as a printed book. We 
-recommend this License principally for works whose purpose is instruction or 
+We have designed this License in order to use it for manuals for free software,
+because free software needs free documentation: a free program should come with
+manuals providing the same freedoms that the software does. But this License is
+not limited to software manuals; it can be used for any textual work,
+regardless of subject matter or whether it is published as a printed book. We
+recommend this License principally for works whose purpose is instruction or
 reference.
 
 === 1. APPLICABILITY AND DEFINITIONS
-This License applies to any manual or other work, in any medium, that contains 
-a notice placed by the copyright holder saying it can be distributed under the 
-terms of this License. Such a notice grants a world-wide, royalty-free license, 
-unlimited in duration, to use that work under the conditions stated herein. The 
-"Document", below, refers to any such manual or work. Any member of the public 
-is a licensee, and is addressed as "you". You accept the license if you copy, 
+
+This License applies to any manual or other work, in any medium, that contains
+a notice placed by the copyright holder saying it can be distributed under the
+terms of this License. Such a notice grants a world-wide, royalty-free license,
+unlimited in duration, to use that work under the conditions stated herein. The
+"Document", below, refers to any such manual or work. Any member of the public
+is a licensee, and is addressed as "you". You accept the license if you copy,
 modify or distribute the work in a way requiring permission under copyright law.
 
-A "Modified Version" of the Document means any work containing the Document or 
-a portion of it, either copied verbatim, or with modifications and/or 
+A "Modified Version" of the Document means any work containing the Document or
+a portion of it, either copied verbatim, or with modifications and/or
 translated into another language.
 
-A "Secondary Section" is a named appendix or a front-matter section of the 
-Document that deals exclusively with the relationship of the publishers or 
-authors of the Document to the Document's overall subject (or to related 
-matters) and contains nothing that could fall directly within that overall 
-subject. (Thus, if the Document is in part a textbook of mathematics, a 
-Secondary Section may not explain any mathematics.) The relationship could be a 
-matter of historical connection with the subject or with related matters, or of 
+A "Secondary Section" is a named appendix or a front-matter section of the
+Document that deals exclusively with the relationship of the publishers or
+authors of the Document to the Document's overall subject (or to related
+matters) and contains nothing that could fall directly within that overall
+subject. (Thus, if the Document is in part a textbook of mathematics, a
+Secondary Section may not explain any mathematics.) The relationship could be a
+matter of historical connection with the subject or with related matters, or of
 legal, commercial, philosophical, ethical or political position regarding them.
 
-The "Invariant Sections" are certain Secondary Sections whose titles are 
-designated, as being those of Invariant Sections, in the notice that says that 
-the Document is released under this License. If a section does not fit the 
-above definition of Secondary then it is not allowed to be designated as 
-Invariant. The Document may contain zero Invariant Sections. If the Document 
+The "Invariant Sections" are certain Secondary Sections whose titles are
+designated, as being those of Invariant Sections, in the notice that says that
+the Document is released under this License. If a section does not fit the
+above definition of Secondary then it is not allowed to be designated as
+Invariant. The Document may contain zero Invariant Sections. If the Document
 does not identify any Invariant Sections then there are none.
 
-The "Cover Texts" are certain short passages of text that are listed, as 
-Front-Cover Texts or Back-Cover Texts, in the notice that says that the 
-Document is released under this License. A Front-Cover Text may be at most 5 
+The "Cover Texts" are certain short passages of text that are listed, as
+Front-Cover Texts or Back-Cover Texts, in the notice that says that the
+Document is released under this License. A Front-Cover Text may be at most 5
 words, and a Back-Cover Text may be at most 25 words.
 
-A "Transparent" copy of the Document means a machine-readable copy, represented 
-in a format whose specification is available to the general public, that is 
-suitable for revising the document straightforwardly with generic text editors 
-or (for images composed of pixels) generic paint programs or (for drawings) 
-some widely available drawing editor, and that is suitable for input to text 
-formatters or for automatic translation to a variety of formats suitable for 
-input to text formatters. A copy made in an otherwise Transparent file format 
-whose markup, or absence of markup, has been arranged to thwart or discourage 
-subsequent modification by readers is not Transparent. An image format is not 
-Transparent if used for any substantial amount of text. A copy that is not 
+A "Transparent" copy of the Document means a machine-readable copy, represented
+in a format whose specification is available to the general public, that is
+suitable for revising the document straightforwardly with generic text editors
+or (for images composed of pixels) generic paint programs or (for drawings)
+some widely available drawing editor, and that is suitable for input to text
+formatters or for automatic translation to a variety of formats suitable for
+input to text formatters. A copy made in an otherwise Transparent file format
+whose markup, or absence of markup, has been arranged to thwart or discourage
+subsequent modification by readers is not Transparent. An image format is not
+Transparent if used for any substantial amount of text. A copy that is not
 "Transparent" is called "Opaque".
 
-Examples of suitable formats for Transparent copies include plain ASCII without 
-markup, Texinfo input format, LaTeX input format, SGML or XML using a publicly 
-available DTD, and standard-conforming simple HTML, PostScript or PDF designed 
-for human modification. Examples of transparent image formats include PNG, XCF 
-and JPG. Opaque formats include proprietary formats that can be read and edited 
-only by proprietary word processors, SGML or XML for which the DTD and/or 
-processing tools are not generally available, and the machine-generated HTML, 
+Examples of suitable formats for Transparent copies include plain ASCII without
+markup, Texinfo input format, LaTeX input format, SGML or XML using a publicly
+available DTD, and standard-conforming simple HTML, PostScript or PDF designed
+for human modification. Examples of transparent image formats include PNG, XCF
+and JPG. Opaque formats include proprietary formats that can be read and edited
+only by proprietary word processors, SGML or XML for which the DTD and/or
+processing tools are not generally available, and the machine-generated HTML,
 PostScript or PDF produced by some word processors for output purposes only.
 
-The "Title Page" means, for a printed book, the title page itself, plus such 
-following pages as are needed to hold, legibly, the material this License 
-requires to appear in the title page. For works in formats which do not have 
-any title page as such, "Title Page" means the text near the most prominent 
+The "Title Page" means, for a printed book, the title page itself, plus such
+following pages as are needed to hold, legibly, the material this License
+requires to appear in the title page. For works in formats which do not have
+any title page as such, "Title Page" means the text near the most prominent
 appearance of the work's title, preceding the beginning of the body of the text.
 
-The "publisher" means any person or entity that distributes copies of the 
+The "publisher" means any person or entity that distributes copies of the
 Document to the public.
 
-A section "Entitled XYZ" means a named subunit of the Document whose title 
-either is precisely XYZ or contains XYZ in parentheses following text that 
-translates XYZ in another language. (Here XYZ stands for a specific section 
-name mentioned below, such as "Acknowledgements", "Dedications", 
-"Endorsements", or "History".) To "Preserve the Title" of such a section when 
-you modify the Document means that it remains a section "Entitled XYZ" 
+A section "Entitled XYZ" means a named subunit of the Document whose title
+either is precisely XYZ or contains XYZ in parentheses following text that
+translates XYZ in another language. (Here XYZ stands for a specific section
+name mentioned below, such as "Acknowledgements", "Dedications",
+"Endorsements", or "History".) To "Preserve the Title" of such a section when
+you modify the Document means that it remains a section "Entitled XYZ"
 according to this definition.
 
-The Document may include Warranty Disclaimers next to the notice which states 
-that this License applies to the Document. These Warranty Disclaimers are 
-considered to be included by reference in this License, but only as regards 
-disclaiming warranties: any other implication that these Warranty Disclaimers 
+The Document may include Warranty Disclaimers next to the notice which states
+that this License applies to the Document. These Warranty Disclaimers are
+considered to be included by reference in this License, but only as regards
+disclaiming warranties: any other implication that these Warranty Disclaimers
 may have is void and has no effect on the meaning of this License.
 
 === 2. VERBATIM COPYING
-You may copy and distribute the Document in any medium, either commercially or 
-noncommercially, provided that this License, the copyright notices, and the 
-license notice saying this License applies to the Document are reproduced in 
-all copies, and that you add no other conditions whatsoever to those of this 
-License. You may not use technical measures to obstruct or control the reading 
-or further copying of the copies you make or distribute. However, you may 
-accept compensation in exchange for copies. If you distribute a large enough 
+
+You may copy and distribute the Document in any medium, either commercially or
+noncommercially, provided that this License, the copyright notices, and the
+license notice saying this License applies to the Document are reproduced in
+all copies, and that you add no other conditions whatsoever to those of this
+License. You may not use technical measures to obstruct or control the reading
+or further copying of the copies you make or distribute. However, you may
+accept compensation in exchange for copies. If you distribute a large enough
 number of copies you must also follow the conditions in section 3.
 
-You may also lend copies, under the same conditions stated above, and you may 
+You may also lend copies, under the same conditions stated above, and you may
 publicly display copies.
 
 === 3. COPYING IN QUANTITY
-If you publish printed copies (or copies in media that commonly have printed 
-covers) of the Document, numbering more than 100, and the Document's license 
-notice requires Cover Texts, you must enclose the copies in covers that carry, 
-clearly and legibly, all these Cover Texts: Front-Cover Texts on the front 
-cover, and Back-Cover Texts on the back cover. Both covers must also clearly 
-and legibly identify you as the publisher of these copies. The front cover must 
-present the full title with all words of the title equally prominent and 
-visible. You may add other material on the covers in addition. Copying with 
-changes limited to the covers, as long as they preserve the title of the 
-Document and satisfy these conditions, can be treated as verbatim copying in 
+
+If you publish printed copies (or copies in media that commonly have printed
+covers) of the Document, numbering more than 100, and the Document's license
+notice requires Cover Texts, you must enclose the copies in covers that carry,
+clearly and legibly, all these Cover Texts: Front-Cover Texts on the front
+cover, and Back-Cover Texts on the back cover. Both covers must also clearly
+and legibly identify you as the publisher of these copies. The front cover must
+present the full title with all words of the title equally prominent and
+visible. You may add other material on the covers in addition. Copying with
+changes limited to the covers, as long as they preserve the title of the
+Document and satisfy these conditions, can be treated as verbatim copying in
 other respects.
 
-If the required texts for either cover are too voluminous to fit legibly, you 
-should put the first ones listed (as many as fit reasonably) on the actual 
+If the required texts for either cover are too voluminous to fit legibly, you
+should put the first ones listed (as many as fit reasonably) on the actual
 cover, and continue the rest onto adjacent pages.
 
-If you publish or distribute Opaque copies of the Document numbering more than 
-100, you must either include a machine-readable Transparent copy along with 
-each Opaque copy, or state in or with each Opaque copy a computer-network 
-location from which the general network-using public has access to download 
-using public-standard network protocols a complete Transparent copy of the 
-Document, free of added material. If you use the latter option, you must take 
-reasonably prudent steps, when you begin distribution of Opaque copies in 
-quantity, to ensure that this Transparent copy will remain thus accessible at 
-the stated location until at least one year after the last time you distribute 
-an Opaque copy (directly or through your agents or retailers) of that edition 
+If you publish or distribute Opaque copies of the Document numbering more than
+100, you must either include a machine-readable Transparent copy along with
+each Opaque copy, or state in or with each Opaque copy a computer-network
+location from which the general network-using public has access to download
+using public-standard network protocols a complete Transparent copy of the
+Document, free of added material. If you use the latter option, you must take
+reasonably prudent steps, when you begin distribution of Opaque copies in
+quantity, to ensure that this Transparent copy will remain thus accessible at
+the stated location until at least one year after the last time you distribute
+an Opaque copy (directly or through your agents or retailers) of that edition
 to the public.
 
-It is requested, but not required, that you contact the authors of the Document 
-well before redistributing any large number of copies, to give them a chance to 
+It is requested, but not required, that you contact the authors of the Document
+well before redistributing any large number of copies, to give them a chance to
 provide you with an updated version of the Document.
 
 === 4. MODIFICATIONS
-You may copy and distribute a Modified Version of the Document under the 
-conditions of sections 2 and 3 above, provided that you release the Modified 
-Version under precisely this License, with the Modified Version filling the 
-role of the Document, thus licensing distribution and modification of the 
-Modified Version to whoever possesses a copy of it. In addition, you must do 
+
+You may copy and distribute a Modified Version of the Document under the
+conditions of sections 2 and 3 above, provided that you release the Modified
+Version under precisely this License, with the Modified Version filling the
+role of the Document, thus licensing distribution and modification of the
+Modified Version to whoever possesses a copy of it. In addition, you must do
 these things in the Modified Version:
 
-A. Use in the Title Page (and on the covers, if any) a title distinct from that 
-of the Document, and from those of previous versions (which should, if there 
-were any, be listed in the History section of the Document). You may use the 
-same title as a previous version if the original publisher of that version 
-gives permission. 
+A. Use in the Title Page (and on the covers, if any) a title distinct from that
+of the Document, and from those of previous versions (which should, if there
+were any, be listed in the History section of the Document). You may use the
+same title as a previous version if the original publisher of that version
+gives permission.
 
-B. List on the Title Page, as authors, one or more persons or entities 
-responsible for authorship of the modifications in the Modified Version, 
-together with at least five of the principal authors of the Document (all of 
-its principal authors, if it has fewer than five), unless they release you from 
-this requirement. 
+B. List on the Title Page, as authors, one or more persons or entities
+responsible for authorship of the modifications in the Modified Version,
+together with at least five of the principal authors of the Document (all of
+its principal authors, if it has fewer than five), unless they release you from
+this requirement.
 
-C. State on the Title page the name of the publisher of the Modified Version, 
-as the publisher. 
+C. State on the Title page the name of the publisher of the Modified Version,
+as the publisher.
 
-D. Preserve all the copyright notices of the Document. 
+D. Preserve all the copyright notices of the Document.
 
-E. Add an appropriate copyright notice for your modifications adjacent to the 
-other copyright notices. 
+E. Add an appropriate copyright notice for your modifications adjacent to the
+other copyright notices.
 
-F. Include, immediately after the copyright notices, a license notice giving 
-the public permission to use the Modified Version under the terms of this 
-License, in the form shown in the Addendum below. 
+F. Include, immediately after the copyright notices, a license notice giving
+the public permission to use the Modified Version under the terms of this
+License, in the form shown in the Addendum below.
 
-G. Preserve in that license notice the full lists of Invariant Sections and 
-required Cover Texts given in the Document's license notice. 
+G. Preserve in that license notice the full lists of Invariant Sections and
+required Cover Texts given in the Document's license notice.
 
-H. Include an unaltered copy of this License. 
+H. Include an unaltered copy of this License.
 
-I. Preserve the section Entitled "History", Preserve its Title, and add to it 
-an item stating at least the title, year, new authors, and publisher of the 
-Modified Version as given on the Title Page. If there is no section Entitled 
-"History" in the Document, create one stating the title, year, authors, and 
-publisher of the Document as given on its Title Page, then add an item 
-describing the Modified Version as stated in the previous sentence. 
+I. Preserve the section Entitled "History", Preserve its Title, and add to it
+an item stating at least the title, year, new authors, and publisher of the
+Modified Version as given on the Title Page. If there is no section Entitled
+"History" in the Document, create one stating the title, year, authors, and
+publisher of the Document as given on its Title Page, then add an item
+describing the Modified Version as stated in the previous sentence.
 
-J. Preserve the network location, if any, given in the Document for public 
-access to a Transparent copy of the Document, and likewise the network 
-locations given in the Document for previous versions it was based on. These 
-may be placed in the "History" section. You may omit a network location for a 
-work that was published at least four years before the Document itself, or if 
-the original publisher of the version it refers to gives permission. 
+J. Preserve the network location, if any, given in the Document for public
+access to a Transparent copy of the Document, and likewise the network
+locations given in the Document for previous versions it was based on. These
+may be placed in the "History" section. You may omit a network location for a
+work that was published at least four years before the Document itself, or if
+the original publisher of the version it refers to gives permission.
 
-K. For any section Entitled "Acknowledgements" or "Dedications", Preserve the 
-Title of the section, and preserve in the section all the substance and tone of 
-each of the contributor acknowledgements and/or dedications given therein. 
+K. For any section Entitled "Acknowledgements" or "Dedications", Preserve the
+Title of the section, and preserve in the section all the substance and tone of
+each of the contributor acknowledgements and/or dedications given therein.
 
-L. Preserve all the Invariant Sections of the Document, unaltered in their text 
-and in their titles. Section numbers or the equivalent are not considered part 
-of the section titles. 
+L. Preserve all the Invariant Sections of the Document, unaltered in their text
+and in their titles. Section numbers or the equivalent are not considered part
+of the section titles.
 
-M. Delete any section Entitled "Endorsements". Such a section may not be 
-included in the Modified Version. 
+M. Delete any section Entitled "Endorsements". Such a section may not be
+included in the Modified Version.
 
-N. Do not retitle any existing section to be Entitled "Endorsements" or to 
-conflict in title with any Invariant Section. 
+N. Do not retitle any existing section to be Entitled "Endorsements" or to
+conflict in title with any Invariant Section.
 
-O. Preserve any Warranty Disclaimers. 
+O. Preserve any Warranty Disclaimers.
 
-If the Modified Version includes new front-matter sections or appendices that 
-qualify as Secondary Sections and contain no material copied from the Document, 
-you may at your option designate some or all of these sections as invariant. To 
-do this, add their titles to the list of Invariant Sections in the Modified 
-Version's license notice. These titles must be distinct from any other section 
+If the Modified Version includes new front-matter sections or appendices that
+qualify as Secondary Sections and contain no material copied from the Document,
+you may at your option designate some or all of these sections as invariant. To
+do this, add their titles to the list of Invariant Sections in the Modified
+Version's license notice. These titles must be distinct from any other section
 titles.
 
-You may add a section Entitled "Endorsements", provided it contains nothing but 
-endorsements of your Modified Version by various parties—for example, 
-statements of peer review or that the text has been approved by an organization 
+You may add a section Entitled "Endorsements", provided it contains nothing but
+endorsements of your Modified Version by various parties—for example,
+statements of peer review or that the text has been approved by an organization
 as the authoritative definition of a standard.
 
-You may add a passage of up to five words as a Front-Cover Text, and a passage 
-of up to 25 words as a Back-Cover Text, to the end of the list of Cover Texts 
-in the Modified Version. Only one passage of Front-Cover Text and one of 
-Back-Cover Text may be added by (or through arrangements made by) any one 
-entity. If the Document already includes a cover text for the same cover, 
-previously added by you or by arrangement made by the same entity you are 
-acting on behalf of, you may not add another; but you may replace the old one, 
+You may add a passage of up to five words as a Front-Cover Text, and a passage
+of up to 25 words as a Back-Cover Text, to the end of the list of Cover Texts
+in the Modified Version. Only one passage of Front-Cover Text and one of
+Back-Cover Text may be added by (or through arrangements made by) any one
+entity. If the Document already includes a cover text for the same cover,
+previously added by you or by arrangement made by the same entity you are
+acting on behalf of, you may not add another; but you may replace the old one,
 on explicit permission from the previous publisher that added the old one.
 
-The author(s) and publisher(s) of the Document do not by this License give 
-permission to use their names for publicity for or to assert or imply 
+The author(s) and publisher(s) of the Document do not by this License give
+permission to use their names for publicity for or to assert or imply
 endorsement of any Modified Version.
 
 === 5. COMBINING DOCUMENTS
-You may combine the Document with other documents released under this License, 
-under the terms defined in section 4 above for modified versions, provided that 
-you include in the combination all of the Invariant Sections of all of the 
-original documents, unmodified, and list them all as Invariant Sections of your 
-combined work in its license notice, and that you preserve all their Warranty 
+
+You may combine the Document with other documents released under this License,
+under the terms defined in section 4 above for modified versions, provided that
+you include in the combination all of the Invariant Sections of all of the
+original documents, unmodified, and list them all as Invariant Sections of your
+combined work in its license notice, and that you preserve all their Warranty
 Disclaimers.
 
-The combined work need only contain one copy of this License, and multiple 
-identical Invariant Sections may be replaced with a single copy. If there are 
-multiple Invariant Sections with the same name but different contents, make the 
-title of each such section unique by adding at the end of it, in parentheses, 
-the name of the original author or publisher of that section if known, or else 
-a unique number. Make the same adjustment to the section titles in the list of 
+The combined work need only contain one copy of this License, and multiple
+identical Invariant Sections may be replaced with a single copy. If there are
+multiple Invariant Sections with the same name but different contents, make the
+title of each such section unique by adding at the end of it, in parentheses,
+the name of the original author or publisher of that section if known, or else
+a unique number. Make the same adjustment to the section titles in the list of
 Invariant Sections in the license notice of the combined work.
 
-In the combination, you must combine any sections Entitled "History" in the 
-various original documents, forming one section Entitled "History"; likewise 
-combine any sections Entitled "Acknowledgements", and any sections Entitled 
+In the combination, you must combine any sections Entitled "History" in the
+various original documents, forming one section Entitled "History"; likewise
+combine any sections Entitled "Acknowledgements", and any sections Entitled
 "Dedications". You must delete all sections Entitled "Endorsements".
 
 === 6. COLLECTIONS OF DOCUMENTS
-You may make a collection consisting of the Document and other documents 
-released under this License, and replace the individual copies of this License 
-in the various documents with a single copy that is included in the collection, 
-provided that you follow the rules of this License for verbatim copying of each 
+
+You may make a collection consisting of the Document and other documents
+released under this License, and replace the individual copies of this License
+in the various documents with a single copy that is included in the collection,
+provided that you follow the rules of this License for verbatim copying of each
 of the documents in all other respects.
 
-You may extract a single document from such a collection, and distribute it 
-individually under this License, provided you insert a copy of this License 
-into the extracted document, and follow this License in all other respects 
+You may extract a single document from such a collection, and distribute it
+individually under this License, provided you insert a copy of this License
+into the extracted document, and follow this License in all other respects
 regarding verbatim copying of that document.
 
 === 7. AGGREGATION WITH INDEPENDENT WORKS
-A compilation of the Document or its derivatives with other separate and 
-independent documents or works, in or on a volume of a storage or distribution 
-medium, is called an "aggregate" if the copyright resulting from the 
-compilation is not used to limit the legal rights of the compilation's users 
-beyond what the individual works permit. When the Document is included in an 
-aggregate, this License does not apply to the other works in the aggregate 
+
+A compilation of the Document or its derivatives with other separate and
+independent documents or works, in or on a volume of a storage or distribution
+medium, is called an "aggregate" if the copyright resulting from the
+compilation is not used to limit the legal rights of the compilation's users
+beyond what the individual works permit. When the Document is included in an
+aggregate, this License does not apply to the other works in the aggregate
 which are not themselves derivative works of the Document.
 
-If the Cover Text requirement of section 3 is applicable to these copies of the 
-Document, then if the Document is less than one half of the entire aggregate, 
-the Document's Cover Texts may be placed on covers that bracket the Document 
-within the aggregate, or the electronic equivalent of covers if the Document is 
-in electronic form. Otherwise they must appear on printed covers that bracket 
+If the Cover Text requirement of section 3 is applicable to these copies of the
+Document, then if the Document is less than one half of the entire aggregate,
+the Document's Cover Texts may be placed on covers that bracket the Document
+within the aggregate, or the electronic equivalent of covers if the Document is
+in electronic form. Otherwise they must appear on printed covers that bracket
 the whole aggregate.
 
 === 8. TRANSLATION
-Translation is considered a kind of modification, so you may distribute 
-translations of the Document under the terms of section 4. Replacing Invariant 
-Sections with translations requires special permission from their copyright 
-holders, but you may include translations of some or all Invariant Sections in 
-addition to the original versions of these Invariant Sections. You may include 
-a translation of this License, and all the license notices in the Document, and 
-any Warranty Disclaimers, provided that you also include the original English 
-version of this License and the original versions of those notices and 
-disclaimers. In case of a disagreement between the translation and the original 
-version of this License or a notice or disclaimer, the original version will 
+
+Translation is considered a kind of modification, so you may distribute
+translations of the Document under the terms of section 4. Replacing Invariant
+Sections with translations requires special permission from their copyright
+holders, but you may include translations of some or all Invariant Sections in
+addition to the original versions of these Invariant Sections. You may include
+a translation of this License, and all the license notices in the Document, and
+any Warranty Disclaimers, provided that you also include the original English
+version of this License and the original versions of those notices and
+disclaimers. In case of a disagreement between the translation and the original
+version of this License or a notice or disclaimer, the original version will
 prevail.
 
-If a section in the Document is Entitled "Acknowledgements", "Dedications", or 
-"History", the requirement (section 4) to Preserve its Title (section 1) will 
+If a section in the Document is Entitled "Acknowledgements", "Dedications", or
+"History", the requirement (section 4) to Preserve its Title (section 1) will
 typically require changing the actual title.
 
 === 9. TERMINATION
-You may not copy, modify, sublicense, or distribute the Document except as 
-expressly provided under this License. Any attempt otherwise to copy, modify, 
-sublicense, or distribute it is void, and will automatically terminate your 
+
+You may not copy, modify, sublicense, or distribute the Document except as
+expressly provided under this License. Any attempt otherwise to copy, modify,
+sublicense, or distribute it is void, and will automatically terminate your
 rights under this License.
 
-However, if you cease all violation of this License, then your license from a 
-particular copyright holder is reinstated (a) provisionally, unless and until 
-the copyright holder explicitly and finally terminates your license, and (b) 
-permanently, if the copyright holder fails to notify you of the violation by 
+However, if you cease all violation of this License, then your license from a
+particular copyright holder is reinstated (a) provisionally, unless and until
+the copyright holder explicitly and finally terminates your license, and (b)
+permanently, if the copyright holder fails to notify you of the violation by
 some reasonable means prior to 60 days after the cessation.
 
-Moreover, your license from a particular copyright holder is reinstated 
-permanently if the copyright holder notifies you of the violation by some 
-reasonable means, this is the first time you have received notice of violation 
-of this License (for any work) from that copyright holder, and you cure the 
+Moreover, your license from a particular copyright holder is reinstated
+permanently if the copyright holder notifies you of the violation by some
+reasonable means, this is the first time you have received notice of violation
+of this License (for any work) from that copyright holder, and you cure the
 violation prior to 30 days after your receipt of the notice.
 
-Termination of your rights under this section does not terminate the licenses 
-of parties who have received copies or rights from you under this License. If 
-your rights have been terminated and not permanently reinstated, receipt of a 
+Termination of your rights under this section does not terminate the licenses
+of parties who have received copies or rights from you under this License. If
+your rights have been terminated and not permanently reinstated, receipt of a
 copy of some or all of the same material does not give you any rights to use it.
 
 === 10. FUTURE REVISIONS OF THIS LICENSE
-The Free Software Foundation may publish new, revised versions of the GNU Free 
-Documentation License from time to time. Such new versions will be similar in 
-spirit to the present version, but may differ in detail to address new problems 
+
+The Free Software Foundation may publish new, revised versions of the GNU Free
+Documentation License from time to time. Such new versions will be similar in
+spirit to the present version, but may differ in detail to address new problems
 or concerns. See http://www.gnu.org/copyleft/.
 
-Each version of the License is given a distinguishing version number. If the 
-Document specifies that a particular numbered version of this License "or any 
-later version" applies to it, you have the option of following the terms and 
-conditions either of that specified version or of any later version that has 
-been published (not as a draft) by the Free Software Foundation. If the 
-Document does not specify a version number of this License, you may choose any 
-version ever published (not as a draft) by the Free Software Foundation. If the 
-Document specifies that a proxy can decide which future versions of this 
-License can be used, that proxy's public statement of acceptance of a version 
+Each version of the License is given a distinguishing version number. If the
+Document specifies that a particular numbered version of this License "or any
+later version" applies to it, you have the option of following the terms and
+conditions either of that specified version or of any later version that has
+been published (not as a draft) by the Free Software Foundation. If the
+Document does not specify a version number of this License, you may choose any
+version ever published (not as a draft) by the Free Software Foundation. If the
+Document specifies that a proxy can decide which future versions of this
+License can be used, that proxy's public statement of acceptance of a version
 permanently authorizes you to choose that version for the Document.
 
 === 11. RELICENSING
-"Massive Multiauthor Collaboration Site" (or "MMC Site") means any World Wide 
-Web server that publishes copyrightable works and also provides prominent 
-facilities for anybody to edit those works. A public wiki that anybody can edit 
-is an example of such a server. A "Massive Multiauthor Collaboration" (or 
-"MMC") contained in the site means any set of copyrightable works thus 
+
+"Massive Multiauthor Collaboration Site" (or "MMC Site") means any World Wide
+Web server that publishes copyrightable works and also provides prominent
+facilities for anybody to edit those works. A public wiki that anybody can edit
+is an example of such a server. A "Massive Multiauthor Collaboration" (or
+"MMC") contained in the site means any set of copyrightable works thus
 published on the MMC site.
 
-"CC-BY-SA" means the Creative Commons Attribution-Share Alike 3.0 license 
-published by Creative Commons Corporation, a not-for-profit corporation with a 
-principal place of business in San Francisco, California, as well as future 
+"CC-BY-SA" means the Creative Commons Attribution-Share Alike 3.0 license
+published by Creative Commons Corporation, a not-for-profit corporation with a
+principal place of business in San Francisco, California, as well as future
 copyleft versions of that license published by that same organization.
 
-"Incorporate" means to publish or republish a Document, in whole or in part, as 
+"Incorporate" means to publish or republish a Document, in whole or in part, as
 part of another Document.
 
-An MMC is "eligible for relicensing" if it is licensed under this License, and 
-if all works that were first published under this License somewhere other than 
-this MMC, and subsequently incorporated in whole or in part into the MMC, (1) 
-had no cover texts or invariant sections, and (2) were thus incorporated prior 
+An MMC is "eligible for relicensing" if it is licensed under this License, and
+if all works that were first published under this License somewhere other than
+this MMC, and subsequently incorporated in whole or in part into the MMC, (1)
+had no cover texts or invariant sections, and (2) were thus incorporated prior
 to November 1, 2008.
 
-The operator of an MMC Site may republish an MMC contained in the site under 
-CC-BY-SA on the same site at any time before August 1, 2009, provided the MMC 
+The operator of an MMC Site may republish an MMC contained in the site under
+CC-BY-SA on the same site at any time before August 1, 2009, provided the MMC
 is eligible for relicensing.
 

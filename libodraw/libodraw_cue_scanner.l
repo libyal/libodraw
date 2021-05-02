@@ -54,12 +54,12 @@ cue_2digit		[0-9][0-9]
 /* The catalog number is a 13 digit number */
 cue_catalog_number	[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]
 
-cue_comments		;[ ][^\r\n]*
+cue_comments		([;]|[/][/])[ ][^\r\n]*
 
 /* The ISRC code is a 12 character value, first 5 are alpha numeric, last 7 are numeric */
 cue_isrc_code		[A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]
 
-cue_keyword		[A-Z0-9/]+
+cue_keyword		[A-Z0-9/_]+
 
 /* The MSF consists of mm:ss:ff (minutes:seconds:frames) */
 cue_msf			[0-9][0-9]:[0-9][0-9]:[0-9][0-9]
@@ -81,11 +81,25 @@ CATALOG {
 	return( CUE_CATALOG );
 }
 
+CD_ROM {
+	cue_scanner_token_print(
+	 "CD_ROM" );
+
+	return( CUE_CD_ROM );
+}
+
 CDTEXTFILE {
 	cue_scanner_token_print(
 	 "CDTEXTFILE" );
 
 	return( CUE_CDTEXTFILE );
+}
+
+DATAFILE {
+	cue_scanner_token_print(
+	 "DATAFILE" );
+
+	return( CUE_DATAFILE );
 }
 
 FILE {
@@ -114,6 +128,13 @@ ISRC {
 	 "ISRC" );
 
 	return( CUE_ISRC );
+}
+
+NO[ ]COPY {
+	cue_scanner_token_print(
+	 "NO COPY" );
+
+	return( CUE_NO_COPY );
 }
 
 POSTGAP {
