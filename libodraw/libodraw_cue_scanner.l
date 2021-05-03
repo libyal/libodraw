@@ -76,196 +76,252 @@ white_space		[\a\b\c\e\f\t\v ]+
 
 CATALOG {
 	cue_scanner_token_print(
-	 "CATALOG" );
+	 "CUE_CATALOG" );
 
 	return( CUE_CATALOG );
 }
 
+CD_DA {
+	cue_scanner_token_print(
+	 "CUE_CD_DA" );
+
+	return( CUE_CD_DA );
+}
+
 CD_ROM {
 	cue_scanner_token_print(
-	 "CD_ROM" );
+	 "CUE_CD_ROM" );
 
 	return( CUE_CD_ROM );
 }
 
+CD_ROM_XA {
+	cue_scanner_token_print(
+	 "CUE_CD_ROM_XA" );
+
+	return( CUE_CD_ROM_XA );
+}
+
+CD_TEXT {
+	cue_scanner_token_print(
+	 "CUE_CD_TEXT" );
+
+	return( CUE_CD_TEXT );
+}
+
 CDTEXTFILE {
 	cue_scanner_token_print(
-	 "CDTEXTFILE" );
+	 "CUE_CDTEXTFILE" );
 
 	return( CUE_CDTEXTFILE );
 }
 
+COPY {
+	cue_scanner_token_print(
+	 "CUE_COPY" );
+
+	return( CUE_COPY );
+}
+
 DATAFILE {
 	cue_scanner_token_print(
-	 "DATAFILE" );
+	 "CUE_DATAFILE" );
 
 	return( CUE_DATAFILE );
 }
 
 FILE {
 	cue_scanner_token_print(
-	 "FILE" );
+	 "CUE_FILE" );
 
 	return( CUE_FILE );
 }
 
 FLAGS {
 	cue_scanner_token_print(
-	 "FLAGS" );
+	 "CUE_FLAGS" );
 
 	return( CUE_FLAGS );
 }
 
+FOUR_CHANNEL_AUDIO {
+	cue_scanner_token_print(
+	 "CUE_FOUR_CHANNEL_AUDIO" );
+
+	return( CUE_FOUR_CHANNEL_AUDIO );
+}
+
 INDEX {
 	cue_scanner_token_print(
-	 "INDEX" );
+	 "CUE_INDEX" );
 
 	return( CUE_INDEX );
 }
 
 ISRC {
 	cue_scanner_token_print(
-	 "ISRC" );
+	 "CUE_ISRC" );
 
 	return( CUE_ISRC );
 }
 
 NO[ ]COPY {
 	cue_scanner_token_print(
-	 "NO COPY" );
+	 "CUE_NO_COPY" );
 
 	return( CUE_NO_COPY );
 }
 
+NO[ ]PRE_EMPHASIS {
+	cue_scanner_token_print(
+	 "CUE_NO_PRE_EMPHASIS" );
+
+	return( CUE_NO_PRE_EMPHASIS );
+}
+
 POSTGAP {
 	cue_scanner_token_print(
-	 "POSTGAP" );
+	 "CUE_POSTGAP" );
 
 	return( CUE_POSTGAP );
 }
 
+PRE_EMPHASIS {
+	cue_scanner_token_print(
+	 "CUE_PRE_EMPHASIS" );
+
+	return( CUE_PRE_EMPHASIS );
+}
+
 PREGAP {
 	cue_scanner_token_print(
-	 "PREGAP" );
+	 "CUE_PREGAP" );
 
 	return( CUE_PREGAP );
 }
 
 TRACK {
 	cue_scanner_token_print(
-	 "TRACK" );
+	 "CUE_TRACK" );
 
 	return( CUE_TRACK );
 }
 
+TWO_CHANNEL_AUDIO {
+	cue_scanner_token_print(
+	 "CUE_TWO_CHANNEL_AUDIO" );
+
+	return( CUE_TWO_CHANNEL_AUDIO );
+}
+
 ARRANGER {
 	cue_scanner_token_print(
-	 "ARRANGER" );
+	 "CUE_CDTEXT_ARRANGER" );
 
 	return( CUE_CDTEXT_ARRANGER );
 }
 
 COMPOSER {
 	cue_scanner_token_print(
-	 "COMPOSER" );
+	 "CUE_CDTEXT_COMPOSER" );
 
 	return( CUE_CDTEXT_COMPOSER );
 }
 
 DISC_ID {
 	cue_scanner_token_print(
-	 "DISC_ID" );
+	 "CUE_CDTEXT_DISC_ID" );
 
 	return( CUE_CDTEXT_DISC_ID );
 }
 
 GENRE {
 	cue_scanner_token_print(
-	 "GENRE" );
+	 "CUE_CDTEXT_GENRE" );
 
 	return( CUE_CDTEXT_GENRE );
 }
 
 MESSAGE {
 	cue_scanner_token_print(
-	 "MESSAGE" );
+	 "CUE_CDTEXT_MESSAGE" );
 
 	return( CUE_CDTEXT_MESSAGE );
 }
 
 PERFORMER {
 	cue_scanner_token_print(
-	 "PERFORMER" );
+	 "CUE_CDTEXT_PERFORMER" );
 
 	return( CUE_CDTEXT_PERFORMER );
 }
 
 SIZE_INFO {
 	cue_scanner_token_print(
-	 "SIZE_INFO" );
+	 "CUE_CDTEXT_SIZE_INFO" );
 
 	return( CUE_CDTEXT_SIZE_INFO );
 }
 
 SONGWRITER {
 	cue_scanner_token_print(
-	 "SONGWRITER" );
+	 "CUE_CDTEXT_SONGWRITER" );
 
 	return( CUE_CDTEXT_SONGWRITER );
 }
 
 TITLE {
 	cue_scanner_token_print(
-	 "TITLE" );
+	 "CUE_CDTEXT_TITLE" );
 
 	return( CUE_CDTEXT_TITLE );
 }
 
 TOC_INFO1 {
 	cue_scanner_token_print(
-	 "TOC_INFO1" );
+	 "CUE_CDTEXT_TOC_INFO1" );
 
 	return( CUE_CDTEXT_TOC_INFO1 );
 }
 
 TOC_INFO2 {
 	cue_scanner_token_print(
-	 "TOC_INFO2" );
+	 "CUE_CDTEXT_TOC_INFO2" );
 
 	return( CUE_CDTEXT_TOC_INFO2 );
 }
 
 UPC_EAN {
 	cue_scanner_token_print(
-	 "UPC_EAN" );
+	 "CUE_CDTEXT_UPC_EAN" );
 
 	return( CUE_CDTEXT_UPC_EAN );
 }
 
 REM[ \t]+LEAD-OUT {
 	cue_scanner_token_print(
-	 "REM LEAD-OUT" );
+	 "CUE_REMARK_LEAD_OUT" );
 
 	return( CUE_REMARK_LEAD_OUT );
 }
 
 REM[ \t]+ORIGINAL[ \t]+MEDIA-TYPE: {
 	cue_scanner_token_print(
-	 "REM ORIGINAL MEDIA-TYPE" );
+	 "CUE_REMARK_ORIGINAL_MEDIA_TYPE" );
 
 	return( CUE_REMARK_ORIGINAL_MEDIA_TYPE );
 }
 
 REM[ \t]+RUN-OUT {
 	cue_scanner_token_print(
-	 "REM RUN-OUT" );
+	 "CUE_REMARK_RUN_OUT" );
 
 	return( CUE_REMARK_RUN_OUT );
 }
 
 REM[ \t]+SESSION {
 	cue_scanner_token_print(
-	 "REM SESSION" );
+	 "CUE_REMARK_SESSION" );
 
 	return( CUE_REMARK_SESSION );
 }
@@ -274,14 +330,14 @@ REM[ \t]+ {
 	/* BEGIN( REM ); */
 
 	cue_scanner_token_print(
-	 "REM" );
+	 "CUE_REMARK" );
 
 	return( CUE_REMARK );
 }
 
 {cue_catalog_number} {
 	cue_scanner_token_print(
-	 "cue_catalog_number" );
+	 "CUE_CATALOG_NUMBER" );
 
 	cue_scanner_lval.string_value.data   = cue_scanner_text;
 	cue_scanner_lval.string_value.length = (size_t) cue_scanner_leng;
@@ -291,7 +347,7 @@ REM[ \t]+ {
 
 {cue_isrc_code} {
 	cue_scanner_token_print(
-	 "cue_isrc_code" );
+	 "CUE_ISRC_CODE" );
 
 	cue_scanner_lval.string_value.data   = cue_scanner_text;
 	cue_scanner_lval.string_value.length = (size_t) cue_scanner_leng;
@@ -301,7 +357,7 @@ REM[ \t]+ {
 
 {cue_msf} {
 	cue_scanner_token_print(
-	 "cue_msf" );
+	 "CUE_MSF" );
 
 	cue_scanner_lval.string_value.data   = cue_scanner_text;
 	cue_scanner_lval.string_value.length = (size_t) cue_scanner_leng;
@@ -311,7 +367,7 @@ REM[ \t]+ {
 
 {cue_2digit} {
 	cue_scanner_token_print(
-	 "cue_2digit" );
+	 "CUE_2DIGIT" );
 
 	cue_scanner_lval.string_value.data   = cue_scanner_text;
 	cue_scanner_lval.string_value.length = (size_t) cue_scanner_leng;
@@ -321,7 +377,7 @@ REM[ \t]+ {
 
 {cue_keyword} {
 	cue_scanner_token_print(
-	 "cue_keyword" );
+	 "CUE_KEYWORD_STRING" );
 
 	cue_scanner_lval.string_value.data   = cue_scanner_text;
 	cue_scanner_lval.string_value.length = (size_t) cue_scanner_leng;
@@ -337,7 +393,7 @@ REM[ \t]+ {
 
 {string_double_quoted}|{string_single_quoted} {
 	cue_scanner_token_print(
-	 "string" );
+	 "CUE_STRING" );
 
 	if( cue_scanner_leng > 2 )
 	{
@@ -354,7 +410,7 @@ REM[ \t]+ {
 
 {string_unquoted} {
 	cue_scanner_token_print(
-	 "string" );
+	 "CUE_STRING" );
 
 	cue_scanner_lval.string_value.data   = cue_scanner_text;
 	cue_scanner_lval.string_value.length = (size_t) cue_scanner_leng;
@@ -363,6 +419,13 @@ REM[ \t]+ {
 }
 
 {white_space} ;
+
+. {
+	cue_scanner_token_print(
+	 "CUE_UNDEFINED" );
+
+	return( CUE_UNDEFINED );
+}
 
 %%
 

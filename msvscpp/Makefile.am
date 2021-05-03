@@ -11,6 +11,7 @@ MSVSCPP_FILES = \
 	libhmac/libhmac.vcproj \
 	libodraw/libodraw.vcproj \
 	libuna/libuna.vcproj \
+	odraw_test_cue_parser/odraw_test_cue_parser.vcproj \
 	odraw_test_data_file/odraw_test_data_file.vcproj \
 	odraw_test_data_file_descriptor/odraw_test_data_file_descriptor.vcproj \
 	odraw_test_error/odraw_test_error.vcproj \

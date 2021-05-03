@@ -6,7 +6,7 @@ $ExitSuccess = 0
 $ExitFailure = 1
 $ExitIgnore = 77
 
-$LibraryTests = "data_file data_file_descriptor error io_handle notify sector_range support track_value"
+$LibraryTests = "cue_parser data_file data_file_descriptor error io_handle notify sector_range support track_value"
 $LibraryTestsWithInput = "handle"
 $OptionSets = ""
 

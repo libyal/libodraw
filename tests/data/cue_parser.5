@@ -1,0 +1,12 @@
+CD_ROM
+TRACK MODE1
+DATAFILE "data_1"
+ZERO 00:02:00 // post-gap
+
+TRACK AUDIO
+SILENCE 00:02:00 // pre-gap
+START
+FILE "data_2.wav" 0
+
+TRACK AUDIO
+FILE "data_3.wav" 0

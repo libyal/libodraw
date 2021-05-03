@@ -30,6 +30,7 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	odraw_test_cue_parser \
 	odraw_test_data_file \
 	odraw_test_data_file_descriptor \
 	odraw_test_error \
@@ -39,6 +40,18 @@ check_PROGRAMS = \
 	odraw_test_sector_range \
 	odraw_test_support \
 	odraw_test_track_value
+
+odraw_test_cue_parser_SOURCES = \
+	odraw_test_cue_parser.c \
+	odraw_test_libcerror.h \
+	odraw_test_libodraw.h \
+	odraw_test_macros.h \
+	odraw_test_memory.c odraw_test_memory.h \
+	odraw_test_unused.h
+
+odraw_test_cue_parser_LDADD = \
+	../libodraw/libodraw.la \
+	@LIBCERROR_LIBADD@
 
 odraw_test_data_file_SOURCES = \
 	odraw_test_data_file.c \

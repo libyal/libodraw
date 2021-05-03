@@ -68,18 +68,28 @@ of the text itself, e.g. extended ASCII or UTF-8.
 
 The CUE sheet consists of multiple sections:
 
+* optional header section
+  * optional session type
 * main section
 * session section
 * track section
 
 Each section contains keywords which are commonly referred to as commands.
 
-Main section specific commands:
+Header section specific commands:
 
 * CATALOG
+
+Session type specific commands:
+
+* CD_DA
 * CD_ROM
+* CD_ROM_XA
+
+Main section specific commands:
+
+* CD_TEXT
 * CDTEXTFILE
-* DATAFILE
 * FILE
 * REM ORIGINAL MEDIA-TYPE
 * REM SESSION
@@ -93,11 +103,21 @@ The session section specific commands:
 
 Track section specific commands:
 
+* CD_TEXT
+* COPY or NO COPY
+* DATAFILE
 * FLAGS
+* FIFO
+* FOUR_CHANNEL_AUDIO
 * INDEX
 * ISRC
 * POSTGAP
 * PREGAP
+* PRE_EMPHASIS or NO PRE_EMPHASIS
+* SILENCE
+* START
+* TWO_CHANNEL_AUDIO
+* ZERO
 
 Note that the following commands can be present in both sections:
 
@@ -135,15 +155,40 @@ according to UPC/EAN (Universal Product Code/European Article Number) rules.
 The CATALOG command can appear only once in the CUE sheet. It will usually be
 the first command in the CUE sheet, but this is not mandatory.
 
+=== CD_DA
+
+Used by cdrdao to indicate that the disc contains only audio tracks.
+
+....
+CD_DA
+....
+
 === CD_ROM
 
-The CD_ROM command is used to specify a CUE file describes a CD-ROM.
+Used by cdrdao to indicate that the disc contains just mode 1 tracks or mode 1
+and audio tracks (mixed mode CD).
 
 ....
 CR_ROM
 ....
 
-[yellow-background]*Seen used by cdrdao as the first command*
+=== CD_ROM_XA
+
+Used by cdrdao to indicate that the mode 2 form 1 or mode 2 form 2 tracks
+including audio tracks (mixed mode CD).
+
+....
+CD_ROM_XA
+....
+
+=== CD_TEXT
+
+Used by cdrdao to specify CD-TEXT data like the album title and the used
+languages.
+
+....
+CD_TEXT
+....
 
 === CDTEXTFILE
 
@@ -158,18 +203,6 @@ If the filename contains any spaces, then it must be enclosed in quotation
 marks.
 
 [yellow-background]*TODO format of this file? Binary data from the “Read TOC CD-Text command” without the 4 bytes header.*
-
-=== DATAFILE
-
-[yellow-background]*Seen used by cdrdao*
-
-The DATAFILE command is used to specify a file that contains data.
-
-....
-DATAFILE [filename] [MSF]
-....
-
-Also see section: <<msf,MSF>>
 
 === FILE
 
@@ -239,9 +272,10 @@ TRACK [track type]
 | Value | Description
 | AUDIO | Audio (sector size: 2352)
 | CDG | Karaoke CD+G (sector size: 2448)
-| MODE1_RAW | CD-ROM Mode 1 data (raw) (sector size: 2352), seen used by cdrdao
+| MODE1_RAW | CD-ROM Mode 1 data (raw) (sector size: 2352), used by cdrdao
 | MODE1/2048 | CD-ROM Mode 1 data (cooked) (sector size: 2048)
 | MODE1/2352 | CD-ROM Mode 1 data (raw) (sector size: 2352)
+| MODE2_RAW | CD-ROM Mode 2 data (raw) (sector size: 2352), used by cdrdao
 | MODE2/2048 | CD-ROM Mode 2 XA form-1 data (sector size: 2048)
 | MODE2/2324 | CD-ROM Mode 2 XA form-2 data (sector size: 2324)
 | MODE2/2336 | CD-ROM Mode 2 data (sector size: 2336)
@@ -451,6 +485,25 @@ audio tracks.*
 
 == Track commands
 
+=== COPY and NO COPY
+
+....
+COPY
+NO COPY
+....
+
+=== DATAFILE
+
+[yellow-background]*Seen used by cdrdao*
+
+The DATAFILE command is used to specify a file that contains data.
+
+....
+DATAFILE [filename] [MSF]
+....
+
+Also see section: <<msf,MSF>>
+
 === FLAGS
 
 The FLAGS command is used to define special sub-code flags for a track.
@@ -479,6 +532,16 @@ commands. Only one FLAGS command is allowed per track.
 
 There is also a sub-code flag "DATA" which is set for all non-audio tracks.
 This flag is set automatically based on the track type.
+
+=== FIFO
+
+[yellow-background]*TODO describe FIFO*
+
+=== FOUR_CHANNEL_AUDIO
+
+....
+FOUR_CHANNEL_AUDIO
+....
 
 === INDEX
 
@@ -532,6 +595,13 @@ Only one POSTGAP command is allowed per track.
 
 Also see section: <<msf,MSF>>
 
+=== PRE_EMPHASIS and NO PRE_EMPHASIS
+
+....
+PRE_EMPHASIS
+NO PRE_EMPHASIS
+....
+
 === PREGAP
 
 The PREGAP command is used to specify the length of a track pre-gap.
@@ -547,6 +617,28 @@ The PREGAP command must appear after a TRACK command, but before any INDEX
 commands. Only one PREGAP command is allowed per track.
 
 Also see section: <<msf,MSF>>
+
+=== SILENCE
+
+....
+SILENCE [MSF]
+....
+
+=== START
+
+[yellow-background]*TODO describe START*
+
+=== TWO_CHANNEL_AUDIO
+
+....
+TWO_CHANNEL_AUDIO
+....
+
+=== ZERO
+
+....
+ZERO [MSF]
+....
 
 == Data types
 

@@ -242,25 +242,25 @@ size_t cue_scanner_buffer_offset;
 
 static char *cue_parser_function = "cue_parser";
 
-int cue_parser_parse_number(
+int libodraw_cue_parser_parse_number(
      const char *token,
      size_t token_size,
      int *number,
      libcerror_error_t **error );
 
-int cue_parser_parse_msf(
+int libodraw_cue_parser_parse_msf(
      const char *token,
      size_t token_size,
      uint64_t *lba,
      libcerror_error_t **error );
 
-int cue_parser_parse_track_type(
+int libodraw_cue_parser_parse_track_type(
      const char *token,
      size_t token_size,
      uint8_t *track_type,
      libcerror_error_t **error );
 
-int cue_parser_parse_buffer(
+int libodraw_cue_parser_parse_buffer(
      libodraw_handle_t *handle,
      const uint8_t *buffer,
      size_t buffer_size,
@@ -286,18 +286,26 @@ int cue_parser_parse_buffer(
 /* Reserved words
  */
 %token CUE_CATALOG
+%token CUE_CD_DA
 %token CUE_CD_ROM
+%token CUE_CD_ROM_XA
+%token CUE_CD_TEXT
 %token CUE_CDTEXTFILE
+%token CUE_COPY
 %token CUE_DATAFILE
 %token CUE_FLAGS
+%token CUE_FOUR_CHANNEL_AUDIO
 %token CUE_FILE
 %token CUE_INDEX
 %token CUE_ISRC
 %token CUE_NO_COPY
+%token CUE_NO_PRE_EMPHASIS
 %token CUE_POSTGAP
+%token CUE_PRE_EMPHASIS
 %token CUE_PREGAP
 %token CUE_REMARK
 %token CUE_TRACK
+%token CUE_TWO_CHANNEL_AUDIO
 
 /* CD-text reserved words
  */
@@ -322,14 +330,30 @@ int cue_parser_parse_buffer(
 %token CUE_REMARK_RUN_OUT
 %token CUE_REMARK_SESSION
 
+/* Other tokens
+ */
+%token CUE_UNDEFINED
+
 %%
 
 /* Parser rules
  */
 
 cue_main
-	: cue_cd_rom cue_main_items cue_main_tracks
-	| cue_main_items cue_file cue_main_items cue_main_tracks
+	: cue_header_item cue_session_type cue_main_items cue_main_tracks
+	| cue_header_item cue_main_items cue_file cue_main_items cue_main_tracks
+	;
+
+cue_header_item
+	: /* empty */
+	| cue_catalog
+	;
+
+cue_session_type
+	: /* empty */
+	| cue_cd_da
+	| cue_cd_rom
+	| cue_cd_rom_xa
 	;
 
 cue_main_items
@@ -337,9 +361,9 @@ cue_main_items
 	| cue_main_item cue_main_items
 	;
 
+/* TODO add support for cue_cd_text */
 cue_main_item
-	: cue_catalog
-	| cue_cdtextfile
+	: cue_cdtextfile
 	| cue_cdtext
 	| cue_remark_item
 	| cue_empty_line
@@ -395,11 +419,17 @@ cue_main_track_trailing_items
 	| cue_main_track_trailing_item cue_main_track_trailing_items
 	;
 
+/* TODO add support for cue_cd_text */
 cue_main_track_trailing_item
 	: cue_cdtext
+	| cue_copy
 	| cue_datafile
+	| cue_four_channel_audio
 	| cue_no_copy
+	| cue_no_pre_emphasis
 	| cue_postgap
+	| cue_pre_emphasis
+	| cue_two_channel_audio
 	| cue_remark_item
 	| cue_empty_line
 	;
@@ -436,6 +466,14 @@ cue_cdtext_type
 /* TODO IRSC definition */
 	;
 
+cue_cd_da
+	: CUE_CD_DA CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_cd_da" );
+	}
+	;
+
 cue_cd_rom
 	: CUE_CD_ROM CUE_END_OF_LINE
 	{
@@ -444,92 +482,19 @@ cue_cd_rom
 	}
 	;
 
+cue_cd_rom_xa
+	: CUE_CD_ROM_XA CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_cd_rom_xa" );
+	}
+	;
+
 cue_cdtextfile
 	: CUE_CDTEXTFILE CUE_STRING CUE_END_OF_LINE
 	{
 		cue_parser_rule_print(
 		 "cue_cdtextfile" );
-	}
-	;
-
-cue_datafile
-	: CUE_DATAFILE CUE_STRING CUE_MSF CUE_END_OF_LINE
-	{
-		cue_parser_rule_print(
-		 "cue_datafile" );
-
-		if( $2.data == NULL )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid filename.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		if( cue_parser_parse_msf(
-		     $3.data,
-		     $3.length,
-		     &( ( (cue_parser_state_t *) parser_state )->track_number_of_sectors ),
-		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to parse datafile MSF.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		( (cue_parser_state_t *) parser_state )->file_type = LIBODRAW_FILE_TYPE_BINARY_LITTLE_ENDIAN;
-
-		if( libodraw_handle_append_data_file(
-		     ( (cue_parser_state_t *) parser_state )->handle,
-		     $2.data,
-		     $2.length,
-		     ( (cue_parser_state_t *) parser_state )->file_type,
-		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to append data file.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		if( ( (cue_parser_state_t *) parser_state )->previous_file_index < 0 )
-		{
-			( (cue_parser_state_t *) parser_state )->file_sector = ( (cue_parser_state_t *) parser_state )->previous_track_start_sector;
-
-			( (cue_parser_state_t *) parser_state )->previous_file_index += 1;
-		}
-		( (cue_parser_state_t *) parser_state )->previous_file_sector = ( (cue_parser_state_t *) parser_state )->previous_track_start_sector
-		                                                              - ( (cue_parser_state_t *) parser_state )->file_sector;
-
-		if( libodraw_handle_append_track(
-		     ( (cue_parser_state_t *) parser_state )->handle,
-		     ( (cue_parser_state_t *) parser_state )->previous_track_start_sector,
-		     ( (cue_parser_state_t *) parser_state )->track_number_of_sectors,
-		     ( (cue_parser_state_t *) parser_state )->current_track_type,
-		     ( (cue_parser_state_t *) parser_state )->previous_file_index,
-		     ( (cue_parser_state_t *) parser_state )->previous_file_sector,
-		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
-		{
-			libcerror_error_set(
-			 ( (cue_parser_state_t *) parser_state )->error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to append track.",
-			 cue_parser_function );
-
-			YYABORT;
-		}
-		( (cue_parser_state_t *) parser_state )->current_file_index += 1;
 	}
 	;
 
@@ -651,7 +616,7 @@ cue_index
 
 		( (cue_parser_state_t *) parser_state )->previous_index = ( (cue_parser_state_t *) parser_state )->current_index;
 
-		if( cue_parser_parse_number(
+		if( libodraw_cue_parser_parse_number(
 		     $2.data,
 		     $2.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_index ),
@@ -678,7 +643,7 @@ cue_index
 
 			YYABORT;
 		}
-		if( cue_parser_parse_msf(
+		if( libodraw_cue_parser_parse_msf(
 		     $3.data,
 		     $3.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_start_sector ),
@@ -839,6 +804,103 @@ cue_index
 	}
 	;
 
+cue_copy
+	: CUE_COPY CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_copy" );
+	}
+	;
+
+cue_datafile
+	: CUE_DATAFILE CUE_STRING CUE_MSF CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_datafile" );
+
+		if( $2.data == NULL )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid filename.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		if( libodraw_cue_parser_parse_msf(
+		     $3.data,
+		     $3.length,
+		     &( ( (cue_parser_state_t *) parser_state )->track_number_of_sectors ),
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to parse datafile MSF.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		( (cue_parser_state_t *) parser_state )->file_type = LIBODRAW_FILE_TYPE_BINARY_LITTLE_ENDIAN;
+
+		if( libodraw_handle_append_data_file(
+		     ( (cue_parser_state_t *) parser_state )->handle,
+		     $2.data,
+		     $2.length,
+		     ( (cue_parser_state_t *) parser_state )->file_type,
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append data file.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		if( ( (cue_parser_state_t *) parser_state )->previous_file_index < 0 )
+		{
+			( (cue_parser_state_t *) parser_state )->file_sector = ( (cue_parser_state_t *) parser_state )->previous_track_start_sector;
+
+			( (cue_parser_state_t *) parser_state )->previous_file_index += 1;
+		}
+		( (cue_parser_state_t *) parser_state )->previous_file_sector = ( (cue_parser_state_t *) parser_state )->previous_track_start_sector
+		                                                              - ( (cue_parser_state_t *) parser_state )->file_sector;
+
+		if( libodraw_handle_append_track(
+		     ( (cue_parser_state_t *) parser_state )->handle,
+		     ( (cue_parser_state_t *) parser_state )->previous_track_start_sector,
+		     ( (cue_parser_state_t *) parser_state )->track_number_of_sectors,
+		     ( (cue_parser_state_t *) parser_state )->current_track_type,
+		     ( (cue_parser_state_t *) parser_state )->previous_file_index,
+		     ( (cue_parser_state_t *) parser_state )->previous_file_sector,
+		     ( (cue_parser_state_t *) parser_state )->error ) != 1 )
+		{
+			libcerror_error_set(
+			 ( (cue_parser_state_t *) parser_state )->error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append track.",
+			 cue_parser_function );
+
+			YYABORT;
+		}
+		( (cue_parser_state_t *) parser_state )->current_file_index += 1;
+	}
+	;
+
+cue_four_channel_audio
+	: CUE_FOUR_CHANNEL_AUDIO CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_four_channel_audio" );
+	}
+	;
+
 cue_isrc
 	: CUE_ISRC CUE_ISRC_CODE CUE_END_OF_LINE
 	{
@@ -855,6 +917,14 @@ cue_no_copy
 	}
 	;
 
+cue_no_pre_emphasis
+	: CUE_NO_PRE_EMPHASIS CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_no_pre_emphasis" );
+	}
+	;
+
 cue_postgap
 	: CUE_POSTGAP CUE_MSF CUE_END_OF_LINE
 	{
@@ -863,11 +933,27 @@ cue_postgap
 	}
 	;
 
+cue_pre_emphasis
+	: CUE_PRE_EMPHASIS CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_pre_emphasis" );
+	}
+	;
+
 cue_pregap
 	: CUE_PREGAP CUE_MSF CUE_END_OF_LINE
 	{
 		cue_parser_rule_print(
 		 "cue_pregap" );
+	}
+	;
+
+cue_two_channel_audio
+	: CUE_TWO_CHANNEL_AUDIO CUE_END_OF_LINE
+	{
+		cue_parser_rule_print(
+		 "cue_two_channel_audio" );
 	}
 	;
 
@@ -885,7 +971,7 @@ cue_lead_out
 		cue_parser_rule_print(
 		 "cue_lead_out" );
 
-		if( cue_parser_parse_msf(
+		if( libodraw_cue_parser_parse_msf(
 		     $2.data,
 		     $2.length,
 		     &( ( (cue_parser_state_t *) parser_state )->previous_lead_out_start_sector ),
@@ -954,7 +1040,7 @@ cue_run_out
 		cue_parser_rule_print(
 		 "cue_run_out" );
 
-		if( cue_parser_parse_msf(
+		if( libodraw_cue_parser_parse_msf(
 		     $2.data,
 		     $2.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_start_sector ),
@@ -996,7 +1082,7 @@ cue_session
 
 		( (cue_parser_state_t *) parser_state )->previous_session = ( (cue_parser_state_t *) parser_state )->current_session;
 
-		if( cue_parser_parse_number(
+		if( libodraw_cue_parser_parse_number(
 		     $2.data,
 		     $2.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_session ),
@@ -1045,7 +1131,7 @@ cue_track
 		}
 		( (cue_parser_state_t *) parser_state )->previous_track_type = ( (cue_parser_state_t *) parser_state )->current_track_type;
 
-		if( cue_parser_parse_track_type(
+		if( libodraw_cue_parser_parse_track_type(
 		     $2.data,
 		     $2.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_track_type ),
@@ -1070,7 +1156,7 @@ cue_track
 
 		( (cue_parser_state_t *) parser_state )->previous_track = ( (cue_parser_state_t *) parser_state )->current_track;
 
-		if( cue_parser_parse_number(
+		if( libodraw_cue_parser_parse_number(
 		     $2.data,
 		     $2.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_track ),
@@ -1099,7 +1185,7 @@ cue_track
 		}
 		( (cue_parser_state_t *) parser_state )->previous_track_type = ( (cue_parser_state_t *) parser_state )->current_track_type;
 
-		if( cue_parser_parse_track_type(
+		if( libodraw_cue_parser_parse_track_type(
 		     $3.data,
 		     $3.length,
 		     &( ( (cue_parser_state_t *) parser_state )->current_track_type ),
@@ -1128,13 +1214,13 @@ cue_empty_line
 /* Parses a number
  * Returns 1 if successful or -1 on error
  */
-int cue_parser_parse_number(
+int libodraw_cue_parser_parse_number(
      const char *token,
      size_t token_size,
      int *number,
      libcerror_error_t **error )
 {
-	static char *function = "cue_parser_parse_number";
+	static char *function = "libodraw_cue_parser_parse_number";
 	int safe_number       = 0;
 
 	if( token == NULL )
@@ -1211,13 +1297,13 @@ int cue_parser_parse_number(
 /* Parses a MFS (minutes:seconds:frames) value and converts it into a logical block address (LBA)
  * Returns 1 if successful or -1 on error
  */
-int cue_parser_parse_msf(
+int libodraw_cue_parser_parse_msf(
      const char *token,
      size_t token_size,
      uint64_t *lba,
      libcerror_error_t **error )
 {
-	static char *function = "cue_parser_parse_msf";
+	static char *function = "libodraw_cue_parser_parse_msf";
 	uint64_t safe_lba     = 0;
 
 	if( token == NULL )
@@ -1293,13 +1379,13 @@ int cue_parser_parse_msf(
 /* Parses a track type
  * Returns 1 if successful or -1 on error
  */
-int cue_parser_parse_track_type(
+int libodraw_cue_parser_parse_track_type(
      const char *token,
      size_t token_size,
      uint8_t *track_type,
      libcerror_error_t **error )
 {
-	static char *function = "cue_parser_parse_track_type";
+	static char *function = "libodraw_cue_parser_parse_track_type";
 
 	if( token == NULL )
 	{
@@ -1391,6 +1477,13 @@ int cue_parser_parse_track_type(
 		{
 			*track_type = LIBODRAW_TRACK_TYPE_MODE1_2352;
 		}
+		else if( narrow_string_compare(
+		          token,
+		          "MODE2_RAW",
+		          9 ) == 0 )
+		{
+			*track_type = LIBODRAW_TRACK_TYPE_MODE2_2352;
+		}
 	}
 	else if( token_size == 10 )
 	{
@@ -1458,7 +1551,7 @@ int cue_parser_parse_track_type(
 /* Parses a CUE file
  * Returns 1 if successful or -1 on error
  */
-int cue_parser_parse_buffer(
+int libodraw_cue_parser_parse_buffer(
      libodraw_handle_t *handle,
      const uint8_t *buffer,
      size_t buffer_size,
@@ -1466,10 +1559,22 @@ int cue_parser_parse_buffer(
 {
 	cue_parser_state_t parser_state;
 	
+	static char *function        = "libodraw_cue_parser_parse_buffer";
 	YY_BUFFER_STATE buffer_state = NULL;
 	size_t buffer_offset         = 0;
 	int result                   = -1;
 
+	if( buffer == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid buffer.",
+		 function );
+
+		return( -1 );
+	}
 	if( buffer_size >= 3 )
 	{
 		if( ( buffer[ 0 ] == 0x0ef )
@@ -1533,7 +1638,7 @@ int cue_parser_parse_buffer(
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
 				 "%s: unable to append session.",
-				 cue_parser_function );
+				 function );
 
 				result = -1;
 			}
@@ -1551,7 +1656,7 @@ int cue_parser_parse_buffer(
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
 				 "%s: unable to append lead-out.",
-				 cue_parser_function );
+				 function );
 
 				result = -1;
 			}
@@ -1581,7 +1686,7 @@ int cue_parser_parse_buffer(
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
 				 "%s: unable to append track.",
-				 cue_parser_function );
+				 function );
 
 				result = -1;
 			}

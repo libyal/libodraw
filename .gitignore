@@ -132,6 +132,7 @@ stamp-h[1-9]
 /odrawtools/odrawverify
 /tests/*.exe
 /tests/input
+/tests/odraw_test_cue_parser
 /tests/odraw_test_data_file
 /tests/odraw_test_data_file_descriptor
 /tests/odraw_test_error

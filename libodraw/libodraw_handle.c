@@ -45,11 +45,12 @@
 #include "libodraw_track_value.h"
 #include "libodraw_types.h"
 
-extern int cue_parser_parse_buffer(
-            libodraw_handle_t *handle,
-            const uint8_t *buffer,
-            size_t buffer_size,
-            libcerror_error_t **error );
+extern \
+int libodraw_cue_parser_parse_buffer(
+     libodraw_handle_t *handle,
+     const uint8_t *buffer,
+     size_t buffer_size,
+     libcerror_error_t **error );
 
 /* Creates a handle
  * Make sure the value handle is referencing, is set to NULL
@@ -2061,7 +2062,7 @@ int libodraw_handle_open_read(
 	buffer[ buffer_size - 2 ] = 0;
 	buffer[ buffer_size - 1 ] = 0;
 
-	result = cue_parser_parse_buffer(
+	result = libodraw_cue_parser_parse_buffer(
 	          (libodraw_handle_t *) internal_handle,
 	          buffer,
 	          buffer_size,

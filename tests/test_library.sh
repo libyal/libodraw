@@ -7,7 +7,7 @@ EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-LIBRARY_TESTS="data_file data_file_descriptor error io_handle notify sector_range support track_value";
+LIBRARY_TESTS="cue_parser data_file data_file_descriptor error io_handle notify sector_range support track_value";
 LIBRARY_TESTS_WITH_INPUT="handle";
 OPTION_SETS="";
 

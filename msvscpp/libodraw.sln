@@ -1,6 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odraw_test_cue_parser", "odraw_test_cue_parser\odraw_test_cue_parser.vcproj", "{0ADF4AD0-B908-4776-ABFC-5540B197B9E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{31355F6F-10AC-432A-A6D1-0143297F093D} = {31355F6F-10AC-432A-A6D1-0143297F093D}
+		{BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C} = {BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C}
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odraw_test_data_file", "odraw_test_data_file\odraw_test_data_file.vcproj", "{8C6D992D-2382-4EE1-A9BF-3F7A3464C23F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{31355F6F-10AC-432A-A6D1-0143297F093D} = {31355F6F-10AC-432A-A6D1-0143297F093D}
@@ -168,6 +174,10 @@ Global
 		VSDebug|Win32 = VSDebug|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0ADF4AD0-B908-4776-ABFC-5540B197B9E4}.Release|Win32.ActiveCfg = Release|Win32
+		{0ADF4AD0-B908-4776-ABFC-5540B197B9E4}.Release|Win32.Build.0 = Release|Win32
+		{0ADF4AD0-B908-4776-ABFC-5540B197B9E4}.VSDebug|Win32.ActiveCfg = VSDebug|Win32
+		{0ADF4AD0-B908-4776-ABFC-5540B197B9E4}.VSDebug|Win32.Build.0 = VSDebug|Win32
 		{8C6D992D-2382-4EE1-A9BF-3F7A3464C23F}.Release|Win32.ActiveCfg = Release|Win32
 		{8C6D992D-2382-4EE1-A9BF-3F7A3464C23F}.Release|Win32.Build.0 = Release|Win32
 		{8C6D992D-2382-4EE1-A9BF-3F7A3464C23F}.VSDebug|Win32.ActiveCfg = VSDebug|Win32
