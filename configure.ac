@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libodraw],
- [20210503],
+ [20210801],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -125,7 +125,7 @@ AS_IF(
  ])
 
 AS_IF(
- [test "x$ac_cv_libhmac" = xyes],
+ [test "x$ac_cv_libhmac" = xyes || test "x$ac_cv_libcrypto" != xno],
  [AC_SUBST(
   [libodraw_spec_tools_build_requires],
   [BuildRequires:])

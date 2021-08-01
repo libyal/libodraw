@@ -66,8 +66,8 @@ cue_msf			[0-9][0-9]:[0-9][0-9]:[0-9][0-9]
 
 end_of_line		[\r\n|\n|\r]
 
-string_double_quoted	["]([^"]|\\["])*["]
-string_single_quoted	[']([^']|\\['])*[']
+string_double_quoted	["]([^"\x00-\x08\x0a-\x1f\x7f]|\\["]){0,256}["]
+string_single_quoted	[']([^'\x00-\x08\x0a-\x1f\x7f]|\\[']){0,256}[']
 string_unquoted		[^\a\b\c\e\f\n\r\t\v ]+
 
 white_space		[\a\b\c\e\f\t\v ]+

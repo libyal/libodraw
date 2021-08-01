@@ -2054,7 +2054,7 @@ int libodraw_handle_open_read(
 		libcnotify_print_data(
 		 buffer,
 		 (size_t) file_size,
-		 0 );
+		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 	}
 #endif
 	/* Lex wants 2 zero bytes at the end of the buffer
