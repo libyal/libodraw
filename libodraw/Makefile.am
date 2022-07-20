@@ -1,5 +1,5 @@
 AM_LFLAGS = -Cf
-AM_YFLAGS = -d -v -l -p cue_scanner_
+AM_YFLAGS = -d -v -l -p libodraw_cue_scanner_
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
