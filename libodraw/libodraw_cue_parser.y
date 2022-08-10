@@ -242,25 +242,25 @@ size_t libodraw_cue_scanner_buffer_offset;
 
 static char *libodraw_cue_parser_function = "libodraw_cue_parser";
 
-int libodraw_libodraw_cue_parser_parse_number(
+int libodraw_cue_parser_parse_number(
      const char *token,
      size_t token_size,
      int *number,
      libcerror_error_t **error );
 
-int libodraw_libodraw_cue_parser_parse_msf(
+int libodraw_cue_parser_parse_msf(
      const char *token,
      size_t token_size,
      uint64_t *lba,
      libcerror_error_t **error );
 
-int libodraw_libodraw_cue_parser_parse_track_type(
+int libodraw_cue_parser_parse_track_type(
      const char *token,
      size_t token_size,
      uint8_t *track_type,
      libcerror_error_t **error );
 
-int libodraw_libodraw_cue_parser_parse_buffer(
+int libodraw_cue_parser_parse_buffer(
      libodraw_handle_t *handle,
      const uint8_t *buffer,
      size_t buffer_size,
