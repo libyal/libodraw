@@ -54,7 +54,7 @@ cue_2digit		[0-9][0-9]
 /* The catalog number is a 13 digit number */
 cue_catalog_number	[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]
 
-cue_comments		([;]|[/][/])[ ][^\r\n]*
+cue_comments		([;]|[/][/])[ ][^\x00-\x08\x0a-\x1f\x7f]*
 
 /* The ISRC code is a 12 character value, first 5 are alpha numeric, last 7 are numeric */
 cue_isrc_code		[A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]
