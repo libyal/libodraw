@@ -674,7 +674,7 @@ cue_index
 						 ( (libodraw_cue_parser_state_t *) parser_state )->error,
 						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 						 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-						 "%s: invalid session start sector value preceeds previous.",
+						 "%s: invalid session start sector value precedes previous.",
 						 libodraw_cue_parser_function );
 
 						YYABORT;
@@ -691,7 +691,7 @@ cue_index
 						 ( (libodraw_cue_parser_state_t *) parser_state )->error,
 						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 						 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-						 "%s: invalid lead-out start sector value preceeds previous.",
+						 "%s: invalid lead-out start sector value precedes previous.",
 						 libodraw_cue_parser_function );
 
 						YYABORT;
@@ -710,7 +710,7 @@ cue_index
 						 ( (libodraw_cue_parser_state_t *) parser_state )->error,
 						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 						 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-						 "%s: invalid track start sector value preceeds previous.",
+						 "%s: invalid track start sector value precedes previous.",
 						 libodraw_cue_parser_function );
 
 						YYABORT;
@@ -994,7 +994,7 @@ cue_lead_out
 				 ( (libodraw_cue_parser_state_t *) parser_state )->error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-				 "%s: invalid lead-out start sector value preceeds previous track start sector.",
+				 "%s: invalid lead-out start sector value precedes previous track start sector.",
 				 libodraw_cue_parser_function );
 
 				YYABORT;
@@ -1063,7 +1063,7 @@ cue_run_out
 				 ( (libodraw_cue_parser_state_t *) parser_state )->error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-				 "%s: invalid track start sector value preceeds previous.",
+				 "%s: invalid track start sector value precedes previous.",
 				 libodraw_cue_parser_function );
 
 				YYABORT;
