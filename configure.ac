@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
  [libodraw],
- [20220912],
+ [20230101],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
