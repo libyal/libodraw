@@ -1,6 +1,6 @@
 dnl Checks for required headers and functions
 dnl
-dnl Version: 20170919
+dnl Version: 20230218
 
 dnl Function to detect if ctime_r or ctime is available
 dnl Also checks how to use ctime_r
@@ -88,7 +88,7 @@ AC_DEFUN([AX_ODRAWTOOLS_CHECK_FUNC_CTIME],
 
 dnl Function to detect if libodraw dependencies are available
 AC_DEFUN([AX_LIBODRAW_CHECK_LOCAL],
-  [AM_PROG_LEX
+  [AC_PROG_LEX(noyywrap)
   AC_PROG_YACC
 
   dnl Check for internationalization functions in libodraw/libodraw_i18n.c
@@ -119,7 +119,7 @@ AC_DEFUN([AX_ODRAWTOOLS_CHECK_LOCAL],
   ])
 
   dnl Headers included in odrawtools/process_status.c
-  AC_HEADER_TIME
+  AC_CHECK_HEADERS([sys/time.h])
 
   dnl Functions included in odrawtools/process_status.c
   AX_ODRAWTOOLS_CHECK_FUNC_CTIME
