@@ -19,9 +19,9 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libodraw.h
-	/bin/rm -f libodraw/definitions.h
-	/bin/rm -f libodraw/features.h
-	/bin/rm -f libodraw/types.h
-	/bin/rm -f Makefile
+	-rm -f libodraw.h
+	-rm -f libodraw/definitions.h
+	-rm -f libodraw/features.h
+	-rm -f libodraw/types.h
+	-rm -f Makefile
 

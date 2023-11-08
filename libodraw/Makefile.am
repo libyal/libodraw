@@ -74,15 +74,17 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libodraw_definitions.h
-	/bin/rm -f libodraw.rc
-	/bin/rm -f libodraw_cue_parser.c
-	/bin/rm -f libodraw_cue_parser.h
-	/bin/rm -f libodraw_cue_parser.output
-	/bin/rm -f libodraw_cue_scanner.c
-	/bin/rm -f Makefile
+	-rm -f libodraw_definitions.h
+	-rm -f libodraw.rc
+	-rm -f libodraw_cue_parser.c
+	-rm -f libodraw_cue_parser.h
+	-rm -f libodraw_cue_parser.output
+	-rm -f libodraw_cue_scanner.c
+	-rm -f Makefile
 
-splint:
+sources-local: $(BUILT_SOURCES)
+
+splint-local:
 	@echo "Running splint on libodraw ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(libodraw_la_SOURCES)
 
