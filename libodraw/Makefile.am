@@ -2,8 +2,8 @@ AM_LFLAGS = -Cf
 AM_YFLAGS = -d -v -l -p libodraw_cue_scanner_
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/include \
-	-I$(top_srcdir)/common \
+	-I../include -I$(top_srcdir)/include \
+	-I../common -I$(top_srcdir)/common \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -70,17 +70,15 @@ EXTRA_DIST = \
 	libodraw.rc \
 	libodraw.rc.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libodraw_definitions.h \
+	libodraw.rc \
+	libodraw_cue_parser.c \
+	libodraw_cue_parser.h \
+	libodraw_cue_parser.output \
+	libodraw_cue_scanner.c \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libodraw_definitions.h
-	-rm -f libodraw.rc
-	-rm -f libodraw_cue_parser.c
-	-rm -f libodraw_cue_parser.h
-	-rm -f libodraw_cue_parser.output
-	-rm -f libodraw_cue_scanner.c
-	-rm -f Makefile
 
 sources-local: $(BUILT_SOURCES)
 

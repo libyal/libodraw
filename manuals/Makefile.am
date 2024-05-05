@@ -6,9 +6,7 @@ EXTRA_DIST = \
 	odrawinfo.1 \
 	libodraw.3
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f Makefile
 
