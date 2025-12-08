@@ -30,6 +30,6 @@ jobs:
         head -n 20 projects/libyal/Dockerfile > projects/libodraw/Dockerfile
         echo "RUN git clone --depth 1 https://github.com/libyal/libodraw.git libodraw" >> projects/libodraw/Dockerfile
         tail -n 3 projects/libyal/Dockerfile >> projects/libodraw/Dockerfile
-        python3 infra/helper.py build_image --pull libodraw 
+        python3 infra/helper.py build_image --pull libodraw
         python3 infra/helper.py build_fuzzers --sanitizer address libodraw
         python3 infra/helper.py check_build libodraw
