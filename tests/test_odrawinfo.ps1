@@ -1,6 +1,6 @@
 # Info tool testing script
 #
-# Version: 20230410
+# Version: 20251224
 
 $ExitSuccess = 0
 $ExitFailure = 1
@@ -84,32 +84,30 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 	}
 	$IgnoreList = ReadIgnoreList ${TestProfileDirectory}
 
-	# Note that the trailing backtick is needed.
-	Get-ChildItem -Path "input" -Exclude ".*" | ForEach-Object `
+	ForEach ($TestSetInputDirectory in Get-ChildItem -Path "input" -Exclude ".*")
 	{
-		$TestSetDirectory = $_
-
-		If (-Not (Test-Path -Path ${TestSetDirectory} -PathType Container))
+		If (-Not (Test-Path -Path ${TestSetInputDirectory} -PathType "Container"))
 		{
 			Continue
 		}
-		$TestSetName = ${TestSetDirectory}.Name
-
-		If (${IgnoreList}.Contains(${TestSetName}))
+		If (${TestSetInputDirectory} -Contains ${IgnoreList})
 		{
 			Continue
 		}
+		$TestSetName = ${TestSetInputDirectory}.Name
+
 		If (-Not (Test-Path -Path "${TestProfileDirectory}\${TestSetName}" -PathType Container))
 		{
 			New-Item -Name "${TestProfileDirectory}\${TestSetName}" -ItemType "directory" | Out-Null
 		}
-		If (Test-Path -Path "${TestProfileDirectory}\${TestSetName}\files" -PathType Container)
+		If (Test-Path -Path "${TestProfileDirectory}\${TestSetName}\files" -PathType "Leaf")
 		{
-			$InputFiles = Get-content -Path "${TestProfileDirectory}\${TestSetName}\files"
+			$InputFiles = Get-Content -Path "${TestProfileDirectory}\${TestSetName}\files" | Where {$_ -ne ""}
+			$InputFiles = $InputFiles -replace "^","${TestSetInputDirectory}\"
 		}
 		Else
 		{
-			$InputFiles = Get-ChildItem -Path "${TestSetDirectory}\${InputGlob}"
+			$InputFiles = Get-ChildItem -Path "${TestSetInputDirectory}\${InputGlob}"
 		}
 		ForEach ($InputFile in ${InputFiles})
 		{
@@ -133,7 +131,19 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 					{
 						Continue
 					}
-					$InputOptions = Get-content -Path "${TestDataOptionFile}" -First 1
+					$OptionsHeader = Get-content -Path "${TestDataOptionFile}" -First 1
+
+					If (-Not (${OptionsHeader} -match "^# libyal test data options"))
+					{
+						Continue
+					}
+					$InputOptions = Get-content -Path "${TestDataOptionFile}" | Select-Object -Skip 1
+
+					$InputOptions = $InputOptions -replace "^offset=","-o"
+					$InputOptions = $InputOptions -replace "^password=","-p"
+					$InputOptions = $InputOptions -replace "^recovery_password=","-r"
+					$InputOptions = $InputOptions -replace "^startup_key=","-s"
+					$InputOptions = $InputOptions -replace "^virtual_address=","-v"
 
 					$TestLog = "${InputFileName}-${OptionSet}.log"
 
