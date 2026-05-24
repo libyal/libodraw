@@ -25,5 +25,5 @@ echo "image.cue" > "${TEST_INPUT_DIRECTORY}/.libodraw/${TEST_SET}/files";
 echo "image.cue" > "${TEST_INPUT_DIRECTORY}/.odrawinfo/${TEST_SET}/files";
 echo "image.cue" > "${TEST_INPUT_DIRECTORY}/.odrawverify/${TEST_SET}/files";
 
-sed 's?specimens/cdrdao/??' -i "${TEST_INPUT_DIRECTORY}/${TEST_SET}/image.cue";
+sed -i'~' 's?specimens/cdrdao/??' "${TEST_INPUT_DIRECTORY}/${TEST_SET}/image.cue";
 

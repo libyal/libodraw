@@ -30,3 +30,5 @@ ForEach ($TestFile in ${TestFiles} -split " ")
 "image.cue" | Out-File -Encoding ascii "${TestInputDirectory}\.odrawinfo\${TestSet}\files"
 "image.cue" | Out-File -Encoding ascii "${TestInputDirectory}\.odrawverify\${TestSet}\files"
 
+$Content = Get-Content -Path "${TestInputDirectory}\${TestSet}\image.cue"
+$Content -Replace "specimens/cdrdao/","" | Set-Content -Path "${TestInputDirectory}\${TestSet}\image.cue"

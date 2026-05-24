@@ -47,7 +47,7 @@ Function ReadIgnoreList
 	$IgnoreFile = "${TestProfileDirectory}\ignore"
 	$IgnoreList = ""
 
-	If (Test-Path -Path ${IgnoreFile} -PathType "Leaf")
+	If (Test-Path -Path ${IgnoreFile} -PathType Leaf)
 	{
 		$IgnoreList = Get-Content -Path ${IgnoreFile} | Where {$_ -notmatch '^#.*'}
 	}
@@ -78,7 +78,7 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 
 	$TestProfileDirectory = "input\.${TestProfile}"
 
-	If (-Not (Test-Path -Path ${TestProfileDirectory} -PathType "Container"))
+	If (-Not (Test-Path -Path ${TestProfileDirectory} -PathType Container))
 	{
 		New-Item -ItemType "directory" -Path ${TestProfileDirectory} | Out-Null
 	}
@@ -86,7 +86,7 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 
 	ForEach ($TestSetInputDirectory in Get-ChildItem -Path "input" -Exclude ".*")
 	{
-		If (-Not (Test-Path -Path ${TestSetInputDirectory} -PathType "Container"))
+		If (-Not (Test-Path -Path ${TestSetInputDirectory} -PathType Container))
 		{
 			Continue
 		}
@@ -96,18 +96,14 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 		}
 		$TestSetName = ${TestSetInputDirectory}.Name
 
-		If (-Not (Test-Path -Path "${TestProfileDirectory}\${TestSetName}" -PathType Container))
-		{
-			New-Item -Name "${TestProfileDirectory}\${TestSetName}" -ItemType "directory" | Out-Null
-		}
-		If (Test-Path -Path "${TestProfileDirectory}\${TestSetName}\files" -PathType "Leaf")
+		If (Test-Path -Path "${TestProfileDirectory}\${TestSetName}\files" -PathType Leaf)
 		{
 			$InputFiles = Get-Content -Path "${TestProfileDirectory}\${TestSetName}\files" | Where {$_ -ne ""}
 			$InputFiles = $InputFiles -replace "^","${TestSetInputDirectory}\"
 		}
 		Else
 		{
-			$InputFiles = Get-ChildItem -Path "${TestSetInputDirectory}\${InputGlob}"
+			$InputFiles = Get-ChildItem -Path ${TestSetInputDirectory} -Include ${InputGlob}
 		}
 		ForEach ($InputFile in ${InputFiles})
 		{
@@ -127,7 +123,7 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 				{
 					$TestDataOptionFile = "..\${TestProfileDirectory}\${TestSetName}\${InputFileName}.${OptionSet}"
 
-					If (-Not (Test-Path -Path "${TestDataOptionFile}" -PathType "Leaf"))
+					If (-Not (Test-Path -Path "${TestDataOptionFile}" -PathType Leaf))
 					{
 						Continue
 					}
@@ -170,7 +166,7 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 
 					$StoredTestLog = "..\${TestProfileDirectory}\${TestSetName}\${TestLog}"
 
-					If (Test-Path -Path ${StoredTestLog} -PathType "Leaf")
+					If (Test-Path -Path ${StoredTestLog} -PathType Leaf)
 					{
 						$Difference = Compare-Object -ReferenceObject (Get-Content -Path ${StoredTestLog}) -DifferenceObject (Get-Content -Path ${TestLog})
 

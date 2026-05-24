@@ -4,7 +4,7 @@
  * This header should be included in header files that export or import
  * library functions
  *
- * Copyright (C) 2010-2025, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2026, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -31,14 +31,17 @@
  */
 #if defined( LIBODRAW_DLL_EXPORT )
 #define LIBODRAW_EXTERN __declspec(dllexport)
+#define LIBODRAW_EXTERN_VARIABLE extern __declspec(dllexport)
 
 #elif defined( LIBODRAW_DLL_IMPORT )
-#define LIBODRAW_EXTERN extern __declspec(dllimport)
+#define LIBODRAW_EXTERN __declspec(dllimport)
+#define LIBODRAW_EXTERN_VARIABLE extern __declspec(dllimport)
 
 #else
 #define LIBODRAW_EXTERN extern
+#define LIBODRAW_EXTERN_VARIABLE extern
 
-#endif
+#endif /* defined( LIBODRAW_DLL_EXPORT ) */
 
 #endif /* !defined( _LIBODRAW_EXTERN_H ) */
 

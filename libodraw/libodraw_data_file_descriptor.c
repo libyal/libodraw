@@ -1,7 +1,7 @@
 /*
  * Data file descriptor functions
  *
- * Copyright (C) 2010-2025, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2026, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -483,13 +483,13 @@ int libodraw_data_file_descriptor_set_name(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_utf8(
 		          (libuna_utf8_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          &( data_file_descriptor->name_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_utf8(
 		          (libuna_utf8_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          &( data_file_descriptor->name_size ),
 		          error );
 #else
@@ -501,14 +501,14 @@ int libodraw_data_file_descriptor_set_name(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_byte_stream(
 		          (uint8_t *) name,
-		          name_length + 1,
+		          name_length,
 		          libclocale_codepage,
 		          &( data_file_descriptor->name_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_byte_stream(
 		          (uint8_t *) name,
-		          name_length + 1,
+		          name_length,
 		          libclocale_codepage,
 		          &( data_file_descriptor->name_size ),
 		          error );
@@ -554,14 +554,14 @@ int libodraw_data_file_descriptor_set_name(
 		          (libuna_utf32_character_t *) data_file_descriptor->name,
 		          data_file_descriptor->name_size,
 		          (libuna_utf8_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_copy_from_utf8(
 		          (libuna_utf16_character_t *) data_file_descriptor->name,
 		          data_file_descriptor->name_size,
 		          (libuna_utf8_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          error );
 #else
 #error Unsupported size of wchar_t
@@ -574,7 +574,7 @@ int libodraw_data_file_descriptor_set_name(
 		          (libuna_utf32_character_t *) data_file_descriptor->name,
 		          data_file_descriptor->name_size,
 		          (uint8_t *) name,
-		          name_length + 1,
+		          name_length,
 		          libclocale_codepage,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
@@ -582,7 +582,7 @@ int libodraw_data_file_descriptor_set_name(
 		          (libuna_utf16_character_t *) data_file_descriptor->name,
 		          data_file_descriptor->name_size,
 		          (uint8_t *) name,
-		          name_length + 1,
+		          name_length,
 		          libclocale_codepage,
 		          error );
 #else
@@ -978,13 +978,13 @@ int libodraw_data_file_descriptor_set_name_wide(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_size_from_utf32(
 		          (libuna_utf32_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          &( data_file_descriptor->name_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf8_string_size_from_utf16(
 		          (libuna_utf16_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          &( data_file_descriptor->name_size ),
 		          error );
 #else
@@ -996,14 +996,14 @@ int libodraw_data_file_descriptor_set_name_wide(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_byte_stream_size_from_utf32(
 		          (libuna_utf32_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          libclocale_codepage,
 		          &( data_file_descriptor->name_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_size_from_utf16(
 		          (libuna_utf16_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          libclocale_codepage,
 		          &( data_file_descriptor->name_size ),
 		          error );
@@ -1067,14 +1067,14 @@ int libodraw_data_file_descriptor_set_name_wide(
 		          (libuna_utf8_character_t *) data_file_descriptor->name,
 		          data_file_descriptor->name_size,
 		          (libuna_utf32_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf8_string_copy_from_utf16(
 		          (libuna_utf8_character_t *) data_file_descriptor->name,
 		          data_file_descriptor->name_size,
 		          (libuna_utf16_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          error );
 #else
 #error Unsupported size of wchar_t
@@ -1088,7 +1088,7 @@ int libodraw_data_file_descriptor_set_name_wide(
 		          data_file_descriptor->name_size,
 		          libclocale_codepage,
 		          (libuna_utf32_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_copy_from_utf16(
@@ -1096,7 +1096,7 @@ int libodraw_data_file_descriptor_set_name_wide(
 		          data_file_descriptor->name_size,
 		          libclocale_codepage,
 		          (libuna_utf16_character_t *) name,
-		          name_length + 1,
+		          name_length,
 		          error );
 #else
 #error Unsupported size of wchar_t
