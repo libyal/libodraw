@@ -433,7 +433,7 @@ int libodraw_handle_open(
 {
 	libbfio_handle_t *file_io_handle            = NULL;
 	libodraw_internal_handle_t *internal_handle = NULL;
-	char *basename_end                          = NULL;
+	const char *basename_end                    = NULL;
 	static char *function                       = "libodraw_handle_open";
 	size_t basename_length                      = 0;
 	size_t filename_length                      = 0;
@@ -622,7 +622,7 @@ int libodraw_handle_open_wide(
 {
 	libbfio_handle_t *file_io_handle            = NULL;
 	libodraw_internal_handle_t *internal_handle = NULL;
-	wchar_t *basename_end                       = NULL;
+	const wchar_t *basename_end                 = NULL;
 	static char *function                       = "libodraw_handle_open_wide";
 	size_t basename_length                      = 0;
 	size_t filename_length                      = 0;

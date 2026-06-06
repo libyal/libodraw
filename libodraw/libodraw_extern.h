@@ -24,6 +24,19 @@
 
 #include <common.h>
 
+#if !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute )
+#if __has_attribute( visibility )
+#define LIBODRAW_INTERNAL	__attribute__((visibility("hidden"))) extern
+
+#else
+#define LIBODRAW_INTERNAL	extern
+
+#endif /* __has_attribute( visibility ) */
+#else
+#define LIBODRAW_INTERNAL	extern
+
+#endif /* !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute ) */
+
 /* Define HAVE_LOCAL_LIBODRAW for local use of libodraw
  */
 #if !defined( HAVE_LOCAL_LIBODRAW )
@@ -32,7 +45,7 @@
 
 #else
 #define LIBODRAW_EXTERN		/* extern */
-#define LIBODRAW_EXTERN_VARIABLE	extern
+#define LIBODRAW_EXTERN_VARIABLE	LIBODRAW_INTERNAL
 
 #endif /* !defined( HAVE_LOCAL_LIBODRAW ) */
 

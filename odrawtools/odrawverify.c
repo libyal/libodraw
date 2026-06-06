@@ -24,6 +24,10 @@
 #include <system_string.h>
 #include <types.h>
 
+#if defined( HAVE_FCNTL_H ) || defined( WINAPI )
+#include <fcntl.h>
+#endif
+
 #if defined( HAVE_IO_H ) || defined( WINAPI )
 #include <io.h>
 #endif
@@ -142,6 +146,11 @@ int main( int argc, char * const argv[] )
 	uint8_t print_status_information                   = 1;
 	uint8_t verbose                                    = 0;
 	int result                                         = 0;
+
+#if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
+	_setmode( _fileno( stdout ), _O_BINARY );
+	_setmode( _fileno( stderr ), _O_BINARY );
+#endif
 
 	libcnotify_stream_set(
 	 stderr,
@@ -265,6 +274,9 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
+#if defined( __clang_analyzer__ )
+	__builtin_assume( odrawverify_verification_handle != NULL );
+#endif
 	if( option_process_buffer_size != NULL )
 	{
 		result = verification_handle_set_process_buffer_size(

@@ -27,6 +27,10 @@
 
 #include <stdio.h>
 
+#if defined( HAVE_FCNTL_H ) || defined( WINAPI )
+#include <fcntl.h>
+#endif
+
 #if defined( HAVE_IO_H ) || defined( WINAPI )
 #include <io.h>
 #endif
@@ -131,6 +135,11 @@ int main( int argc, char * const argv[] )
 	system_integer_t option     = 0;
 	uint8_t ignore_data_files   = 0;
 	int verbose                 = 0;
+
+#if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
+	_setmode( _fileno( stdout ), _O_BINARY );
+	_setmode( _fileno( stderr ), _O_BINARY );
+#endif
 
 	libcnotify_stream_set(
 	 stderr,
@@ -242,6 +251,9 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
+#if defined( __clang_analyzer__ )
+	__builtin_assume( odrawinfo_info_handle != NULL );
+#endif
 	odrawinfo_info_handle->ignore_data_files = ignore_data_files;
 
 	if( odrawtools_signal_attach(

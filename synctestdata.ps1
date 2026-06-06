@@ -1,11 +1,11 @@
 # Script that synchronizes the local test data
 #
-# Version: 20251217
+# Version: 20260531
 
 $Repository = "dfirlabs/cue-specimens"
 $TestDataPath = "specimens/cdrdao"
 $TestSet = "public"
-$TestInputDirectory = "tests/input"
+$TestInputDirectory = "tests\input"
 $TestFiles = "image.bin image.cue"
 
 If (-Not (Test-Path ${TestInputDirectory}))
