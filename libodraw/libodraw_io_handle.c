@@ -205,9 +205,9 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 	size_t buffer_offset      = 0;
 	size_t read_size          = 0;
 	size_t sector_data_offset = 0;
-	uint32_t sector_lba       = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT ) || defined( HAVE_VERBOSE_OUTPUT )
+	uint32_t sector_lba       = 0;
 	uint8_t sector_mode       = 0;
 #endif
 
@@ -338,13 +338,13 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 #endif
 				sector_data_offset += 12;
 
+#if defined( HAVE_DEBUG_OUTPUT ) || defined( HAVE_VERBOSE_OUTPUT )
 				libodraw_optical_disk_copy_msf_to_lba(
 				 sector_data[ sector_data_offset ],
 				 sector_data[ sector_data_offset + 1 ],
 				 sector_data[ sector_data_offset + 2 ],
 				 sector_lba );
 
-#if defined( HAVE_DEBUG_OUTPUT ) || defined( HAVE_VERBOSE_OUTPUT )
 				sector_mode = sector_data[ sector_data_offset + 3 ] & 0x03;
 #endif
 #if defined( HAVE_DEBUG_OUTPUT )
@@ -367,20 +367,23 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 				}
 #endif
 #if defined( HAVE_VERBOSE_OUTPUT )
-				if( sector_lba != sector_index )
+				if( libcnotify_verbose != 0 )
 				{
-					libcnotify_printf(
-					 "%s: sector MSF (LBA) does not match current.\n",
-					 function );
-				}
-				if( ( ( track_type == LIBODRAW_TRACK_TYPE_MODE1_2352 )
-				  &&  ( sector_mode != 1 ) )
-				 || ( ( track_type == LIBODRAW_TRACK_TYPE_MODE2_2352 )
-				  &&  ( sector_mode != 2 ) ) )
-				{
-					libcnotify_printf(
-					 "%s: sector mode does not match table of contents.\n",
-					 function );
+					if( sector_lba != sector_index )
+					{
+						libcnotify_printf(
+						 "%s: sector MSF (LBA) does not match current.\n",
+						 function );
+					}
+					if( ( ( track_type == LIBODRAW_TRACK_TYPE_MODE1_2352 )
+					  &&  ( sector_mode != 1 ) )
+					 || ( ( track_type == LIBODRAW_TRACK_TYPE_MODE2_2352 )
+					  &&  ( sector_mode != 2 ) ) )
+					{
+						libcnotify_printf(
+						 "%s: sector mode does not match table of contents.\n",
+						 function );
+					}
 				}
 #endif
 				sector_data_offset += 4;

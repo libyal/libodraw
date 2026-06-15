@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20251129
+# Version: 20260604
 
 # Generic auto-generated build files
 *~
@@ -134,7 +134,12 @@ stamp-h[1-9]
 /odrawtools/*.exe
 /odrawtools/odrawinfo
 /odrawtools/odrawverify
+/tests/*.dir
 /tests/*.exe
+/tests/*.log
+/tests/*.tmp
+/tests/atconfig
+/tests/atlocal
 /tests/input
 /tests/notify_stream.log
 /tests/odraw_test_cue_parser
@@ -147,6 +152,11 @@ stamp-h[1-9]
 /tests/odraw_test_sector_range
 /tests/odraw_test_support
 /tests/odraw_test_track_value
+/tests/package.m4
+/tests/test_inputs_*.at
+/tests/test_library
+/tests/test_manpages
+/tests/test_tools
 /tests/tmp*
 
 # Local library dependencies specific files
