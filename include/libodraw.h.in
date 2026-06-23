@@ -379,7 +379,7 @@ int libodraw_handle_append_data_file_wide(
  * ------------------------------------------------------------------------- */
 
 /* Retrieves the media size
- * Returns the 1 if succesful or -1 on error
+ * Returns the 1 if successful or -1 on error
  */
 LIBODRAW_EXTERN \
 int libodraw_handle_get_media_size(

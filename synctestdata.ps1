@@ -1,37 +1,34 @@
 # Script that synchronizes the local test data
-#
-# Version: 20260608
 
-$Repository = "dfirlabs/cue-specimens"
-$TestDataPath = "specimens/cdrdao"
+$TestsInputDirectory = "tests\input"
 $TestSet = "public"
-$TestInputDirectory = "tests\input"
 $TestFiles = "image.bin image.cue"
 
-If (-Not (Test-Path ${TestInputDirectory}))
+If (-Not (Test-Path ${TestsInputDirectory}))
 {
-	New-Item -Name ${TestInputDirectory} -ItemType "directory" | Out-Null
+	New-Item -Name ${TestsInputDirectory} -ItemType "directory" | Out-Null
 }
-If (-Not (Test-Path "${TestInputDirectory}\${TestSet}"))
+If (-Not (Test-Path "${TestsInputDirectory}\${TestSet}"))
 {
-	New-Item -Name "${TestInputDirectory}\${TestSet}" -ItemType "directory" | Out-Null
-	New-Item -Name "${TestInputDirectory}\.libodraw\${TestSet}" -ItemType "directory" | Out-Null
-	New-Item -Name "${TestInputDirectory}\.odrawinfo\${TestSet}" -ItemType "directory" | Out-Null
-	New-Item -Name "${TestInputDirectory}\.odrawverify\${TestSet}" -ItemType "directory" | Out-Null
+	New-Item -Name "${TestsInputDirectory}\${TestSet}" -ItemType "directory" | Out-Null
 }
 ForEach ($TestFile in ${TestFiles} -split " ")
 {
 	$UrlTestFile = [System.Uri]::EscapeDataString("${TestFile}")
-	$Url = "https://raw.githubusercontent.com/${Repository}/refs/heads/main/${TestDataPath}/${UrlTestFile}"
- 
-	$ProgressPreference = 'SilentlyContinue'
+	$Url = "https://raw.githubusercontent.com/dfirlabs/cue-specimens/refs/heads/main/specimens/cdrdao/${UrlTestFile}"
 
-	Invoke-WebRequest -Uri ${Url} -OutFile "${TestInputDirectory}\${TestSet}\${TestFile}"
+	$ProgressPreference = 'SilentlyContinue'
+	Invoke-WebRequest -Uri ${Url} -OutFile "${TestsInputDirectory}\${TestSet}\${TestFile}"
 }
 
-"image.cue" | Out-File -Encoding ascii "${TestInputDirectory}\.libodraw\${TestSet}\files"
-"image.cue" | Out-File -Encoding ascii "${TestInputDirectory}\.odrawinfo\${TestSet}\files"
-"image.cue" | Out-File -Encoding ascii "${TestInputDirectory}\.odrawverify\${TestSet}\files"
+$Content = Get-Content -Path "${TestsInputDirectory}\${TestSet}\image.cue"
+$Content -Replace "specimens/cdrdao/","" | Set-Content -Path "${TestsInputDirectory}\${TestSet}\image.cue"
 
-$Content = Get-Content -Path "${TestInputDirectory}\${TestSet}\image.cue"
-$Content -Replace "specimens/cdrdao/","" | Set-Content -Path "${TestInputDirectory}\${TestSet}\image.cue"
+New-Item -Name "${TestsInputDirectory}\.libodraw\${TestSet}" -ItemType "directory" | Out-Null
+"image.cue" | Out-File -Encoding ascii "${TestsInputDirectory}\.libodraw\${TestSet}\files"
+
+New-Item -Name "${TestsInputDirectory}\.odrawinfo\${TestSet}" -ItemType "directory" | Out-Null
+"image.cue" | Out-File -Encoding ascii "${TestsInputDirectory}\.odrawinfo\${TestSet}\files"
+
+New-Item -Name "${TestsInputDirectory}\.odrawverify\${TestSet}" -ItemType "directory" | Out-Null
+"image.cue" | Out-File -Encoding ascii "${TestsInputDirectory}\.odrawverify\${TestSet}\files"

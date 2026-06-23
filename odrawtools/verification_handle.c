@@ -408,7 +408,7 @@ int verification_handle_open_input(
 }
 
 /* Closes the verification handle
- * Returns the 0 if succesful or -1 on error
+ * Returns the 0 if successful or -1 on error
  */
 int verification_handle_close(
      verification_handle_t *verification_handle,
