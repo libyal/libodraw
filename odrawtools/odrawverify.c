@@ -52,36 +52,6 @@
 verification_handle_t *odrawverify_verification_handle = NULL;
 int odrawverify_abort                                  = 0;
 
-/* Prints the executable usage information to the stream
- */
-void usage_fprint(
-      FILE *stream )
-{
-	if( stream == NULL )
-	{
-		return;
-	}
-	fprintf( stream, "Use odrawverify to verify data stored in the optical disc (split)\n"
-	                 "RAW image file format.\n\n" );
-
-	fprintf( stream, "Usage: odrawverify [ -d digest_type ] [ -l log_filename ]\n"
-	                 "                   [ -p process_buffer_size ] [ -hqvV ]\n"
-	                 "                   source\n\n" );
-
-	fprintf( stream, "\tsource: the source table of contents (TOC) file\n"
-	                 "\t        supported TOC file types: CDRWIN CUE\n\n" );
-
-	fprintf( stream, "\t-d:     calculate additional digest (hash) types besides md5,\n"
-	                 "\t        options: sha1, sha256\n" );
-	fprintf( stream, "\t-h:     shows this help\n" );
-	fprintf( stream, "\t-l:     logs verification errors and the digest (hash) to the\n"
-	                 "\t        log_filename\n" );
-	fprintf( stream, "\t-p:     specify the process buffer size (default is the 32768)\n" );
-	fprintf( stream, "\t-q:     quiet shows minimal status information\n" );
-	fprintf( stream, "\t-v:     verbose output to stderr\n" );
-	fprintf( stream, "\t-V:     print version\n" );
-}
-
 /* Signal handler for odrawverify
  */
 void odrawverify_signal_handler(
@@ -134,15 +104,31 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
+	const char *description = \
+		"Use odrawverify to verify data stored in the optical disc (split) RAW image file format.";
+
+	odrawtools_option_t options[ ] = {
+		{ 'd', "digest_type", "calculate additional digest (hash) types besides md5, options: sha1, sha256" },
+		{ 'h', NULL, "shows this help" },
+		{ 'l', "log_file", "logs verification errors and the digest (hash) to a file" },
+		{ 'p', "buffer_size", "specify the process buffer size (default is the 32768)" },
+		{ 'q', NULL, "quiet shows minimal status information" },
+		{ 'v', NULL, "verbose output to stderr" },
+		{ 'V', NULL, "print version" },
+		{ 0, "source", "the source image" },
+	};
+	system_character_t options_string[ 32 ];
+
 	libcerror_error_t *error                           = NULL;
 	log_handle_t *log_handle                           = NULL;
 	system_character_t *log_filename                   = NULL;
 	system_character_t *option_additional_digest_types = NULL;
 	system_character_t *option_process_buffer_size     = NULL;
-	system_character_t *program                        = _SYSTEM_STRING( "odrawverify" );
 	system_character_t *source                         = NULL;
 	system_integer_t option                            = 0;
+	char *program                                      = "odrawverify";
 	uint8_t calculate_md5                              = 1;
+	int number_of_options                              = (int) ( sizeof( options ) / sizeof( odrawtools_option_t ) );
 	uint8_t print_status_information                   = 1;
 	uint8_t verbose                                    = 0;
 	int result                                         = 0;
@@ -182,10 +168,22 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
+	if( odrawtools_getopt_get_options_string(
+	     options,
+	     number_of_options,
+	     options_string,
+	     32 ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to determine options string.\n" );
+
+		goto on_error;
+	}
 	while( ( option = odrawtools_getopt(
 	                   argc,
 	                   argv,
-	                   _SYSTEM_STRING( "d:hl:p:qvV" ) ) ) != (system_integer_t) -1 )
+	                   options_string ) ) != (system_integer_t) -1 )
 	{
 		switch( option )
 		{
@@ -196,8 +194,12 @@ int main( int argc, char * const argv[] )
 				 "Invalid argument: %" PRIs_SYSTEM "\n",
 				 argv[ optind - 1 ] );
 
-				usage_fprint(
-				 stdout );
+				odrawtools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				goto on_error;
 
@@ -207,8 +209,12 @@ int main( int argc, char * const argv[] )
 				break;
 
 			case (system_integer_t) 'h':
-				usage_fprint(
-				 stdout );
+				odrawtools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_SUCCESS );
 
@@ -245,8 +251,12 @@ int main( int argc, char * const argv[] )
 		 stderr,
 		 "Missing source file.\n" );
 
-		usage_fprint(
-		 stdout );
+		odrawtools_getopt_usage_fprint(
+		 stdout,
+		 program,
+		 description,
+		 options,
+		 number_of_options );
 
 		return( EXIT_FAILURE );
 	}

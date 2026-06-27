@@ -1,19 +1,22 @@
 .Dd June 27, 2026
-.Dt ODRAWINFO 1
+.Dt ODRAWVERIFY 1
 .Os
 .Sh NAME
-.Nm odrawinfo
-.Nd determines information about an optical disc (split) RAW image file
+.Nm odrawverify
+.Nd verifies media data stored in an optical disc (split) RAW image file
 .Sh SYNOPSIS
-.Nm odrawinfo
-.Op Fl hivV
+.Nm odrawverify
+.Op Fl d Ar digest_type
+.Op Fl l Ar log_file
+.Op Fl p Ar buffer_size
+.Op Fl hvV
 .Ar source
 .Sh DESCRIPTION
-.Nm odrawinfo
-is a utility to determine information about an optical disc (split) RAW image \
+.Nm odrawverify
+is a utility to verify media data stored in an optical disc (split) RAW image \
 file
 .Pp
-.Nm odrawinfo
+.Nm odrawverify
 is part of the
 .Nm libodraw
 package.
@@ -25,10 +28,16 @@ is the source image.
 .Pp
 The options are as follows:
 .Bl -tag -width Ds
+.It Fl d Ar digest_type
+calculate additional digest (hash) types besides md5, options: sha1, sha256
 .It Fl h
 shows this help
-.It Fl i
-ignore data file(s)
+.It Fl l Ar log_file
+logs verification errors and the digest (hash) to a file
+.It Fl p Ar buffer_size
+specify the process buffer size (default is the 32768)
+.It Fl q
+quiet shows minimal status information
 .It Fl v
 verbose output to stderr
 .It Fl V
@@ -40,29 +49,8 @@ None
 None
 .Sh EXAMPLES
 .Bd -literal
-# odrawinfo cd.cue
-odrawinfo 20110111
-.sp
-Optical disc:
-	media size: 42885120
-.sp
-Data files:
-	total number: 1
-	filename: disc1_single.iso (type: binary little-endian)
-.sp
-Sessions:
-	total number: 2
-	at sectors(s): 0 - 20619 number: 20620
-	at sectors(s): 20620 - 20939 number: 320
-.sp
-Lead-outs:
-	total number: 1
-	at sectors(s): 9220 - 20619 number: 11400
-.sp
-Tracks:
-	total number: 2
-	type: mode1/2352 (sector size: 2352) at sectors(s): 0 - 9219
-	type: mode1/2352 (sector size: 2352) at sectors(s): 20620 - 20939
+# odrawverify cd.cue
+odrawverify 20110801
 .sp
 .Ed
 .Sh DIAGNOSTICS
@@ -70,7 +58,7 @@ Errors, verbose and debug output are printed to stderr when verbose output \
 \-v is enabled.
 Verbose and debug output are only printed when enabled at compilation.
 .Sh SEE ALSO
-.Xr odrawverify 1
+.Xr odrawinfo 1
 .Sh AUTHORS
 .An Joachim Metz <joachim.metz@gmail.com>
 .Sh BUGS

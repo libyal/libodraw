@@ -1,5 +1,5 @@
 /*
- * Shows information obtained from optical disc (split) RAW file(s)
+ * Shows information obtained from an optical disc (split) RAW image file.
  *
  * Copyright (C) 2010-2026, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -21,11 +21,8 @@
 
 #include <common.h>
 #include <file_stream.h>
-#include <memory.h>
 #include <system_string.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #if defined( HAVE_FCNTL_H ) || defined( WINAPI )
 #include <fcntl.h>
@@ -56,54 +53,33 @@
 info_handle_t *odrawinfo_info_handle = NULL;
 int odrawinfo_abort                  = 0;
 
-/* Prints the executable usage information
- */
-void usage_fprint(
-      FILE *stream )
-{
-	if( stream == NULL )
-	{
-		return;
-	}
-	fprintf( stream, "Use odrawinfo to determine information about optical disc\n"
-	                 "(split) RAW file(s)\n\n" );
-
-	fprintf( stream, "Usage: odrawinfo [ -hivV ] source\n\n" );
-
-	fprintf( stream, "\tsource: the source table of contents (TOC) file\n"
-	                 "\t        supported TOC file types: CDRWIN CUE\n\n" );
-
-	fprintf( stream, "\t-h:     shows this help\n" );
-	fprintf( stream, "\t-i:     ignore data file(s)\n" );
-	fprintf( stream, "\t-v:     verbose output to stderr\n" );
-	fprintf( stream, "\t-V:     print version\n" );
-}
-
 /* Signal handler for odrawinfo
  */
 void odrawinfo_signal_handler(
       odrawtools_signal_t signal ODRAWTOOLS_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
-	static char *function   = "odrawinfo_signal_handler";
+	static char *function    = "odrawinfo_signal_handler";
 
 	ODRAWTOOLS_UNREFERENCED_PARAMETER( signal )
 
 	odrawinfo_abort = 1;
 
-	if( ( odrawinfo_info_handle != NULL )
-	 && ( info_handle_signal_abort(
-	       odrawinfo_info_handle,
-	       &error ) != 1 ) )
+	if( odrawinfo_info_handle != NULL )
 	{
-		libcnotify_printf(
-		 "%s: unable to signal info handle to abort.\n",
-		 function );
+		if( info_handle_signal_abort(
+		     odrawinfo_info_handle,
+		     &error ) != 1 )
+		{
+			libcnotify_printf(
+			 "%s: unable to signal info handle to abort.\n",
+			 function );
 
-		libcnotify_print_error_backtrace(
-		 error );
-		libcerror_error_free(
-		 &error );
+			libcnotify_print_error_backtrace(
+			 error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	/* Force stdin to close otherwise any function reading it will remain blocked
 	 */
@@ -129,12 +105,25 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libcerror_error_t *error    = NULL;
-	system_character_t *program = _SYSTEM_STRING( "odrawinfo" );
-	system_character_t *source  = NULL;
-	system_integer_t option     = 0;
-	uint8_t ignore_data_files   = 0;
-	int verbose                 = 0;
+	const char *description = \
+		"Use odrawinfo to determine information about an optical disc (split) RAW image file.";
+
+	odrawtools_option_t options[ ] = {
+		{ 'h', NULL, "shows this help" },
+		{ 'i', NULL, "ignore data file(s)" },
+		{ 'v', NULL, "verbose output to stderr" },
+		{ 'V', NULL, "print version" },
+		{ 0, "source", "the source image" },
+	};
+	system_character_t options_string[ 32 ];
+
+	libodraw_error_t *error    = NULL;
+	system_character_t *source = NULL;
+	char *program              = "odrawinfo";
+	system_integer_t option    = 0;
+	uint8_t ignore_data_files  = 0;
+	int number_of_options      = (int) ( sizeof( options ) / sizeof( odrawtools_option_t ) );
+	int verbose                = 0;
 
 #if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
 	_setmode( _fileno( stdout ), _O_BINARY );
@@ -148,7 +137,7 @@ int main( int argc, char * const argv[] )
 	 1 );
 
 	if( libclocale_initialize(
-             "odrawtools",
+	     "odrawtools",
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -157,9 +146,9 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-        if( odrawtools_output_initialize(
-             _IONBF,
-             &error ) != 1 )
+	if( odrawtools_output_initialize(
+	     _IONBF,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -171,10 +160,22 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
+	if( odrawtools_getopt_get_options_string(
+	     options,
+	     number_of_options,
+	     options_string,
+	     32 ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to determine options string.\n" );
+
+		goto on_error;
+	}
 	while( ( option = odrawtools_getopt(
 	                   argc,
 	                   argv,
-	                   _SYSTEM_STRING( "ihvV" ) ) ) != (system_integer_t) -1 )
+	                   options_string ) ) != (system_integer_t) -1 )
 	{
 		switch( option )
 		{
@@ -185,14 +186,22 @@ int main( int argc, char * const argv[] )
 				 "Invalid argument: %" PRIs_SYSTEM "\n",
 				 argv[ optind - 1 ] );
 
-				usage_fprint(
-				 stdout );
+				odrawtools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_FAILURE );
 
 			case (system_integer_t) 'h':
-				usage_fprint(
-				 stdout );
+				odrawtools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_SUCCESS );
 
@@ -217,10 +226,14 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Missing source file.\n" );
+		 "Missing source image.\n" );
 
-		usage_fprint(
-		 stdout );
+		odrawtools_getopt_usage_fprint(
+		 stdout,
+		 program,
+		 description,
+		 options,
+		 number_of_options );
 
 		return( EXIT_FAILURE );
 	}
@@ -228,7 +241,6 @@ int main( int argc, char * const argv[] )
 
 	libcnotify_verbose_set(
 	 verbose );
-
 #if !defined( HAVE_LOCAL_LIBODRAW )
 	libodraw_notify_set_stream(
 	 stderr,
@@ -241,13 +253,9 @@ int main( int argc, char * const argv[] )
 	     &odrawinfo_info_handle,
 	     &error ) != 1 )
 	{
-		odrawtools_output_version_fprint(
-		 stderr,
-		 program );
-
 		fprintf(
 		 stderr,
-		 "Unable to create info handle.\n" );
+		 "Unable to initialize info handle.\n" );
 
 		goto on_error;
 	}
@@ -276,18 +284,17 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to open file: %" PRIs_SYSTEM ".\n",
-		 source );
+		 "Unable to open source image.\n" );
 
 		goto on_error;
 	}
-	if( info_handle_handle_fprint(
+	if( info_handle_image_fprint(
 	     odrawinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to print information.\n" );
+		 "Unable to print image information.\n" );
 
 		goto on_error;
 	}
@@ -349,5 +356,5 @@ on_error:
 		 NULL );
 	}
 	return( EXIT_FAILURE );
-
 }
+

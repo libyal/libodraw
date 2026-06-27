@@ -953,14 +953,14 @@ int info_handle_tracks_fprint(
 	return( result );
 }
 
-/* Prints the handle information
+/* Prints the image information
  * Returns 1 if successful or -1 on error
  */
-int info_handle_handle_fprint(
+int info_handle_image_fprint(
      info_handle_t *info_handle,
      libcerror_error_t **error )
 {
-	static char *function = "info_handle_handle_fprint";
+	static char *function = "info_handle_image_fprint";
 	size64_t media_size   = 0;
 
 	if( info_handle == NULL )

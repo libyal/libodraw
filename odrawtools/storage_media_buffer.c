@@ -126,7 +126,7 @@ int storage_media_buffer_initialize(
 #else
 		( *buffer )->raw_buffer = (uint8_t *) memory_allocate(
 		                                       sizeof( uint8_t ) * raw_buffer_size );
-			
+
 		if( ( *buffer )->raw_buffer == NULL )
 		{
 			libcerror_error_set(

@@ -1,10 +1,10 @@
 man_MANS = \
+	libodraw.3 \
 	odrawinfo.1 \
-	libodraw.3
+	odrawverify.1
 
 EXTRA_DIST = \
-	odrawinfo.1 \
-	libodraw.3
+	$(man_MANS)
 
 DISTCLEANFILES = \
 	Makefile \

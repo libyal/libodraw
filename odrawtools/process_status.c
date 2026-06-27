@@ -801,7 +801,7 @@ void process_status_timestamp_fprint(
 		if( time_elements.tm_isdst != 0 )
 		{
 			time_elements.tm_hour -= 1;
-			time_elements.tm_isdst = 0;	
+			time_elements.tm_isdst = 0;
 		}
 		if( time_elements.tm_yday > 0 )
 		{
