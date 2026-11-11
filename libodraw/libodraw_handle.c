@@ -1721,7 +1721,7 @@ int libodraw_handle_close(
 	}
 	internal_handle->toc_file_io_handle = NULL;
 
-	if( internal_handle->data_file_io_pool != 0 )
+	if( internal_handle->data_file_io_pool_created_in_library != 0 )
 	{
 		if( internal_handle->data_file_io_pool != NULL )
 		{
@@ -1732,8 +1732,8 @@ int libodraw_handle_close(
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_IO,
-				 LIBCERROR_IO_ERROR_GENERIC,
-				 "%s: unable close data files IO pool.",
+				 LIBCERROR_IO_ERROR_CLOSE_FAILED,
+				 "%s: unable to close data files IO pool.",
 				 function );
 
 				result = -1;

@@ -12,7 +12,26 @@ AM_CPPFLAGS = \
 	@LIBBFIO_CPPFLAGS@
 
 bin_PROGRAMS = \
+	data_file_fuzzer \
 	handle_fuzzer
+
+data_file_fuzzer_SOURCES = \
+	data_file_fuzzer.cc \
+	ossfuzz_libbfio.h \
+	ossfuzz_libodraw.h
+
+data_file_fuzzer_LDADD = \
+	@LIB_FUZZING_ENGINE@ \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
+	@LIBUNA_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
+	../libodraw/libodraw.la \
+	@LIBCNOTIFY_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@LIBINTL@
 
 handle_fuzzer_SOURCES = \
 	handle_fuzzer.cc \
@@ -38,6 +57,7 @@ DISTCLEANFILES = \
 	Makefile.in
 
 splint-local:
+	@echo "Running splint on data_file_fuzzer ..."
+	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(data_file_fuzzer_SOURCES)
 	@echo "Running splint on handle_fuzzer ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(handle_fuzzer_SOURCES)
-

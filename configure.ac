@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libodraw],
-  [20261012],
+  [20261111],
   [https://github.com/libyal/libodraw/issues])
 
 AC_CONFIG_SRCDIR(
