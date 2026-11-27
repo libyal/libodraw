@@ -2676,6 +2676,18 @@ ssize_t libodraw_handle_read_buffer_from_run_out(
 
 		goto on_error;
 	}
+	if( track_value->bytes_per_sector == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid track value: %d - missing bytes per sector.",
+		 function,
+		 internal_handle->current_track - 1 );
+
+		goto on_error;
+	}
 	if( track_value->end_sector != sector_range->start_sector )
 	{
 		libcerror_error_set(
@@ -3037,6 +3049,18 @@ ssize_t libodraw_handle_read_buffer_from_lead_out(
 
 		goto on_error;
 	}
+	if( track_value->bytes_per_sector == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid track value: %d - missing bytes per sector.",
+		 function,
+		 internal_handle->current_track - 1 );
+
+		goto on_error;
+	}
 	if( track_value->end_sector != sector_range->start_sector )
 	{
 		libcerror_error_set(
@@ -3347,6 +3371,18 @@ ssize_t libodraw_handle_read_buffer_from_unspecified_sector(
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: missing track value: %d.",
+		 function,
+		 internal_handle->current_track - 1 );
+
+		goto on_error;
+	}
+	if( track_value->bytes_per_sector == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid track value: %d - missing bytes per sector.",
 		 function,
 		 internal_handle->current_track - 1 );
 

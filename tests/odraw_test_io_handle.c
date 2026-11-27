@@ -27,6 +27,10 @@
 #include <stdlib.h>
 #endif
 
+#if defined( HAVE_STRING_H ) || defined( WINAPI )
+#include <string.h>
+#endif
+
 #include "odraw_test_libcerror.h"
 #include "odraw_test_libodraw.h"
 #include "odraw_test_macros.h"
@@ -398,6 +402,376 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libodraw_io_handle_copy_sector_data_to_buffer function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_io_handle_copy_sector_data_to_buffer(
+     void )
+{
+	libcerror_error_t *error          = NULL;
+	libodraw_io_handle_t *io_handle   = NULL;
+	uint8_t *buffer                   = NULL;
+	uint8_t *sector_data              = NULL;
+	size_t buffer_size                = 0;
+	size_t number_of_bytes            = 0;
+	size_t sector_data_size           = 0;
+	size_t sector_offset              = 0;
+	ssize_t read_count                = 0;
+	int result                        = 0;
+
+	/* Create the sector data
+	 */
+	sector_data_size = 2336;
+
+	sector_data = (uint8_t *) malloc( 2352 );
+
+	if( sector_data == NULL )
+	{
+		fprintf( stdout, "unable to create sector data.\n" );
+
+		goto on_error;
+	}
+	for( number_of_bytes = 0;
+	     number_of_bytes < sector_data_size;
+	     number_of_bytes++ )
+	{
+		sector_data[ number_of_bytes ] = (uint8_t) ( ( number_of_bytes * 199 ) % 255 );
+	}
+	result = libodraw_io_handle_initialize(
+	          &io_handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "io_handle",
+	 io_handle );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	io_handle->bytes_per_sector = 2048;
+
+	/* Test regular case with a sector size (2336) that differs from the
+	 * IO handle sector size (2048), including a non-zero sector offset.
+	 * This reproduces the heap-buffer-overflow reported by the fuzzer.
+	 */
+	buffer_size   = 497;
+	sector_offset = 1868;
+
+	buffer = (uint8_t *) malloc( buffer_size );
+
+	if( buffer == NULL )
+	{
+		fprintf( stdout, "unable to create buffer.\n" );
+
+		goto on_error;
+	}
+	memset( buffer, 0xee, buffer_size );
+
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              io_handle,
+	              sector_data,
+	              sector_data_size,
+	              sector_data_size,
+	              LIBODRAW_TRACK_TYPE_UNKNOWN,
+	              buffer,
+	              buffer_size,
+	              0,
+	              sector_offset,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) 468 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	if( memcmp(
+	     buffer,
+	     &( sector_data[ sector_offset ] ),
+	     468 ) != 0 )
+	{
+		fprintf( stdout, "unexpected buffer content.\n" );
+
+		goto on_error;
+	}
+	if( ( buffer[ read_count     ] != 0xee )
+	 || ( buffer[ read_count + 1 ] != 0xee )
+	 || ( buffer[ read_count + 2 ] != 0xee ) )
+	{
+		fprintf( stdout, "unexpected data beyond read count.\n" );
+
+		goto on_error;
+	}
+	free( buffer );
+
+	buffer = NULL;
+
+	/* Test regular case converting a MODE1 2352 sector to a 2048 buffer
+	 */
+	buffer_size = 2048;
+
+	buffer = (uint8_t *) malloc( buffer_size );
+
+	if( buffer == NULL )
+	{
+		fprintf( stdout, "unable to create buffer.\n" );
+
+		goto on_error;
+	}
+	memset( buffer, 0xee, buffer_size );
+
+	memset( sector_data, 0, 2352 );
+
+	sector_data[ 0 ] = 0x00;
+	sector_data[ 1 ] = 0xff;
+	sector_data[ 2 ] = 0xff;
+	sector_data[ 3 ] = 0xff;
+	sector_data[ 4 ] = 0xff;
+	sector_data[ 5 ] = 0xff;
+	sector_data[ 6 ] = 0xff;
+	sector_data[ 7 ] = 0xff;
+	sector_data[ 8 ] = 0xff;
+	sector_data[ 9 ] = 0xff;
+	sector_data[ 10 ] = 0xff;
+	sector_data[ 11 ] = 0x00;
+	sector_data[ 15 ]  = 0x01;
+
+	memset(
+	 &( sector_data[ 16 ] ),
+	 0x5a,
+	 2048 );
+
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              io_handle,
+	              sector_data,
+	              2352,
+	              2352,
+	              LIBODRAW_TRACK_TYPE_MODE1_2352,
+	              buffer,
+	              buffer_size,
+	              0,
+	              0,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) 2048 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	if( memcmp(
+	     buffer,
+	     &( sector_data[ 16 ] ),
+	     2048 ) != 0 )
+	{
+		fprintf( stdout, "unexpected buffer content.\n" );
+
+		goto on_error;
+	}
+	free( buffer );
+
+	buffer = NULL;
+
+	/* Test error cases
+	 */
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              NULL,
+	              sector_data,
+	              sector_data_size,
+	              sector_data_size,
+	              LIBODRAW_TRACK_TYPE_UNKNOWN,
+	              sector_data,
+	              sector_data_size,
+	              0,
+	              0,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              io_handle,
+	              NULL,
+	              sector_data_size,
+	              sector_data_size,
+	              LIBODRAW_TRACK_TYPE_UNKNOWN,
+	              sector_data,
+	              sector_data_size,
+	              0,
+	              0,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              io_handle,
+	              sector_data,
+	              sector_data_size,
+	              sector_data_size,
+	              LIBODRAW_TRACK_TYPE_UNKNOWN,
+	              NULL,
+	              sector_data_size,
+	              0,
+	              0,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test error case with sector offset value out of bounds
+	 */
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              io_handle,
+	              sector_data,
+	              sector_data_size,
+	              sector_data_size,
+	              LIBODRAW_TRACK_TYPE_UNKNOWN,
+	              sector_data,
+	              sector_data_size,
+	              0,
+	              sector_data_size,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test error case with corrupt XA sub-header
+	 * Note the sector data is too small to contain a XA sub-header,
+	 * this must be reported as an error instead of reading past the end
+	 */
+	buffer_size = 2048;
+
+	buffer = (uint8_t *) malloc( buffer_size );
+
+	if( buffer == NULL )
+	{
+		fprintf( stdout, "unable to create buffer.\n" );
+
+		goto on_error;
+	}
+	read_count = libodraw_io_handle_copy_sector_data_to_buffer(
+	              io_handle,
+	              sector_data,
+	              2,
+	              2336,
+	              LIBODRAW_TRACK_TYPE_MODE2_2336,
+	              buffer,
+	              buffer_size,
+	              0,
+	              0,
+	              &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_SSIZE(
+	 "read_count",
+	 read_count,
+	 (ssize_t) -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	free( buffer );
+
+	buffer = NULL;
+
+	result = libodraw_io_handle_free(
+	          &io_handle,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "io_handle",
+	 io_handle );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	free( sector_data );
+
+	sector_data = NULL;
+
+	return( 1 );
+
+on_error:
+	if( buffer != NULL )
+	{
+		free( buffer );
+	}
+	if( sector_data != NULL )
+	{
+		free( sector_data );
+	}
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( io_handle != NULL )
+	{
+		libodraw_io_handle_free(
+		 &io_handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 
 /* The main program
@@ -429,7 +803,9 @@ int main(
 	 "libodraw_io_handle_clear",
 	 odraw_test_io_handle_clear );
 
-	/* TODO: add tests for libodraw_io_handle_copy_sector_data_to_buffer */
+	ODRAW_TEST_RUN(
+	 "libodraw_io_handle_copy_sector_data_to_buffer",
+	 odraw_test_io_handle_copy_sector_data_to_buffer );
 
 #endif /* defined( __GNUC__ ) && !defined( LIBODRAW_DLL_IMPORT ) */
 

@@ -81,6 +81,48 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libodraw_get_access_flags_read_write function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_get_access_flags_read_write(
+     void )
+{
+	int access_flags = 0;
+
+	access_flags = libodraw_get_access_flags_read_write();
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "access_flags",
+	 access_flags,
+	 LIBODRAW_OPEN_READ_WRITE );
+
+	return( 1 );
+
+on_error:
+	return( 0 );
+}
+
+/* Tests the libodraw_get_access_flags_write function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_get_access_flags_write(
+     void )
+{
+	int access_flags = 0;
+
+	access_flags = libodraw_get_access_flags_write();
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "access_flags",
+	 access_flags,
+	 LIBODRAW_OPEN_WRITE );
+
+	return( 1 );
+
+on_error:
+	return( 0 );
+}
+
 /* Tests the libodraw_get_codepage function
  * Returns 1 if successful or 0 if not
  */
@@ -202,6 +244,26 @@ int main(
 	ODRAW_TEST_RUN(
 	 "libodraw_get_version",
 	 odraw_test_get_version );
+
+	ODRAW_TEST_RUN(
+	 "libodraw_get_access_flags_read",
+	 odraw_test_get_access_flags_read );
+
+	ODRAW_TEST_RUN(
+	 "libodraw_get_access_flags_read_write",
+	 odraw_test_get_access_flags_read_write );
+
+	ODRAW_TEST_RUN(
+	 "libodraw_get_access_flags_write",
+	 odraw_test_get_access_flags_write );
+
+	ODRAW_TEST_RUN(
+	 "libodraw_get_codepage",
+	 odraw_test_get_codepage );
+
+	ODRAW_TEST_RUN(
+	 "libodraw_set_codepage",
+	 odraw_test_set_codepage );
 
 	return( EXIT_SUCCESS );
 

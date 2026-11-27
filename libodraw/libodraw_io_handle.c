@@ -395,6 +395,17 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 			if( ( track_type == LIBODRAW_TRACK_TYPE_MODE2_2336 )
 			 || ( track_type == LIBODRAW_TRACK_TYPE_MODE2_2352 ) )
 			{
+				if( ( sector_data_offset + 8 ) > sector_data_size )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+					 "%s: sector data too small.",
+					 function );
+
+					return( -1 );
+				}
 				if( ( sector_data[ sector_data_offset     ] != sector_data[ sector_data_offset + 4 ] )
 				 || ( sector_data[ sector_data_offset + 1 ] != sector_data[ sector_data_offset + 5 ] )
 				 || ( sector_data[ sector_data_offset + 2 ] != sector_data[ sector_data_offset + 6 ] )
@@ -465,7 +476,7 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 					if( memory_copy(
 					     &( buffer[ buffer_offset ] ),
 					     libodraw_sector_synchronisation_data,
-					     read_size ) != 0 )
+					     read_size ) == NULL )
 					{
 						libcerror_error_set(
 						 error,
@@ -557,9 +568,24 @@ ssize_t libodraw_io_handle_copy_sector_data_to_buffer(
 			read_size          -= (size_t) sector_offset;
 			sector_offset       = 0;
 		}
+		if( sector_data_offset < sector_data_size )
+		{
+			if( read_size > sector_data_size - sector_data_offset )
+			{
+				read_size = sector_data_size - sector_data_offset;
+			}
+		}
+		else
+		{
+			read_size = 0;
+		}
 		if( ( read_size + buffer_offset ) > buffer_size )
 		{
 			read_size = buffer_size - buffer_offset;
+		}
+		if( read_size == 0 )
+		{
+			break;
 		}
 		if( ( track_type == LIBODRAW_TRACK_TYPE_AUDIO )
 		 && ( io_handle->bytes_per_sector != 2352 ) )

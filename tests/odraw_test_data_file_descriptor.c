@@ -21,7 +21,9 @@
 
 #include <common.h>
 #include <file_stream.h>
+#include <narrow_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
@@ -300,6 +302,40 @@ int odraw_test_data_file_descriptor_get_name_size(
 	 "error",
 	 error );
 
+	/* Without a name set the function should fail.
+	 */
+	result = libodraw_data_file_descriptor_get_name_size(
+	          data_file_descriptor,
+	          &name_size,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_set_name(
+	          data_file_descriptor,
+	          "data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	/* Test regular cases
 	 */
 	result = libodraw_data_file_descriptor_get_name_size(
@@ -307,10 +343,15 @@ int odraw_test_data_file_descriptor_get_name_size(
 	          &name_size,
 	          &error );
 
-	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
+
+	ODRAW_TEST_ASSERT_EQUAL_SIZE(
+	 "name_size",
+	 name_size,
+	 9 * sizeof( char ) );
 
 	ODRAW_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -388,7 +429,429 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libodraw_data_file_descriptor_set_name function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_data_file_descriptor_set_name(
+     void )
+{
+	libcerror_error_t *error                              = NULL;
+	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
+	int result                                            = 0;
+
+	/* Initialize test
+	 */
+	result = libodraw_data_file_descriptor_initialize(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libodraw_data_file_descriptor_set_name(
+	          data_file_descriptor,
+	          "data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libodraw_data_file_descriptor_set_name(
+	          NULL,
+	          "data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_set_name(
+	          data_file_descriptor,
+	          NULL,
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libodraw_data_file_descriptor_free(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( data_file_descriptor != NULL )
+	{
+		libodraw_data_file_descriptor_free(
+		 &data_file_descriptor,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_data_file_descriptor_get_name function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_data_file_descriptor_get_name(
+     void )
+{
+	libcerror_error_t *error                              = NULL;
+	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
+	char buffer[ 32 ]                                     = { 0 };
+	int result                                            = 0;
+
+	/* Initialize test
+	 */
+	result = libodraw_data_file_descriptor_initialize(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Without a name set the function should fail.
+	 */
+	result = libodraw_data_file_descriptor_get_name(
+	          data_file_descriptor,
+	          buffer,
+	          sizeof( buffer ),
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_set_name(
+	          data_file_descriptor,
+	          "data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libodraw_data_file_descriptor_get_name(
+	          data_file_descriptor,
+	          buffer,
+	          sizeof( buffer ),
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "narrow_string_compare",
+	 narrow_string_compare(
+	  buffer,
+	  "data.wav",
+	  9 ),
+	 0 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libodraw_data_file_descriptor_get_name(
+	          NULL,
+	          buffer,
+	          sizeof( buffer ),
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_get_name(
+	          data_file_descriptor,
+	          NULL,
+	          sizeof( buffer ),
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_get_name(
+	          data_file_descriptor,
+	          buffer,
+	          5,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libodraw_data_file_descriptor_free(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( data_file_descriptor != NULL )
+	{
+		libodraw_data_file_descriptor_free(
+		 &data_file_descriptor,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
+/* Tests the libodraw_data_file_descriptor_set_name_wide function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_data_file_descriptor_set_name_wide(
+     void )
+{
+	libcerror_error_t *error                              = NULL;
+	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
+	int result                                            = 0;
+
+	/* Initialize test
+	 */
+	result = libodraw_data_file_descriptor_initialize(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libodraw_data_file_descriptor_set_name_wide(
+	          data_file_descriptor,
+	          L"data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libodraw_data_file_descriptor_set_name_wide(
+	          NULL,
+	          L"data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_set_name_wide(
+	          data_file_descriptor,
+	          NULL,
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libodraw_data_file_descriptor_free(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( data_file_descriptor != NULL )
+	{
+		libodraw_data_file_descriptor_free(
+		 &data_file_descriptor,
+		 NULL );
+	}
+	return( 0 );
+}
 
 /* Tests the libodraw_data_file_descriptor_get_name_size_wide function
  * Returns 1 if successful or 0 if not
@@ -420,6 +883,40 @@ int odraw_test_data_file_descriptor_get_name_size_wide(
 	 "error",
 	 error );
 
+	/* Without a name set the function should fail.
+	 */
+	result = libodraw_data_file_descriptor_get_name_size_wide(
+	          data_file_descriptor,
+	          &name_size_wide,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_set_name_wide(
+	          data_file_descriptor,
+	          L"data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	/* Test regular cases
 	 */
 	result = libodraw_data_file_descriptor_get_name_size_wide(
@@ -427,10 +924,15 @@ int odraw_test_data_file_descriptor_get_name_size_wide(
 	          &name_size_wide,
 	          &error );
 
-	ODRAW_TEST_ASSERT_NOT_EQUAL_INT(
+	ODRAW_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
+
+	ODRAW_TEST_ASSERT_EQUAL_SIZE(
+	 "name_size_wide",
+	 name_size_wide,
+	 (size_t) 9 );
 
 	ODRAW_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -458,6 +960,188 @@ int odraw_test_data_file_descriptor_get_name_size_wide(
 	result = libodraw_data_file_descriptor_get_name_size_wide(
 	          data_file_descriptor,
 	          NULL,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libodraw_data_file_descriptor_free(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( data_file_descriptor != NULL )
+	{
+		libodraw_data_file_descriptor_free(
+		 &data_file_descriptor,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libodraw_data_file_descriptor_get_name_wide function
+ * Returns 1 if successful or 0 if not
+ */
+int odraw_test_data_file_descriptor_get_name_wide(
+     void )
+{
+	libcerror_error_t *error                              = NULL;
+	libodraw_data_file_descriptor_t *data_file_descriptor = NULL;
+	wchar_t buffer[ 16 ]                                  = { 0 };
+	int result                                            = 0;
+
+	/* Initialize test
+	 */
+	result = libodraw_data_file_descriptor_initialize(
+	          &data_file_descriptor,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "data_file_descriptor",
+	 data_file_descriptor );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Without a name set the function should fail.
+	 */
+	result = libodraw_data_file_descriptor_get_name_wide(
+	          data_file_descriptor,
+	          buffer,
+	          16,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_set_name_wide(
+	          data_file_descriptor,
+	          L"data.wav",
+	          8,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libodraw_data_file_descriptor_get_name_wide(
+	          data_file_descriptor,
+	          buffer,
+	          16,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "wide_string_compare",
+	 wide_string_compare(
+	  buffer,
+	  L"data.wav",
+	  9 ),
+	 0 );
+
+	ODRAW_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libodraw_data_file_descriptor_get_name_wide(
+	          NULL,
+	          buffer,
+	          16,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_get_name_wide(
+	          data_file_descriptor,
+	          NULL,
+	          16,
+	          &error );
+
+	ODRAW_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	ODRAW_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libodraw_data_file_descriptor_get_name_wide(
+	          data_file_descriptor,
+	          buffer,
+	          5,
 	          &error );
 
 	ODRAW_TEST_ASSERT_EQUAL_INT(
@@ -537,19 +1221,31 @@ int main(
 	 "libodraw_data_file_descriptor_free",
 	 odraw_test_data_file_descriptor_free );
 
-	/* TODO: add tests for libodraw_data_file_descriptor_get_name_size */
+	ODRAW_TEST_RUN(
+	 "libodraw_data_file_descriptor_set_name",
+	 odraw_test_data_file_descriptor_set_name );
 
-	/* TODO: add tests for libodraw_data_file_descriptor_get_name */
+	ODRAW_TEST_RUN(
+	 "libodraw_data_file_descriptor_get_name_size",
+	 odraw_test_data_file_descriptor_get_name_size );
 
-	/* TODO: add tests for libodraw_data_file_descriptor_set_name */
+	ODRAW_TEST_RUN(
+	 "libodraw_data_file_descriptor_get_name",
+	 odraw_test_data_file_descriptor_get_name );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-	/* TODO: add tests for libodraw_data_file_descriptor_get_name_size_wide */
+	ODRAW_TEST_RUN(
+	 "libodraw_data_file_descriptor_set_name_wide",
+	 odraw_test_data_file_descriptor_set_name_wide );
 
-	/* TODO: add tests for libodraw_data_file_descriptor_get_name_wide */
+	ODRAW_TEST_RUN(
+	 "libodraw_data_file_descriptor_get_name_size_wide",
+	 odraw_test_data_file_descriptor_get_name_size_wide );
 
-	/* TODO: add tests for libodraw_data_file_descriptor_set_name_wide */
+	ODRAW_TEST_RUN(
+	 "libodraw_data_file_descriptor_get_name_wide",
+	 odraw_test_data_file_descriptor_get_name_wide );
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
